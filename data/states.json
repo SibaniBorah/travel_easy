@@ -1,0 +1,233 @@
+[
+  {
+    "code": "AS",
+    "name": "Assam",
+    "capital": "Dispur",
+    "tagline": "Land of the Red River and Blue Hills",
+    "description": "Assam is the gateway to Northeast India, home to Kaziranga National Park, the mighty Brahmaputra river, and vibrant tea gardens. The state blends wildlife, culture, and natural beauty.",
+    "best_time": "November to April",
+    "ilp_required": false,
+    "ilp_fee_inr": 0,
+    "ilp_portal": "",
+    "ilp_info": "",
+    "popular_food": [
+      "Rice and fish curry",
+      "Pitika",
+      "Masor Tenga",
+      "Pitha"
+    ],
+    "cultural_highlights": [
+      "Bihu festival (April, January, October)",
+      "Sattriya dance tradition",
+      "Vaishnavite monasteries (Sattras)",
+      "One-horned rhinoceros conservation"
+    ],
+    "source_id": "govt-assam-tourism",
+    "verified_at": "2026-11-21T10:25:18.930642147+05:30",
+    "expires_at": "2027-02-19T10:25:18.930642214+05:30",
+    "confidence": 0.95,
+    "status": "published"
+  },
+  {
+    "code": "ML",
+    "name": "Meghalaya",
+    "capital": "Shillong",
+    "tagline": "Abode of the Clouds",
+    "description": "Meghalaya is known for its living root bridges, the wettest place on Earth (Mawsynram/Cherrapunji), stunning waterfalls, and vibrant Khasi, Garo, and Jaintia tribal cultures.",
+    "best_time": "October to May",
+    "ilp_required": false,
+    "ilp_fee_inr": 0,
+    "ilp_portal": "",
+    "ilp_info": "",
+    "popular_food": [
+      "Jadoh (pork and rice)",
+      "Dohneiiong",
+      "Pumaloi",
+      "Kyat (millet beer)"
+    ],
+    "cultural_highlights": [
+      "Living root bridges — Nongriat",
+      "Nongkrem Dance Festival",
+      "Sacred forests and groves",
+      "Matrilineal Khasi society"
+    ],
+    "source_id": "govt-meghalaya-tourism",
+    "verified_at": "2026-11-21T10:25:18.930677616+05:30",
+    "expires_at": "2027-02-19T10:25:18.930677657+05:30",
+    "confidence": 0.95,
+    "status": "published"
+  },
+  {
+    "code": "AR",
+    "name": "Arunachal Pradesh",
+    "capital": "Itanagar",
+    "tagline": "Land of the Dawn-Lit Mountains",
+    "description": "Arunachal Pradesh borders China, Bhutan, and Myanmar. It hosts Tawang Monastery — the largest in India — tribal cultures, alpine lakes, and dense forests. ILP is required.",
+    "best_time": "October to April",
+    "ilp_required": true,
+    "ilp_fee_inr": 100,
+    "ilp_portal": "https://arunachalilp.com",
+    "ilp_info": "Inner Line Permit required for all Indian citizens. Apply online at least 2-3 days in advance.",
+    "popular_food": [
+      "Thukpa",
+      "Apong (rice beer)",
+      "Bamboo shoot curry",
+      "Pika Pila"
+    ],
+    "cultural_highlights": [
+      "Tawang Monastery — Tibetan Buddhism",
+      "Ziro Music Festival",
+      "26+ major tribes",
+      "Sela Pass — 13,700 ft"
+    ],
+    "source_id": "govt-arunachal-tourism",
+    "verified_at": "2026-11-21T10:25:18.930677764+05:30",
+    "expires_at": "2027-02-19T10:25:18.930677805+05:30",
+    "confidence": 0.9,
+    "status": "published"
+  },
+  {
+    "code": "MN",
+    "name": "Manipur",
+    "capital": "Imphal",
+    "tagline": "Jewel of India",
+    "description": "Manipur is home to the unique Loktak Lake with its floating islands (phumdis), Sangai deer, ancient Meitei culture, and world-class polo — reputedly the sport's birthplace.",
+    "best_time": "October to March",
+    "ilp_required": true,
+    "ilp_fee_inr": 120,
+    "ilp_portal": "https://manipurilponline.mn.gov.in",
+    "ilp_info": "ILP required for Indian nationals. Apply online. PAP required for foreigners (more restricted access).",
+    "popular_food": [
+      "Eromba",
+      "Singju (salad)",
+      "Chamthong (Kangshoi)",
+      "Ngari (fermented fish)"
+    ],
+    "cultural_highlights": [
+      "Loktak Lake — floating islands",
+      "Sangai Festival (November)",
+      "Ras Leela dance",
+      "Polo ground, Imphal — world's oldest"
+    ],
+    "source_id": "govt-manipur-tourism",
+    "verified_at": "2026-11-21T10:25:18.930677881+05:30",
+    "expires_at": "2027-02-19T10:25:18.930677922+05:30",
+    "confidence": 0.88,
+    "status": "published"
+  },
+  {
+    "code": "MZ",
+    "name": "Mizoram",
+    "capital": "Aizawl",
+    "tagline": "Land of Blue Mountains",
+    "description": "Mizoram is a serene hill state with rolling bamboo forests, terraced fields, and deeply Christian Mizo culture. Almost entirely ILP-required. Very friendly, literate populace.",
+    "best_time": "October to March",
+    "ilp_required": true,
+    "ilp_fee_inr": 0,
+    "ilp_portal": "https://mizoramilp.com",
+    "ilp_info": "ILP required. Can be obtained at Silchar airport or Aizawl checkpoint. Valid for 15 days.",
+    "popular_food": [
+      "Bai",
+      "Vawksa Rep (pork)",
+      "Sawhchiar (rice porridge)",
+      "Zu (rice wine)"
+    ],
+    "cultural_highlights": [
+      "Cheraw bamboo dance",
+      "Chapchar Kut festival",
+      "Phawngpui Blue Mountain — highest peak",
+      "Murlen National Park"
+    ],
+    "source_id": "govt-mizoram-tourism",
+    "verified_at": "2026-11-21T10:25:18.930677997+05:30",
+    "expires_at": "2027-02-19T10:25:18.930678036+05:30",
+    "confidence": 0.87,
+    "status": "published"
+  },
+  {
+    "code": "NL",
+    "name": "Nagaland",
+    "capital": "Kohima",
+    "tagline": "Land of Festivals",
+    "description": "Nagaland is famous for the Hornbill Festival, its warrior Naga tribes, WWII history at Kohima, and pristine Dzukou Valley. Permits are needed for some border areas.",
+    "best_time": "October to May",
+    "ilp_required": false,
+    "ilp_fee_inr": 0,
+    "ilp_portal": "",
+    "ilp_info": "",
+    "popular_food": [
+      "Smoked pork with bamboo shoot",
+      "Galho (rice porridge)",
+      "Raja mirchi (ghost chilli) dishes"
+    ],
+    "cultural_highlights": [
+      "Hornbill Festival — first week of December",
+      "Kohima War Cemetery — WWII",
+      "16 major Naga tribes",
+      "Dzukou Valley trekking"
+    ],
+    "source_id": "govt-nagaland-tourism",
+    "verified_at": "2026-11-21T10:25:18.930678111+05:30",
+    "expires_at": "2027-02-19T10:25:18.93067815+05:30",
+    "confidence": 0.9,
+    "status": "published"
+  },
+  {
+    "code": "SK",
+    "name": "Sikkim",
+    "capital": "Gangtok",
+    "tagline": "Small but Beautiful",
+    "description": "Sikkim is a former Buddhist kingdom with spectacular Himalayan views including Kanchenjunga (3rd highest), monasteries, clean rivers, and organic farmlands. PAP needed for some areas.",
+    "best_time": "March to June, October to December",
+    "ilp_required": false,
+    "ilp_fee_inr": 0,
+    "ilp_portal": "",
+    "ilp_info": "",
+    "popular_food": [
+      "Momos",
+      "Thukpa",
+      "Gundruk soup",
+      "Chhurpi (cheese)"
+    ],
+    "cultural_highlights": [
+      "Rumtek Monastery",
+      "Kanchenjunga Base Camp trek",
+      "Tsomgo Lake",
+      "Losar (Tibetan New Year)"
+    ],
+    "source_id": "govt-sikkim-tourism",
+    "verified_at": "2026-11-21T10:25:18.930678224+05:30",
+    "expires_at": "2027-02-19T10:25:18.930678264+05:30",
+    "confidence": 0.93,
+    "status": "published"
+  },
+  {
+    "code": "TR",
+    "name": "Tripura",
+    "capital": "Agartala",
+    "tagline": "India's Jewel in the Northeast",
+    "description": "Tripura is a compact state with palaces, temples, tribal cultures, and the stunning Neermahal water palace. Easy to explore by road from Agartala.",
+    "best_time": "October to March",
+    "ilp_required": false,
+    "ilp_fee_inr": 0,
+    "ilp_portal": "",
+    "ilp_info": "",
+    "popular_food": [
+      "Muya Awandru (bamboo shoot)",
+      "Gudok (fermented fish/meat)",
+      "Chakhwi",
+      "Berma (dried fish)"
+    ],
+    "cultural_highlights": [
+      "Neermahal Water Palace",
+      "Ujjayanta Palace",
+      "19 scheduled tribes",
+      "Kharchi Puja festival"
+    ],
+    "source_id": "govt-tripura-tourism",
+    "verified_at": "2026-11-21T10:25:18.930678338+05:30",
+    "expires_at": "2027-02-19T10:25:18.930678378+05:30",
+    "confidence": 0.9,
+    "status": "published"
+  }
+]

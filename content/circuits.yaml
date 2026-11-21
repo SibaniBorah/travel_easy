@@ -1,0 +1,156 @@
+# ═════════════════════════════════════════════════════════════════════════════
+# Chalo NorthEast — Anchor Circuits Specification (v1.0)
+# Pilot focus: 2 priority circuits first (Assam-Meghalaya and Kaziranga-Majuli),
+# followed by the 6 anchor regional circuits.
+# ═════════════════════════════════════════════════════════════════════════════
+
+circuits:
+  # Priority Circuit 1: Assam-Meghalaya Classic Loop
+  - id: "assam-meghalaya-classic"
+    title: "Assam-Meghalaya Clouds & Canyons Loop"
+    duration_days: 5
+    gateway: "guwahati"
+    states: ["AS", "ML"]
+    budget_range_inr: [6500, 11500]
+    pace: "moderate"
+    ilp_required: false
+    best_months: [10, 11, 12, 1, 2, 3, 4, 5]
+    monsoon_notes: "Spectacular roaring waterfalls in June-August, but requires careful hiking on root bridge steps."
+    destinations:
+      - slug: "guwahati"
+        stay_nights: 1
+        highlights: ["Kamakhya Temple", "Brahmaputra Sunset Cruise", "Umananda Island"]
+      - slug: "shillong"
+        stay_nights: 1
+        highlights: ["Ward's Lake", "Police Bazar Khasi food", "Don Bosco Museum"]
+      - slug: "cherrapunji-sohra"
+        stay_nights: 1
+        highlights: ["Nohkalikai Falls (340m)", "Mawsmai & Arwah Caves", "Wei Sawdong"]
+      - slug: "nongriat-root-bridges"
+        stay_nights: 1
+        highlights: ["Double Decker Living Root Bridge", "Rainbow Falls", "Natural stone pools"]
+      - slug: "dawki-shnongpdeng-river"
+        stay_nights: 1
+        highlights: ["Crystal Umngot river boating", "Riverside pebble camping", "Suspension bridge"]
+    transit_chain:
+      - from: "guwahati"
+        to: "shillong"
+        mode: "shared-sumo"
+        fare_inr: [300, 400]
+        stand: "Paltan Bazar / Khanapara"
+      - from: "shillong"
+        to: "cherrapunji-sohra"
+        mode: "shared-sumo"
+        fare_inr: [120, 180]
+        stand: "Lewduh (Bara Bazar)"
+      - from: "cherrapunji-sohra"
+        to: "nongriat-root-bridges"
+        mode: "shared-taxi-plus-trek"
+        fare_inr: [60, 100]
+        stand: "Tyrna Village Trailhead (3,500 steps)"
+      - from: "nongriat-root-bridges"
+        to: "dawki-shnongpdeng-river"
+        mode: "shared-sumo"
+        fare_inr: [200, 300]
+        stand: "Tyrna junction to Dawki"
+      - from: "dawki-shnongpdeng-river"
+        to: "guwahati"
+        mode: "shared-sumo"
+        fare_inr: [450, 600]
+        stand: "Dawki border market directly to Guwahati"
+
+  # Priority Circuit 2: Wild Assam (Kaziranga & Majuli River Island)
+  - id: "kaziranga-majuli-wildlife"
+    title: "Wild Assam & River Island: Kaziranga, Majuli & Ahom Heritage"
+    duration_days: 6
+    gateway: "guwahati"
+    states: ["AS"]
+    budget_range_inr: [7500, 13000]
+    pace: "relaxed"
+    ilp_required: false
+    best_months: [11, 12, 1, 2, 3, 4]
+    monsoon_notes: "Kaziranga National Park is strictly CLOSED from June 1 to October 31 due to Brahmaputra flooding."
+    destinations:
+      - slug: "guwahati"
+        stay_nights: 1
+        highlights: ["Gateway transit", "Assamese Jolpan breakfast"]
+      - slug: "kaziranga-national-park"
+        stay_nights: 2
+        highlights: ["Great Indian One-Horned Rhinoceros", "Bagori Jeep Safari", "Kohora Dawn Elephant Safari", "Kaziranga Orchid Biodiversity Park"]
+      - slug: "majuli-island"
+        stay_nights: 2
+        highlights: ["Ro-Pax river ferry across Brahmaputra", "Samaguri Satra bamboo mask making", "Kamalabari monk Sattriya dance", "Mishing tribal stilt homestay"]
+      - slug: "sivasagar-ahom-heritage"
+        stay_nights: 1
+        highlights: ["Rang Ghar (Asia's oldest royal amphitheater)", "Talatal Ghar underground palace", "Charaideo UNESCO royal maidams"]
+
+  # Circuit 3: Arunachal High-Altitude Trail
+  - id: "arunachal-tawang-trail"
+    title: "Arunachal High Altitude Trail: Tawang, Sela Pass & Monasteries"
+    duration_days: 7
+    gateway: "tezpur"
+    states: ["AS", "AR"]
+    budget_range_inr: [12000, 18000]
+    pace: "moderate"
+    ilp_required: true
+    permits: ["AR-ILP (Indians)", "AR-PAP (Foreigners)"]
+    best_months: [3, 4, 5, 10, 11]
+
+  # Circuit 4: Nagaland Tribal & Dzukou Valley
+  - id: "nagaland-dzukou-hornbill"
+    title: "Nagaland Heritage: Dzukou Valley Trek & Khonoma Green Village"
+    duration_days: 5
+    gateway: "dimapur"
+    states: ["NL"]
+    budget_range_inr: [7000, 12000]
+    pace: "active"
+    ilp_required: true
+    permits: ["NL-ILP"]
+    best_months: [10, 11, 12, 1, 2, 3, 4]
+
+  # Circuit 5: Sikkim Himalayan Wonder
+  - id: "sikkim-kanchenjunga-gurudongmar"
+    title: "Sikkim Himalayan Magic: Gurudongmar Lake & Pelling"
+    duration_days: 7
+    gateway: "siliguri"
+    states: ["SK"]
+    budget_range_inr: [13000, 21000]
+    pace: "moderate"
+    ilp_required: false
+    permits: ["SK-PAP-North (Gurudongmar/Lachung)"]
+    best_months: [3, 4, 5, 10, 11]
+
+  # Circuit 6: Manipur Floating Paradise
+  - id: "manipur-loktak-sangai"
+    title: "Manipur Floating Paradise: Loktak Lake & Ima Keithel"
+    duration_days: 4
+    gateway: "imphal"
+    states: ["MN"]
+    budget_range_inr: [5500, 9500]
+    pace: "relaxed"
+    ilp_required: true
+    permits: ["MN-ILP"]
+    best_months: [10, 11, 12, 1, 2, 3, 4]
+
+  # Circuit 7: Mizoram Highlander Ridge
+  - id: "mizoram-reiek-vantawng"
+    title: "Mizoram Highlander Ridge: Aizawl, Reiek Peak & Vantawng Falls"
+    duration_days: 5
+    gateway: "aizawl"
+    states: ["MZ"]
+    budget_range_inr: [6000, 10500]
+    pace: "relaxed"
+    ilp_required: true
+    permits: ["MZ-ILP"]
+    best_months: [10, 11, 12, 1, 2, 3]
+
+  # Circuit 8: Tripura Royal Palaces & Ancient Reliefs
+  - id: "tripura-palaces-unakoti"
+    title: "Tripura Heritage: Neermahal Water Palace & Unakoti Shiva Carvings"
+    duration_days: 4
+    gateway: "agartala"
+    states: ["TR"]
+    budget_range_inr: [4500, 8000]
+    pace: "relaxed"
+    ilp_required: false
+    best_months: [10, 11, 12, 1, 2, 3]

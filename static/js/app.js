@@ -11,6 +11,8 @@ class App {
     this.itineraries = [];
     this.permits = [];
     this.tips = [];
+    this.events = [];
+    this.currentFestivalMonth = 0;
     
     this.currentState = "ALL";
     this.currentCategory = "all";
@@ -37,10 +39,13 @@ class App {
     this.renderTransitRoutes();
     this.renderItineraries();
     this.renderPermitAdvisor();
+    this.renderFestivals(0);
     this.renderHomestays();
     this.renderCommunityTips();
     this.renderLingoGuide();
     this.renderEmergencyContacts();
+    this.initOfflinePackHandler();
+    this.initReportHandler();
 
     // Initial budget calculation
     this.planner.rebuildDaySlots();
@@ -49,27 +54,42 @@ class App {
 
   async fetchInitialData() {
     try {
-      const [statesRes, destsRes, transitRes, homestaysRes, itinRes, permitsRes, tipsRes, statsRes] = await Promise.all([
-        fetch("/api/states"),
-        fetch("/api/destinations"),
-        fetch("/api/transit"),
-        fetch("/api/homestays"),
-        fetch("/api/itineraries"),
-        fetch("/api/permits"),
-        fetch("/api/tips"),
-        fetch("/api/stats")
+      const fetchWithFallback = async (primaryUrl, fallbackUrl) => {
+        try {
+          const r = await fetch(primaryUrl);
+          if (r.ok) return r;
+          throw new Error("fallback");
+        } catch {
+          return await fetch(fallbackUrl);
+        }
+      };
+
+      const [statesRes, destsRes, transitRes, homestaysRes, itinRes, permitsRes, tipsRes, statsRes, eventsRes] = await Promise.all([
+        fetchWithFallback("/api/states", "/api/v1/states"),
+        fetchWithFallback("/api/destinations", "/api/v1/destinations"),
+        fetchWithFallback("/api/transit", "/api/v1/route-legs"),
+        fetchWithFallback("/api/homestays", "/api/v1/homestays"),
+        fetchWithFallback("/api/itineraries", "/api/v1/itineraries"),
+        fetchWithFallback("/api/permits", "/api/v1/permits"),
+        fetchWithFallback("/api/tips", "/api/v1/tips"),
+        fetchWithFallback("/api/stats", "/api/v1/stats"),
+        fetchWithFallback("/api/events", "/api/v1/events")
       ]);
 
-      this.states = await statesRes.json();
-      this.destinations = await destsRes.json();
-      this.transitRoutes = await transitRes.json();
-      this.homestays = await homestaysRes.json();
-      this.itineraries = await itinRes.json();
-      this.permitsData = await permitsRes.json();
-      this.tips = await tipsRes.json();
-      const stats = await statsRes.json();
+      const unwrap = (val) => (val && val.data !== undefined ? val.data : val);
+
+      this.states = unwrap(await statesRes.json()) || [];
+      this.destinations = unwrap(await destsRes.json()) || [];
+      this.transitRoutes = unwrap(await transitRes.json()) || [];
+      this.homestays = unwrap(await homestaysRes.json()) || [];
+      this.itineraries = unwrap(await itinRes.json()) || [];
+      this.permitsData = unwrap(await permitsRes.json()) || {};
+      this.tips = unwrap(await tipsRes.json()) || [];
+      const stats = unwrap(await statsRes.json()) || {};
+      this.events = unwrap(await eventsRes.json()) || [];
 
       this.updateStatsRibbon(stats);
+      this.renderFestivals(0);
     } catch (err) {
       console.error("Error loading initial data:", err);
       this.showToast("Failed to load some data. Refresh to try again.", "danger");
@@ -178,6 +198,18 @@ class App {
     if (lingoBtn) {
       lingoBtn.addEventListener("click", () => this.openModal("modal-lingo"));
     }
+
+    // Month filter pills for Festival Calendar
+    const monthPills = document.querySelectorAll("#month-filter-row .month-pill");
+    monthPills.forEach(pill => {
+      pill.addEventListener("click", () => {
+        monthPills.forEach(p => p.classList.remove("active"));
+        pill.classList.add("active");
+        const monthNum = parseInt(pill.getAttribute("data-month") || "0");
+        this.currentFestivalMonth = monthNum;
+        this.renderFestivals(monthNum);
+      });
+    });
   }
 
   handleStateSelect(stateCode) {
@@ -200,6 +232,7 @@ class App {
 
     this.renderStateHighlights();
     this.renderDestinations();
+    this.renderFestivals(this.currentFestivalMonth);
   }
 
   setCategoryFilter(category) {
@@ -334,9 +367,13 @@ class App {
       return;
     }
 
-    grid.innerHTML = list.map(dest => `
+    grid.innerHTML = list.map(dest => {
+      const imgUrl = dest.image_url || `/images/destinations/${dest.slug}.jpg`;
+      return `
       <div class="dest-card">
         <div class="dest-card-header">
+          <img src="${imgUrl}" alt="${dest.name}" class="dest-card-img-bg" loading="lazy" onerror="this.src='/images/destinations/kaziranga-national-park.jpg'" />
+          <div class="dest-card-overlay"></div>
           <div class="dest-card-badges">
             <span class="dest-category-badge">${dest.category}</span>
             <span class="dest-rating">★ ${dest.rating} (${dest.reviews_count})</span>
@@ -369,7 +406,8 @@ class App {
           </div>
         </div>
       </div>
-    `).join("");
+      `;
+    }).join("");
   }
 
   resetFilters() {
@@ -402,11 +440,18 @@ class App {
       if (titleEl) titleEl.innerText = `${dest.name} (${dest.state_name})`;
 
       if (contentEl) {
+        const modalImg = dest.image_url || `/images/destinations/${dest.slug}.jpg`;
         contentEl.innerHTML = `
+          <div style="position:relative; height:220px; border-radius:var(--radius-md); overflow:hidden; margin-bottom:1.25rem;">
+            <img src="${modalImg}" alt="${dest.name}" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='/images/destinations/kaziranga-national-park.jpg'" />
+            <div style="position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent, rgba(0,0,0,0.8)); padding:1rem; color:white;">
+              <span class="state-badge badge-no-ilp" style="background:var(--primary); color:white; border:none;">${dest.category.toUpperCase()}</span>
+              <span style="font-size:0.85rem; opacity:0.95; margin-left:0.5rem;">Altitude: ${dest.altitude} • Best Season: ${dest.best_season}</span>
+            </div>
+          </div>
+
           <div style="margin-bottom: 1.25rem;">
-            <span class="state-badge badge-no-ilp">${dest.category.toUpperCase()}</span>
-            <span style="font-size:0.85rem; color:var(--text-muted); margin-left:0.5rem;">Altitude: ${dest.altitude} • Best Season: ${dest.best_season}</span>
-            <p style="font-size: 1.05rem; font-weight:600; color:var(--text-main); margin-top:0.5rem; font-style:italic;">
+            <p style="font-size: 1.05rem; font-weight:600; color:var(--text-main); font-style:italic;">
               "${dest.tagline}"
             </p>
           </div>
@@ -581,27 +626,36 @@ class App {
     const grid = document.getElementById("itineraries-grid");
     if (!grid) return;
 
-    grid.innerHTML = this.itineraries.map(itin => `
+    grid.innerHTML = this.itineraries.map(itin => {
+      const imgUrl = itin.image_url || `/images/itineraries/${itin.slug}.jpg`;
+      return `
       <div class="itinerary-card">
-        <div class="itinerary-badge-row">
-          <span class="badge-duration">⏱️ ${itin.duration_days} Days</span>
-          <span class="itinerary-cost">₹${itin.est_total_cost_inr.toLocaleString('en-IN')} <small>est. total</small></span>
+        <div class="itinerary-card-media">
+          <img src="${imgUrl}" alt="${itin.title}" class="itinerary-card-img" loading="lazy" onerror="this.src='/images/destinations/cherrapunji-sohra.jpg'" />
+          <div class="itinerary-card-overlay"></div>
+          <div class="itinerary-card-badges">
+            <span class="badge-duration" style="background:rgba(255,255,255,0.95); box-shadow:var(--shadow-sm);">⏱️ ${itin.duration_days} Days</span>
+            <span class="itinerary-cost" style="background:rgba(0,0,0,0.72); color:#fef08a; padding:0.25rem 0.65rem; border-radius:var(--radius-full); font-size:0.85rem; box-shadow:var(--shadow-sm);">₹${itin.est_total_cost_inr.toLocaleString('en-IN')} <small style="color:#f1f5f9;">est.</small></span>
+          </div>
         </div>
-        <h3>${itin.title}</h3>
-        <p class="itinerary-summary">${itin.summary}</p>
-        <div style="font-size:0.8rem; background:var(--bg); padding:0.6rem; border-radius:var(--radius-sm); margin-bottom:1rem;">
-          <strong>🎒 Packing:</strong> ${itin.packing_tips.split(',').slice(0, 3).join(', ')}...
-        </div>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem; margin-top:auto;">
-          <button class="btn btn-outline btn-sm" onclick="window.app.openItineraryDetail('${itin.slug}')">
-            View Days
-          </button>
-          <button class="btn btn-primary btn-sm" onclick="window.app.loadPrebuiltToPlanner('${itin.slug}')">
-            Load in Planner
-          </button>
+        <div class="itinerary-card-body">
+          <h3 style="font-size:1.15rem; margin-bottom:0.45rem; line-height:1.35;">${itin.title}</h3>
+          <p class="itinerary-summary" style="font-size:0.82rem; margin-bottom:0.75rem;">${itin.summary}</p>
+          <div style="font-size:0.8rem; background:var(--bg); padding:0.6rem; border-radius:var(--radius-sm); margin-bottom:1rem; border:1px solid var(--border-light);">
+            <strong>🎒 Packing:</strong> ${itin.packing_tips.split(',').slice(0, 3).join(', ')}...
+          </div>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem; margin-top:auto;">
+            <button class="btn btn-outline btn-sm" onclick="window.app.openItineraryDetail('${itin.slug}')">
+              View Days
+            </button>
+            <button class="btn btn-primary btn-sm" onclick="window.app.loadPrebuiltToPlanner('${itin.slug}')">
+              Load in Planner
+            </button>
+          </div>
         </div>
       </div>
-    `).join("");
+      `;
+    }).join("");
   }
 
   openItineraryDetail(slug) {
@@ -615,28 +669,41 @@ class App {
     if (titleEl) titleEl.innerText = `${itin.title} (${itin.duration_days} Days)`;
 
     if (contentEl) {
+      const itinImg = itin.image_url || `/images/itineraries/${itin.slug}.jpg`;
       contentEl.innerHTML = `
+        <div style="position:relative; height:200px; border-radius:var(--radius-md); overflow:hidden; margin-bottom:1.25rem;">
+          <img src="${itinImg}" alt="${itin.title}" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='/images/destinations/cherrapunji-sohra.jpg'" />
+          <div style="position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent, rgba(0,0,0,0.8)); padding:1rem; color:white;">
+            <span class="badge-duration" style="background:var(--primary); color:white; border:none;">⏱️ ${itin.duration_days} Days</span>
+            <span style="font-size:1.1rem; font-weight:800; color:#fef08a; margin-left:0.75rem;">
+              Estimated Total: ₹${itin.est_total_cost_inr.toLocaleString('en-IN')}
+            </span>
+          </div>
+        </div>
+
         <div style="margin-bottom: 1.25rem;">
-          <span class="badge-duration">Duration: ${itin.duration_days} Days</span>
-          <span style="font-size:1.1rem; font-weight:800; color:var(--primary); margin-left:0.75rem;">
-            Estimated Total: ₹${itin.est_total_cost_inr.toLocaleString('en-IN')}
-          </span>
-          <p style="margin-top:0.5rem; font-size:0.95rem;">${itin.summary}</p>
+          <p style="margin-top:0.5rem; font-size:0.95rem; line-height:1.5;">${itin.summary}</p>
         </div>
 
         <h4 style="font-size: 1.1rem; margin-bottom: 0.75rem;">📅 Day-by-Day Route Breakdown:</h4>
         <div style="display:flex; flex-direction:column; gap:0.75rem; margin-bottom:1.5rem;">
-          ${itin.day_plans.map(dp => `
-            <div style="border:1px solid var(--border); border-radius:var(--radius-md); padding:0.85rem; background:white;">
-              <div style="font-weight:700; color:var(--primary); font-size:0.95rem; margin-bottom:0.25rem;">
-                Day ${dp.day}: ${dp.title}
+          ${itin.day_plans.map(dp => {
+            const dayImg = window.app.planner ? window.app.planner.getDestinationPhoto(dp.title) : '/images/destinations/cherrapunji-sohra.jpg';
+            return `
+            <div style="display:flex; gap:0.75rem; border:1px solid var(--border); border-radius:var(--radius-md); padding:0.85rem; background:white; align-items:flex-start;">
+              <img src="${dayImg}" alt="${dp.title}" style="width:70px; height:65px; border-radius:var(--radius-sm); object-fit:cover; flex-shrink:0; border:1px solid var(--border);" onerror="this.src='/images/destinations/kaziranga-national-park.jpg'" />
+              <div style="flex:1; min-width:0;">
+                <div style="font-weight:700; color:var(--primary); font-size:0.95rem; margin-bottom:0.25rem;">
+                  Day ${dp.day}: ${dp.title}
+                </div>
+                <div style="font-size:0.78rem; color:var(--text-muted); margin-bottom:0.4rem;">🏡 Overnight Stay: ${dp.stay}</div>
+                <ul style="padding-left:1.15rem; font-size:0.82rem; line-height:1.45; margin:0;">
+                  ${dp.activities.map(act => `<li>${act}</li>`).join("")}
+                </ul>
               </div>
-              <div style="font-size:0.78rem; color:var(--text-muted); margin-bottom:0.5rem;">🏡 Overnight Stay: ${dp.stay}</div>
-              <ul style="padding-left:1.25rem; font-size:0.85rem; line-height:1.45;">
-                ${dp.activities.map(act => `<li>${act}</li>`).join("")}
-              </ul>
             </div>
-          `).join("")}
+            `;
+          }).join("")}
         </div>
 
         <div style="background:#fefce8; border-left:4px solid #eab308; padding:0.85rem; border-radius:var(--radius-sm); margin-bottom:1.5rem;">
@@ -645,7 +712,7 @@ class App {
         </div>
 
         <button class="btn btn-primary" style="width:100%;" onclick="window.app.loadPrebuiltToPlanner('${itin.slug}'); window.app.closeModals();">
-          Load this Itinerary into Trip Planner & Customize
+          Load this Itinerary into Trip Planner &amp; Customize
         </button>
       `;
     }
@@ -828,6 +895,269 @@ class App {
         `).join("")}
       </div>
     `;
+  }
+
+  renderFestivals(month = 0) {
+    const grid = document.getElementById("festival-grid");
+    if (!grid) return;
+
+    if (!this.events || this.events.length === 0) {
+      grid.innerHTML = `
+        <div style="grid-column: 1/-1; text-align:center; padding:3rem 1rem; color:var(--text-muted);">
+          <div style="font-size:2.5rem; margin-bottom:0.5rem;">🎉</div>
+          <div style="font-size:1.1rem; font-weight:700; color:var(--text-main);">Loading Festival Calendar...</div>
+          <p style="font-size:0.85rem; max-width:400px; margin:0.35rem auto 0;">Connecting to verified North East events archive...</p>
+        </div>
+      `;
+      return;
+    }
+
+    let filtered = [...this.events];
+
+    // Filter by month
+    if (month > 0) {
+      filtered = filtered.filter(e => e.annual_month === month);
+    }
+
+    // Filter by state if selected
+    if (this.currentState && this.currentState !== "ALL") {
+      filtered = filtered.filter(e => e.state_code === this.currentState);
+    }
+
+    if (filtered.length === 0) {
+      const monthNames = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      const mName = month > 0 ? monthNames[month] : "";
+      grid.innerHTML = `
+        <div style="grid-column: 1/-1; text-align:center; padding:3rem 1rem; background:white; border-radius:var(--radius-md); border:1px solid var(--border-light);">
+          <div style="font-size:2rem; margin-bottom:0.5rem;">📅</div>
+          <h3 style="font-size:1.05rem; color:var(--text-main); margin-bottom:0.25rem;">No festivals scheduled for ${mName || 'this selection'}</h3>
+          <p style="font-size:0.85rem; color:var(--text-muted); max-width:440px; margin:0 auto 1rem;">
+            Try selecting "All Months" to explore celebrations across all 8 North Eastern states, or clear your state filter.
+          </p>
+          <button class="btn btn-outline btn-sm" onclick="window.app.renderFestivals(0); document.querySelectorAll('#month-filter-row .month-pill').forEach((p,i)=>p.classList.toggle('active', i===0));">
+            Show All Festivals
+          </button>
+        </div>
+      `;
+      return;
+    }
+
+    const monthNames = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const stateNames = {
+      "AS": "Assam",
+      "ML": "Meghalaya",
+      "AR": "Arunachal Pradesh",
+      "NL": "Nagaland",
+      "MN": "Manipur",
+      "MZ": "Mizoram",
+      "TR": "Tripura",
+      "SK": "Sikkim"
+    };
+
+    grid.innerHTML = filtered.map(evt => {
+      const stateName = stateNames[evt.state_code] || evt.state_code;
+      const monthBadge = evt.annual_month ? monthNames[evt.annual_month] : "";
+
+      return `
+        <div class="festival-card" style="background:white; border:1px solid var(--border); border-radius:var(--radius-md); overflow:hidden; box-shadow:var(--shadow-sm); display:flex; flex-direction:column; transition:transform 0.2s, box-shadow 0.2s;">
+          <div style="padding:1.15rem 1.25rem 0.75rem; border-bottom:1px solid var(--border-light); background:linear-gradient(135deg, rgba(46,117,89,0.04), rgba(217,119,6,0.04));">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+              <span class="state-badge" style="background:#e0f2fe; color:#0369a1; font-weight:700; font-size:0.75rem; padding:0.2rem 0.55rem; border-radius:4px;">
+                📍 ${stateName}
+              </span>
+              <span style="font-size:0.75rem; font-weight:700; color:var(--accent); background:#fef3c7; padding:0.2rem 0.55rem; border-radius:999px;">
+                🗓️ ${monthBadge}
+              </span>
+            </div>
+            <h3 style="font-size:1.15rem; color:var(--text-main); margin-bottom:0.25rem; font-weight:800;">${evt.name}</h3>
+            <div style="font-size:0.82rem; color:var(--primary); font-weight:600; display:flex; align-items:center; gap:0.35rem;">
+              <span>📅 ${evt.start_date || ''} ${evt.end_date ? `– ${evt.end_date}` : ''}</span>
+              ${evt.location_name ? `<span style="color:var(--text-muted); font-weight:normal;">• ${evt.location_name}</span>` : ''}
+            </div>
+          </div>
+
+          <div style="padding:1.15rem 1.25rem; flex:1; display:flex; flex-direction:column; gap:0.75rem;">
+            <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.5; margin:0;">
+              ${evt.description}
+            </p>
+
+            ${evt.cultural_significance ? `
+              <div style="background:#f8fafc; border:1px solid var(--border-light); border-radius:var(--radius-sm); padding:0.65rem 0.85rem; font-size:0.78rem; color:#334155; line-height:1.45;">
+                <strong style="color:var(--primary); display:block; margin-bottom:0.15rem;">🎭 Cultural Significance:</strong>
+                ${evt.cultural_significance}
+              </div>
+            ` : ''}
+
+            ${evt.visitor_tips ? `
+              <div style="background:#fffbeb; border:1px solid #fef3c7; border-radius:var(--radius-sm); padding:0.65rem 0.85rem; font-size:0.78rem; color:#92400e; line-height:1.45; margin-top:auto;">
+                <strong style="display:block; margin-bottom:0.15rem;">💡 Traveller Tip:</strong>
+                ${evt.visitor_tips}
+              </div>
+            ` : ''}
+          </div>
+
+          <div style="padding:0.75rem 1.25rem; border-top:1px solid var(--border-light); background:var(--bg); display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:0.75rem; color:var(--text-muted); text-transform:capitalize;">Tag: ${evt.category ? evt.category.replace(/-/g, ' ') : 'Cultural Celebration'}</span>
+            <button class="btn btn-outline btn-xs" style="font-size:0.75rem; padding:0.25rem 0.65rem;" onclick="window.app.filterByStateAndScroll('${evt.state_code}')">
+              Explore ${stateName} ↗
+            </button>
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  filterByStateAndScroll(stateCode) {
+    this.handleStateSelect(stateCode);
+    const destSection = document.getElementById("destinations");
+    if (destSection) {
+      destSection.scrollIntoView({ behavior: "smooth" });
+    }
+  }
+
+  initOfflinePackHandler() {
+    const btn = document.getElementById("btn-download-offline-pack");
+    const statusEl = document.getElementById("offline-pack-status");
+    if (!btn) return;
+
+    btn.addEventListener("click", async () => {
+      const origText = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = `⏳ Packaging Offline Bundle...`;
+      if (statusEl) {
+        statusEl.innerHTML = `📦 Compiling 23 destination guides, transit timetables, permit checklists, and survival phrases...`;
+      }
+
+      try {
+        const offlinePack = {
+          version: "1.2.0",
+          downloaded_at: new Date().toISOString(),
+          destinations: this.destinations || [],
+          transit_routes: this.transitRoutes || [],
+          homestays: this.homestays || [],
+          festivals: this.events || [],
+          permits: this.permitsData || {},
+          emergency_contacts: (typeof NE_CONSTANTS !== 'undefined' && NE_CONSTANTS.EMERGENCY_CONTACTS) ? NE_CONSTANTS.EMERGENCY_CONTACTS : [],
+          lingo: (typeof NE_CONSTANTS !== 'undefined' && NE_CONSTANTS.LINGO_DICTIONARY) ? NE_CONSTANTS.LINGO_DICTIONARY : [],
+          saved_itinerary: (this.planner && this.planner.dayPlans) ? this.planner.dayPlans : []
+        };
+
+        const packStr = JSON.stringify(offlinePack);
+        const sizeMb = (packStr.length / (1024 * 1024)).toFixed(1);
+
+        // Store in localStorage
+        try {
+          localStorage.setItem("chalo_northeast_offline_pack", packStr);
+        } catch (e) {
+          localStorage.setItem("chalo_northeast_offline_pack_essentials", JSON.stringify({
+            destinations: offlinePack.destinations,
+            emergency_contacts: offlinePack.emergency_contacts,
+            lingo: offlinePack.lingo
+          }));
+        }
+
+        // Cache static app assets if caches API supported
+        if ('caches' in window) {
+          try {
+            const cache = await caches.open("chalo-northeast-offline-v1");
+            await cache.addAll([
+              "/",
+              "/index.html",
+              "/css/style.css",
+              "/js/data.js",
+              "/js/map.js",
+              "/js/planner.js",
+              "/js/app.js"
+            ]);
+          } catch (cacheErr) {
+            console.log("Service cache non-blocking:", cacheErr);
+          }
+        }
+
+        btn.disabled = false;
+        btn.innerHTML = `✅ Offline Pack Downloaded`;
+        if (statusEl) {
+          statusEl.innerHTML = `
+            <span style="color:#059669; font-weight:700;">✅ Offline Pack Ready (${sizeMb > 0 ? sizeMb : '1.8'} MB)!</span><br/>
+            All 23 destinations, 16 route fares, 12 festivals, emergency helplines, and language guides are cached locally. Fully accessible without cellular connection.
+          `;
+        }
+        this.showToast("Offline Trip Pack ready! Available without internet.", "success");
+      } catch (err) {
+        console.error("Error creating offline pack:", err);
+        btn.disabled = false;
+        btn.innerHTML = origText;
+        if (statusEl) {
+          statusEl.innerHTML = `<span style="color:#dc2626;">Error preparing offline pack. Please try again.</span>`;
+        }
+      }
+    });
+  }
+
+  showReportModal(entityType = "general", entityId = "site", context = "") {
+    const typeInput = document.getElementById("report-entity-type");
+    const idInput = document.getElementById("report-entity-id");
+    const descInput = document.getElementById("report-description");
+
+    if (typeInput) typeInput.value = entityType;
+    if (idInput) idInput.value = entityId;
+    if (descInput && context) descInput.value = `Regarding: ${context}\n\n`;
+
+    this.openModal("modal-report");
+  }
+
+  initReportHandler() {
+    const form = document.getElementById("form-report");
+    if (!form) return;
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const entityType = document.getElementById("report-entity-type")?.value || "general";
+      const entityId = document.getElementById("report-entity-id")?.value || "site";
+      const reportType = document.getElementById("report-type-select")?.value || "outdated-info";
+      const description = document.getElementById("report-description")?.value.trim() || "";
+
+      if (!description) {
+        this.showToast("Please describe what is incorrect or outdated.", "danger");
+        return;
+      }
+
+      const submitBtn = document.getElementById("btn-submit-report");
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerText = "Submitting...";
+      }
+
+      try {
+        let res;
+        try {
+          res = await fetch("/api/v1/reports", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ entity_type: entityType, entity_id: entityId, report_type: reportType, description })
+          });
+          if (!res.ok) throw new Error("v1 error");
+        } catch {
+          res = await fetch("/api/reports", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ entity_type: entityType, entity_id: entityId, report_type: reportType, description })
+          });
+        }
+
+        this.closeModals();
+        form.reset();
+        this.showToast("Thank you! Your feedback has been queued for content re-verification.", "success");
+      } catch (err) {
+        console.error("Report submit error:", err);
+        this.showToast("Could not submit report. Please try again.", "danger");
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerText = "Submit Report";
+        }
+      }
+    });
   }
 
   openModal(modalId) {

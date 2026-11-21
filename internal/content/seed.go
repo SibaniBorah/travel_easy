@@ -2,8 +2,10 @@
 package content
 
 import (
-	"chaloner/internal/db"
+	"fmt"
 	"time"
+
+	"chaloner/internal/db"
 )
 
 // SeedIfEmpty populates the store with initial data if the states collection is empty.
@@ -669,6 +671,9 @@ func seedDestinations(store *db.Store) error {
 		},
 	}
 	for _, d := range destinations {
+		if d.ImageURL == "" {
+			d.ImageURL = "/images/destinations/" + d.Slug + ".jpg"
+		}
 		if err := store.UpsertDestination(d); err != nil {
 			return err
 		}
@@ -856,8 +861,8 @@ func seedPermitRules(store *db.Store) error {
 }
 
 func seedEvents(store *db.Store) error {
-	t := func(month, day int) time.Time {
-		return time.Date(2025, time.Month(month), day, 0, 0, 0, 0, time.UTC)
+	t := func(month, day int) string {
+		return fmt.Sprintf("2025-%02d-%02d", month, day)
 	}
 	events := []db.Event{
 		{ID: "hornbill-2025", StateCode: "NL", Name: "Hornbill Festival", StartDate: t(12, 1), EndDate: t(12, 10), LocationName: "Kisama Heritage Village, Kohima", Description: "India's largest tribal cultural festival showcasing all 16 Naga tribes — music, dance, food, crafts, tattoos, and warrior traditions.", Category: "culture", AnnualMonth: 12},

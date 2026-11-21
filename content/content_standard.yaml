@@ -1,0 +1,100 @@
+# ═════════════════════════════════════════════════════════════════════════════
+# Content Standard v1.0 — Chalo NorthEast
+# Every published destination MUST satisfy all mandatory fields.
+# A CI check script (scripts/check_content.go) enforces this before deploy.
+# ═════════════════════════════════════════════════════════════════════════════
+
+version: "1.0"
+governance: "Chalo NorthEast Editorial & Trust Board"
+
+mandatory_fields:
+  destination:
+    - field: "slug"
+      type: "string"
+      format: "kebab-case"
+    - field: "name"
+      type: "string"
+      min_length: 3
+    - field: "state_code"
+      type: "string"
+      enum: ["AS", "ML", "AR", "NL", "MN", "MZ", "TR", "SK"]
+    - field: "description"
+      type: "string"
+      min_length: 80
+    - field: "top_highlights"
+      type: "list"
+      min_items: 2
+    - field: "how_to_reach_budget"
+      type: "string"
+      must_mention: ["fare", "stand"]
+    - field: "entry_fees"
+      type: "string"
+    - field: "permit_info"
+      type: "string"
+    - field: "cultural_etiquette"
+      type: "string"
+    - field: "best_months"
+      type: "list[int]"
+      min_items: 3
+    - field: "source_id"
+      type: "string"
+    - field: "verified_at"
+      type: "date"
+    - field: "expires_at"
+      type: "date"
+
+  route_leg:
+    - field: "from_slug"
+      type: "string"
+    - field: "to_slug"
+      type: "string"
+    - field: "mode"
+      type: "string"
+      enum: ["shared-sumo", "train", "ferry", "bus", "shared-taxi", "flight", "trek"]
+    - field: "fare_min_inr"
+      type: "int"
+      min: 10
+    - field: "fare_max_inr"
+      type: "int"
+    - field: "duration_min_hrs"
+      type: "float"
+    - field: "duration_max_hrs"
+      type: "float"
+    - field: "pickup_stand"
+      type: "string"
+      min_length: 5
+    - field: "source_id"
+      type: "string"
+    - field: "verified_at"
+      type: "date"
+
+  permit_rule:
+    - field: "state_code"
+      type: "string"
+    - field: "type"
+      type: "string"
+      enum: ["ILP", "PAP", "RAP", "none"]
+    - field: "applies_to"
+      type: "string"
+      enum: ["indian", "foreign", "all"]
+    - field: "documents_required"
+      type: "list[string]"
+      min_items: 1
+    - field: "official_url"
+      type: "url"
+    - field: "verified_at"
+      type: "date"
+    - field: "expires_at"
+      type: "date"
+
+confidence_thresholds:
+  display_as_verified: 0.80
+  display_with_warning: 0.50
+  suppress_from_public: 0.30
+
+freshness_ttl_days:
+  permit_rules: 30
+  fares_and_schedules: 30
+  monsoon_road_status: 14
+  destinations: 90
+  events_and_festivals: 7

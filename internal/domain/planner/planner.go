@@ -7,20 +7,21 @@ import (
 	"time"
 
 	"chaloner/internal/db"
+	"chaloner/internal/domain/permits"
 )
 
 // PlanRequest is the input to the planner pipeline.
 type PlanRequest struct {
-	Gateway            string    // entry destination slug (e.g. "guwahati")
-	StartDate          time.Time
-	Nights             int
-	BudgetTotalINR     int    // 0 = unlimited
-	BudgetPerPersonINR int
-	TravelersCount     int
-	Pace               string   // "relaxed" | "moderate" | "active"
-	Interests          []string // categories
-	TravellerType      string   // "indian" | "foreign"
-	LocalFirst         bool
+	Gateway            string    `json:"gateway"`
+	StartDate          time.Time `json:"start_date"`
+	Nights             int       `json:"nights"`
+	BudgetTotalINR     int       `json:"budget_total_inr"`
+	BudgetPerPersonINR int       `json:"budget_per_person_inr"`
+	TravelersCount     int       `json:"travelers_count"`
+	Pace               string    `json:"pace"`
+	Interests          []string  `json:"interests"`
+	TravellerType      string    `json:"traveller_type"`
+	LocalFirst         bool      `json:"local_first"`
 }
 
 // PlanStatus is the feasibility verdict.
@@ -52,6 +53,7 @@ type PlannedDay struct {
 
 // ItineraryPlan is a complete itinerary with score and warnings.
 type ItineraryPlan struct {
+	Name          string        `json:"name"`
 	Status        PlanStatus    `json:"status"`
 	Days          []PlannedDay  `json:"days"`
 	CostRangeLow  int           `json:"cost_range_low"`
@@ -98,22 +100,42 @@ func interestMatch(d db.Destination, interests []string) bool {
 
 // monthBlocked checks if a given month is in the blocked list.
 func monthBlocked(month int, blocked []int) bool {
-	for _, b := range blocked {
-		if b == month {
+	for _, m := range blocked {
+		if m == month {
 			return true
 		}
 	}
 	return false
 }
 
-// FilterCandidates filters destinations matching the request.
+// FilterCandidates selects destinations that match interests and are in-season,
+// always ensuring the gateway destination is retained as an anchor.
 func FilterCandidates(dests []db.Destination, req PlanRequest) []db.Destination {
 	var out []db.Destination
+	month := travelMonth(req)
 	for _, d := range dests {
-		if d.Status != "published" {
+		if d.Status != "" && d.Status != "published" {
+			continue
+		}
+		if d.Slug == req.Gateway {
+			out = append(out, d)
 			continue
 		}
 		if !interestMatch(d, req.Interests) {
+			continue
+		}
+		inSeason := false
+		if len(d.BestMonths) == 0 {
+			inSeason = true
+		} else {
+			for _, m := range d.BestMonths {
+				if m == month {
+					inSeason = true
+					break
+				}
+			}
+		}
+		if !inSeason {
 			continue
 		}
 		out = append(out, d)
@@ -142,7 +164,7 @@ func reachable(a, b db.Destination, legs []db.RouteLeg, month int) bool {
 	return !monthBlocked(month, l.BlockedMonths)
 }
 
-// BuildCircuits constructs up to 5 candidate destination sequences.
+// BuildCircuits constructs candidate destination sequences originating from the gateway.
 func BuildCircuits(candidates []db.Destination, legs []db.RouteLeg, req PlanRequest) [][]db.Destination {
 	month := travelMonth(req)
 	maxDests := req.Nights
@@ -163,13 +185,12 @@ func BuildCircuits(candidates []db.Destination, legs []db.RouteLeg, req PlanRequ
 	}
 
 	var circuits [][]db.Destination
-
 	if gateway == nil {
 		return circuits
 	}
 
-	// Greedy: start from gateway and greedily add reachable destinations.
-	circuit := []db.Destination{*gateway}
+	// Greedy circuit 1: start from gateway and greedily add reachable destinations.
+	circuit1 := []db.Destination{*gateway}
 	remaining := make([]db.Destination, 0, len(candidates))
 	for _, d := range candidates {
 		if d.Slug != req.Gateway {
@@ -177,8 +198,8 @@ func BuildCircuits(candidates []db.Destination, legs []db.RouteLeg, req PlanRequ
 		}
 	}
 
-	for len(circuit) < maxDests && len(remaining) > 0 {
-		last := circuit[len(circuit)-1]
+	for len(circuit1) < maxDests && len(remaining) > 0 {
+		last := circuit1[len(circuit1)-1]
 		bestIdx := -1
 		for i, r := range remaining {
 			if reachable(last, r, legs, month) {
@@ -189,30 +210,25 @@ func BuildCircuits(candidates []db.Destination, legs []db.RouteLeg, req PlanRequ
 		if bestIdx < 0 {
 			break
 		}
-		circuit = append(circuit, remaining[bestIdx])
+		circuit1 = append(circuit1, remaining[bestIdx])
 		remaining = append(remaining[:bestIdx], remaining[bestIdx+1:]...)
 	}
 
-	if len(circuit) > 0 {
-		circuits = append(circuits, circuit)
+	if len(circuit1) > 0 {
+		circuits = append(circuits, circuit1)
 	}
 
-	// Generate interest-filtered variant.
-	if len(req.Interests) > 0 {
-		var filtered []db.Destination
-		for _, d := range candidates {
-			if interestMatch(d, req.Interests) {
-				filtered = append(filtered, d)
+	// Secondary circuit: check alternative reachable paths from gateway
+	for _, altTarget := range remaining {
+		if reachable(*gateway, altTarget, legs, month) {
+			altCircuit := []db.Destination{*gateway, altTarget}
+			for _, rem := range remaining {
+				if rem.Slug != altTarget.Slug && reachable(altTarget, rem, legs, month) && len(altCircuit) < maxDests {
+					altCircuit = append(altCircuit, rem)
+				}
 			}
-		}
-		if len(filtered) > 0 && len(filtered) != len(candidates) {
-			alt := BuildCircuits(filtered, legs, PlanRequest{
-				Gateway:       req.Gateway,
-				Nights:        req.Nights,
-				Pace:          req.Pace,
-				TravellerType: req.TravellerType,
-			})
-			circuits = append(circuits, alt...)
+			circuits = append(circuits, altCircuit)
+			break
 		}
 	}
 
@@ -280,7 +296,7 @@ func ScorePlan(circuit []db.Destination, legs []db.RouteLeg, req PlanRequest, ev
 		if e.AnnualMonth == month {
 			for _, d := range circuit {
 				if strings.EqualFold(e.StateCode, d.StateCode) {
-					score += 8
+					score += 15 // Significant festival bonus
 				}
 			}
 		}
@@ -302,7 +318,14 @@ func ScorePlan(circuit []db.Destination, legs []db.RouteLeg, req PlanRequest, ev
 	if req.BudgetTotalINR > 0 {
 		var totalCost int
 		for _, d := range circuit {
-			totalCost += d.EstCostPerDay * d.IdealDays
+			daily := d.EstCostPerDay
+			if daily <= 0 {
+				daily = 1200
+			}
+			totalCost += daily
+		}
+		if len(circuit) > 0 {
+			totalCost = (totalCost * req.Nights) / len(circuit)
 		}
 		if totalCost <= req.BudgetTotalINR {
 			score += 10
@@ -318,7 +341,7 @@ func ScorePlan(circuit []db.Destination, legs []db.RouteLeg, req PlanRequest, ev
 }
 
 // CheckHardRejects returns error-severity warnings that make a plan infeasible.
-func CheckHardRejects(circuit []db.Destination, legs []db.RouteLeg, req PlanRequest, permits []db.PermitRule) []PlanWarning {
+func CheckHardRejects(circuit []db.Destination, legs []db.RouteLeg, req PlanRequest, permitRules []db.PermitRule) []PlanWarning {
 	var warns []PlanWarning
 	month := travelMonth(req)
 
@@ -362,7 +385,7 @@ func CheckHardRejects(circuit []db.Destination, legs []db.RouteLeg, req PlanRequ
 }
 
 // CheckSoftViolations returns warning/info severity issues.
-func CheckSoftViolations(circuit []db.Destination, legs []db.RouteLeg, req PlanRequest) []PlanWarning {
+func CheckSoftViolations(circuit []db.Destination, legs []db.RouteLeg, req PlanRequest, matchedPermits []db.PermitRule) []PlanWarning {
 	var warns []PlanWarning
 	month := travelMonth(req)
 	maxTravel := maxDailyTravelHrs(req.Pace)
@@ -379,34 +402,13 @@ func CheckSoftViolations(circuit []db.Destination, legs []db.RouteLeg, req PlanR
 		}
 	}
 
-	// ILP warnings — deduplicated per state.
-	ilpSeen := map[string]bool{}
-	for _, d := range circuit {
-		sc := strings.ToUpper(d.StateCode)
-		if ILPStates[sc] && !ilpSeen[sc] {
-			ilpSeen[sc] = true
-			warns = append(warns, PlanWarning{
-				RuleID:   "ilp-required",
-				Message:  d.StateCode + " requires an Inner Line Permit (ILP). Apply online before travel.",
-				Severity: "warning",
-			})
-		}
-	}
-
-	// PAP warnings for foreign travellers.
-	if req.TravellerType == "foreign" {
-		papSeen := map[string]bool{}
-		for _, d := range circuit {
-			sc := strings.ToUpper(d.StateCode)
-			if (PAPStates[sc] || ILPStates[sc]) && !papSeen[sc] {
-				papSeen[sc] = true
-				warns = append(warns, PlanWarning{
-					RuleID:   "pap-required",
-					Message:  d.StateCode + " requires a Protected Area Permit (PAP) for foreign nationals.",
-					Severity: "warning",
-				})
-			}
-		}
+	// Permits warnings
+	for _, p := range matchedPermits {
+		warns = append(warns, PlanWarning{
+			RuleID:   p.ID,
+			Message:  p.StateCode + " requires " + p.Type + " permit (" + p.Area + "). Lead time: " + string(rune('0'+p.LeadTimeDays)) + " days.",
+			Severity: "warning",
+		})
 	}
 
 	// High monsoon risk in July-Sept.
@@ -440,20 +442,12 @@ func AssignStatus(hardRejects, softViolations []PlanWarning) PlanStatus {
 	if len(hardRejects) > 0 {
 		return StatusNotRecommended
 	}
-	errorCount := 0
-	warnCount := 0
 	for _, w := range softViolations {
-		switch w.Severity {
-		case "error":
-			errorCount++
-		case "warning":
-			warnCount++
+		if w.Severity == "error" {
+			return StatusNotRecommended
 		}
 	}
-	if errorCount > 0 {
-		return StatusNotRecommended
-	}
-	if warnCount > 2 {
+	if len(softViolations) > 0 {
 		return StatusTight
 	}
 	return StatusFeasible
@@ -488,6 +482,10 @@ func buildPlannedDays(circuit []db.Destination, legs []db.RouteLeg, nights int) 
 				stayDays = rem
 			}
 		}
+		dailyCost := d.EstCostPerDay
+		if dailyCost <= 0 {
+			dailyCost = 1200
+		}
 		for j := 0; j < stayDays && dayNum <= nights+1; j++ {
 			act := d.TopHighlights
 			if len(act) > 3 {
@@ -499,7 +497,7 @@ func buildPlannedDays(circuit []db.Destination, legs []db.RouteLeg, nights int) 
 				DestinationName: d.Name,
 				Activities:      act,
 				StayType:        "guesthouse",
-				EstCostRange:    [2]int{d.EstCostPerDay, int(float64(d.EstCostPerDay) * 1.5)},
+				EstCostRange:    [2]int{dailyCost, int(float64(dailyCost) * 1.5)},
 			}
 			if j == 0 {
 				pd.TravelHrs = travelHrs
@@ -511,26 +509,16 @@ func buildPlannedDays(circuit []db.Destination, legs []db.RouteLeg, nights int) 
 	return days
 }
 
-// collectPermitWarnings returns names of permits needed.
-func collectPermitWarnings(warns []PlanWarning) []string {
-	var out []string
-	seen := map[string]bool{}
-	for _, w := range warns {
-		if (w.RuleID == "ilp-required" || w.RuleID == "pap-required") && !seen[w.Message] {
-			out = append(out, w.Message)
-			seen[w.Message] = true
-		}
-	}
-	return out
-}
-
 // GeneratePlans runs the full planner pipeline and returns ranked plans.
-func GeneratePlans(dests []db.Destination, legs []db.RouteLeg, permits []db.PermitRule, events []db.Event, req PlanRequest) []ItineraryPlan {
+func GeneratePlans(dests []db.Destination, legs []db.RouteLeg, permitRules []db.PermitRule, events []db.Event, req PlanRequest) []ItineraryPlan {
 	if req.Nights < 1 {
 		req.Nights = 1
 	}
 	if req.TravelersCount < 1 {
 		req.TravelersCount = 1
+	}
+	if req.TravellerType == "" {
+		req.TravellerType = "indian"
 	}
 
 	candidates := FilterCandidates(dests, req)
@@ -549,11 +537,13 @@ func GeneratePlans(dests []db.Destination, legs []db.RouteLeg, permits []db.Perm
 
 	var plans []ItineraryPlan
 	for _, circuit := range circuits {
-		hard := CheckHardRejects(circuit, legs, req, permits)
-		soft := CheckSoftViolations(circuit, legs, req)
+		matchedPermits := permits.MatchPermits(circuit, permitRules, req.TravellerType)
+
+		hard := CheckHardRejects(circuit, legs, req, permitRules)
+		soft := CheckSoftViolations(circuit, legs, req, matchedPermits)
 		status := AssignStatus(hard, soft)
 
-		allWarns := append(hard, soft...) //nolint:gocritic
+		allWarns := append(hard, soft...)
 
 		score := ScorePlan(circuit, legs, req, events)
 		if status == StatusNotRecommended {
@@ -564,11 +554,28 @@ func GeneratePlans(dests []db.Destination, legs []db.RouteLeg, permits []db.Perm
 
 		var costLow, costHigh int
 		for _, d := range circuit {
-			costLow += d.EstCostPerDay * req.Nights / len(circuit)
-			costHigh += int(float64(d.EstCostPerDay) * 1.5 * float64(req.Nights) / float64(len(circuit)))
+			daily := d.EstCostPerDay
+			if daily <= 0 {
+				daily = 1200
+			}
+			costLow += daily
+			costHigh += int(float64(daily) * 1.5)
+		}
+		if len(circuit) > 0 {
+			costLow = (costLow * req.Nights) / len(circuit)
+			costHigh = (costHigh * req.Nights) / len(circuit)
+		}
+		if costLow <= 0 {
+			costLow = 1000 * req.Nights
+			costHigh = 1600 * req.Nights
 		}
 		costLow *= req.TravelersCount
 		costHigh *= req.TravelersCount
+
+		var permitIDs []string
+		for _, p := range matchedPermits {
+			permitIDs = append(permitIDs, p.ID)
+		}
 
 		plans = append(plans, ItineraryPlan{
 			Status:        status,
@@ -576,7 +583,7 @@ func GeneratePlans(dests []db.Destination, legs []db.RouteLeg, permits []db.Perm
 			CostRangeLow:  costLow,
 			CostRangeHigh: costHigh,
 			Warnings:      allWarns,
-			PermitsNeeded: collectPermitWarnings(soft),
+			PermitsNeeded: permitIDs,
 			Assumptions:   []string{"Prices are estimates for " + req.Pace + " pace", "Shared transport assumed"},
 			Alternatives:  []string{},
 			Score:         score,
@@ -586,6 +593,16 @@ func GeneratePlans(dests []db.Destination, legs []db.RouteLeg, permits []db.Perm
 	sort.Slice(plans, func(i, j int) bool {
 		return plans[i].Score > plans[j].Score
 	})
+
+	if len(plans) > 3 {
+		plans = plans[:3]
+	}
+	names := []string{"Plan A ⭐ (Recommended)", "Plan B (Alternative Scenic)", "Plan C (Slow Travel / Budget)"}
+	for i := range plans {
+		if i < len(names) {
+			plans[i].Name = names[i]
+		}
+	}
 
 	return plans
 }

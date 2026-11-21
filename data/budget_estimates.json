@@ -1,0 +1,123 @@
+[
+  {
+    "id": "guw-stay-bp",
+    "destination_slug": "guwahati",
+    "category": "stay",
+    "description": "Hostel dorm / budget guesthouse",
+    "min_inr": 350,
+    "max_inr": 700,
+    "travel_style": "backpacker",
+    "locally_owned": true,
+    "verified_at": "2026-11-21T10:25:18.939822937+05:30"
+  },
+  {
+    "id": "guw-food-bp",
+    "destination_slug": "guwahati",
+    "category": "food",
+    "description": "Street food + local dhaba meals",
+    "min_inr": 200,
+    "max_inr": 400,
+    "travel_style": "backpacker",
+    "locally_owned": true,
+    "verified_at": "2026-11-21T10:25:18.939823004+05:30"
+  },
+  {
+    "id": "guw-trans-bp",
+    "destination_slug": "guwahati",
+    "category": "transport",
+    "description": "City buses, autos",
+    "min_inr": 100,
+    "max_inr": 200,
+    "travel_style": "backpacker",
+    "locally_owned": true,
+    "verified_at": "2026-11-21T10:25:18.939823056+05:30"
+  },
+  {
+    "id": "shi-stay-bp",
+    "destination_slug": "shillong",
+    "category": "stay",
+    "description": "Budget homestay or hostel",
+    "min_inr": 400,
+    "max_inr": 800,
+    "travel_style": "backpacker",
+    "locally_owned": true,
+    "verified_at": "2026-11-21T10:25:18.9398231+05:30"
+  },
+  {
+    "id": "shi-food-bp",
+    "destination_slug": "shillong",
+    "category": "food",
+    "description": "Police Bazar street food + local cafe",
+    "min_inr": 200,
+    "max_inr": 450,
+    "travel_style": "backpacker",
+    "locally_owned": true,
+    "verified_at": "2026-11-21T10:25:18.939823143+05:30"
+  },
+  {
+    "id": "che-stay-bp",
+    "destination_slug": "cherrapunji-sohra",
+    "category": "stay",
+    "description": "Community homestay Sohra",
+    "min_inr": 400,
+    "max_inr": 700,
+    "travel_style": "backpacker",
+    "locally_owned": true,
+    "verified_at": "2026-11-21T10:25:18.939823193+05:30"
+  },
+  {
+    "id": "che-food-bp",
+    "destination_slug": "cherrapunji-sohra",
+    "category": "food",
+    "description": "Homestay meals + local eateries",
+    "min_inr": 200,
+    "max_inr": 350,
+    "travel_style": "backpacker",
+    "locally_owned": true,
+    "verified_at": "2026-11-21T10:25:18.939823237+05:30"
+  },
+  {
+    "id": "non-stay-bp",
+    "destination_slug": "nongriat-root-bridges",
+    "category": "stay",
+    "description": "Village homestay (no choice — only option)",
+    "min_inr": 500,
+    "max_inr": 800,
+    "travel_style": "backpacker",
+    "locally_owned": true,
+    "verified_at": "2026-11-21T10:25:18.93982328+05:30"
+  },
+  {
+    "id": "non-food-bp",
+    "destination_slug": "nongriat-root-bridges",
+    "category": "food",
+    "description": "Homestay full board (included in stay usually)",
+    "min_inr": 150,
+    "max_inr": 250,
+    "travel_style": "backpacker",
+    "locally_owned": true,
+    "verified_at": "2026-11-21T10:25:18.939823323+05:30"
+  },
+  {
+    "id": "kaz-stay-bp",
+    "destination_slug": "kaziranga-national-park",
+    "category": "stay",
+    "description": "Budget guesthouse, Kohora",
+    "min_inr": 600,
+    "max_inr": 1200,
+    "travel_style": "budget",
+    "locally_owned": true,
+    "verified_at": "2026-11-21T10:25:18.939823365+05:30"
+  },
+  {
+    "id": "kaz-entry-bp",
+    "destination_slug": "kaziranga-national-park",
+    "category": "entry",
+    "description": "Park entry + jeep safari (shared)",
+    "min_inr": 1200,
+    "max_inr": 2500,
+    "travel_style": "budget",
+    "locally_owned": false,
+    "verified_at": "2026-11-21T10:25:18.939823408+05:30"
+  }
+]

@@ -1,0 +1,123 @@
+# ═════════════════════════════════════════════════════════════════════════════
+# Planner Test Fixtures Spec — 15 Scenarios
+# Source of truth specification for planner pipeline verification
+# ═════════════════════════════════════════════════════════════════════════════
+
+fixtures:
+  - id: "guwahati-5d-october"
+    description: "Guwahati, 5 nights, October, 18k, Indian — classic Assam-Meghalaya loop"
+    request:
+      gateway: "guwahati"
+      nights: 5
+      budget_total_inr: 18000
+      start_month: 10
+      traveller_type: "indian"
+      pace: "moderate"
+    expected:
+      status: "feasible"
+      ilp_required: false
+      contains_destinations: ["guwahati", "shillong"]
+
+  - id: "guwahati-7d-march-wildlife"
+    description: "Guwahati, 7 nights, March, 25k, Indian — Wildlife and Brahmaputra river island"
+    request:
+      gateway: "guwahati"
+      nights: 7
+      budget_total_inr: 25000
+      start_month: 3
+      interests: ["wildlife", "culture"]
+      traveller_type: "indian"
+    expected:
+      status: "feasible"
+      contains_destinations: ["kaziranga-national-park"]
+
+  - id: "guwahati-4d-december"
+    description: "Guwahati, 4 nights, December, 15k, Indian — Meghalaya rapid waterfalls and root bridges"
+    request:
+      gateway: "guwahati"
+      nights: 4
+      budget_total_inr: 15000
+      start_month: 12
+      traveller_type: "indian"
+    expected:
+      status: "feasible"
+
+  - id: "tezpur-6d-november-tawang"
+    description: "Tezpur, 6 nights, November, 22k, Indian, monastery interest — must trigger ILP warning"
+    request:
+      gateway: "tezpur"
+      nights: 6
+      budget_total_inr: 22000
+      start_month: 11
+      interests: ["monastery"]
+      traveller_type: "indian"
+    expected:
+      status: "feasible"
+      permits_needed: ["AR-ILP"]
+
+  - id: "dimapur-5d-december-hornbill"
+    description: "Dimapur, 5 nights, December, 20k, Indian — Hornbill Festival celebration bonus"
+    request:
+      gateway: "dimapur"
+      nights: 5
+      budget_total_inr: 20000
+      start_month: 12
+      traveller_type: "indian"
+    expected:
+      status: "feasible"
+      permits_needed: ["NL-ILP"]
+      score_min: 50.0
+
+  - id: "siliguri-5d-april-sikkim"
+    description: "Siliguri, 5 nights, April, 25k, Indian — Gurudongmar & North Sikkim PAP"
+    request:
+      gateway: "siliguri"
+      nights: 5
+      budget_total_inr: 25000
+      start_month: 4
+      traveller_type: "indian"
+    expected:
+      status: "feasible"
+      permits_needed: ["SK-PAP-North"]
+
+  - id: "guwahati-2d-tight"
+    description: "Guwahati, 2 nights, 4k budget — tight duration and budget"
+    request:
+      gateway: "guwahati"
+      nights: 2
+      budget_total_inr: 4000
+      start_month: 10
+      traveller_type: "indian"
+    expected:
+      status_in: ["feasible", "tight"]
+
+  - id: "kaziranga-monsoon-blocked"
+    description: "Guwahati, 3 nights, July, wildlife — Kaziranga safari blocked in monsoon"
+    request:
+      gateway: "guwahati"
+      nights: 3
+      budget_total_inr: 10000
+      start_month: 7
+      interests: ["wildlife"]
+      traveller_type: "indian"
+    expected:
+      status_for_kaziranga: "not_recommended"
+
+  - id: "tezpur-foreign-arunachal-pap"
+    description: "Tezpur, 6 nights, November, 30k, Foreign national — triggers AR-PAP with longer lead time"
+    request:
+      gateway: "tezpur"
+      nights: 6
+      budget_total_inr: 30000
+      start_month: 11
+      traveller_type: "foreign"
+    expected:
+      permits_needed: ["AR-PAP"]
+
+  - id: "invalid-gateway-rejected"
+    description: "Non-existent gateway — returns NotRecommended"
+    request:
+      gateway: "invalid-nowhere"
+      nights: 5
+    expected:
+      status: "not_recommended"

@@ -1,0 +1,536 @@
+[
+  {
+    "id": 1,
+    "slug": "meghalaya-budget-backpacker-5d",
+    "title": "Meghalaya Backpacker: Waterfalls & Living Root Bridges",
+    "states": "ML",
+    "duration_days": 5,
+    "budget_level": "budget",
+    "est_total_cost_inr": 7400,
+    "pace": "Active & Adventurous",
+    "summary": "The quintessential budget explorer route through Meghalaya. Experience soaring waterfalls in Cherrapunji, hike the 3,500 steps to the world-famous Double Decker Root Bridge, camp on the crystal Umngot river in Dawki, and explore Asia's cleanest village without spending a fortune.",
+    "day_plans_json": "[{\"day\": 1, \"title\": \"Guwahati to Shillong & Police Bazar\", \"stay\": \"Shillong Backpacker Hostel\", \"activities\": [\"Shared Swift/Sumo from Khanapara to Shillong (\\u20b9300)\", \"Check-in and stroll through Police Bazar street food\", \"Visit Ward's Lake and Don Bosco Museum\", \"Dinner: Jadoh and local Khasi snacks at Trattoria (\\u20b9150)\"]}, {\"day\": 2, \"title\": \"Shillong to Cherrapunji (Sohra) Waterfalls\", \"stay\": \"Sohra Community Homestay\", \"activities\": [\"Shared Sumo from Lewduh to Sohra (\\u20b9120)\", \"Nohkalikai Falls breathtaking canyon view (\\u20b920 entry)\", \"Explore limestone passages of Mawsmai Cave (\\u20b930)\", \"Sunset at Wei Sawdong 3-tier waterfall\", \"Homestay dinner with warm bamboo soup\"]}, {\"day\": 3, \"title\": \"Trek to the Double Decker Living Root Bridge\", \"stay\": \"Nongriat Village Bamboo Homestay\", \"activities\": [\"Shared taxi to Tyrna village (\\u20b960)\", \"Trek down 3,500 stone steps into the tropical river valley\", \"Arrive at Nongriat Double Decker Living Root Bridge\", \"Hike further to Rainbow Falls natural turquoise pool\", \"Night stay in Nongriat village under starry sky (\\u20b9500)\"]}, {\"day\": 4, \"title\": \"Dawki Umngot River & Shnongpdeng Camping\", \"stay\": \"Shnongpdeng Riverside Tent\", \"activities\": [\"Morning ascent back to Tyrna, shared cab to Dawki & Shnongpdeng (\\u20b9220)\", \"Check-in to riverside camp on pebble beach\", \"Transparent boat safari on Umngot River (\\u20b9200 shared)\", \"Cliff jumping, suspension bridge walk & evening bonfire\"]}, {\"day\": 5, \"title\": \"Mawlynnong Clean Village & Return to Guwahati\", \"stay\": \"Return Trip\", \"activities\": [\"Morning walk in Mawlynnong spotless lanes (Cleanest Village in Asia)\", \"Riwai village single root bridge\", \"Shared cab back to Shillong (\\u20b9150) and Guwahati (\\u20b9300)\", \"Catch evening train/flight from Guwahati\"]}]",
+    "packing_tips": "Sturdy trekking shoes with good grip (crucial for 3,500 stone steps), Quick-dry microfiber towel, Waterproof poncho, Refillable water bottle, Mosquito repellent, Cash (ATMs scarce in Nongriat & Shnongpdeng).",
+    "day_plans": [
+      {
+        "day": 1,
+        "title": "Guwahati to Shillong & Police Bazar",
+        "stay": "Shillong Backpacker Hostel",
+        "activities": [
+          "Shared Swift/Sumo from Khanapara to Shillong (\u20b9300)",
+          "Check-in and stroll through Police Bazar street food",
+          "Visit Ward's Lake and Don Bosco Museum",
+          "Dinner: Jadoh and local Khasi snacks at Trattoria (\u20b9150)"
+        ]
+      },
+      {
+        "day": 2,
+        "title": "Shillong to Cherrapunji (Sohra) Waterfalls",
+        "stay": "Sohra Community Homestay",
+        "activities": [
+          "Shared Sumo from Lewduh to Sohra (\u20b9120)",
+          "Nohkalikai Falls breathtaking canyon view (\u20b920 entry)",
+          "Explore limestone passages of Mawsmai Cave (\u20b930)",
+          "Sunset at Wei Sawdong 3-tier waterfall",
+          "Homestay dinner with warm bamboo soup"
+        ]
+      },
+      {
+        "day": 3,
+        "title": "Trek to the Double Decker Living Root Bridge",
+        "stay": "Nongriat Village Bamboo Homestay",
+        "activities": [
+          "Shared taxi to Tyrna village (\u20b960)",
+          "Trek down 3,500 stone steps into the tropical river valley",
+          "Arrive at Nongriat Double Decker Living Root Bridge",
+          "Hike further to Rainbow Falls natural turquoise pool",
+          "Night stay in Nongriat village under starry sky (\u20b9500)"
+        ]
+      },
+      {
+        "day": 4,
+        "title": "Dawki Umngot River & Shnongpdeng Camping",
+        "stay": "Shnongpdeng Riverside Tent",
+        "activities": [
+          "Morning ascent back to Tyrna, shared cab to Dawki & Shnongpdeng (\u20b9220)",
+          "Check-in to riverside camp on pebble beach",
+          "Transparent boat safari on Umngot River (\u20b9200 shared)",
+          "Cliff jumping, suspension bridge walk & evening bonfire"
+        ]
+      },
+      {
+        "day": 5,
+        "title": "Mawlynnong Clean Village & Return to Guwahati",
+        "stay": "Return Trip",
+        "activities": [
+          "Morning walk in Mawlynnong spotless lanes (Cleanest Village in Asia)",
+          "Riwai village single root bridge",
+          "Shared cab back to Shillong (\u20b9150) and Guwahati (\u20b9300)",
+          "Catch evening train/flight from Guwahati"
+        ]
+      }
+    ],
+    "image_url": "/images/itineraries/meghalaya-budget-backpacker-5d.jpg"
+  },
+  {
+    "id": 2,
+    "slug": "arunachal-tawang-high-altitude-7d",
+    "title": "Arunachal High Altitude Trail: Tawang, Sela Pass & Monasteries",
+    "states": "AR,AS",
+    "duration_days": 7,
+    "budget_level": "budget",
+    "est_total_cost_inr": 13800,
+    "pace": "Moderate & Scenic",
+    "summary": "Traverse the eastern Himalayas on a scenic journey through Bomdila, Dirang, over the frozen Sela Pass at 13,700 feet, to the majestic 400-year-old Tawang Monastery. Master the shared Tata Sumo network to explore the Himalayan wonderland at 70% lower cost.",
+    "day_plans_json": "[{\"day\": 1, \"title\": \"Guwahati to Tezpur Gateway\", \"stay\": \"Tezpur Budget Hotel\", \"activities\": [\"ASTC bus from Guwahati to Tezpur (\\u20b9200)\", \"Verify Arunachal ILP at check counter\", \"Visit Agnigarh Hill overlooking Brahmaputra\", \"Pre-book shared Sumo seat at Tezpur counter for next morning (\\u20b9600)\"]}, {\"day\": 2, \"title\": \"Tezpur to Dirang Valley Acclimatization\", \"stay\": \"Dirang Valley Homestay\", \"activities\": [\"5:30 AM Shared Tata Sumo into Arunachal hills\", \"Check-in at Bhalukpong police checkpoint with ILP\", \"Drive past Tipi Orchidarium and Bomdila\", \"Arrive in picturesque Dirang valley (5,000 ft) for acclimatization\", \"Visit Dirang Dzong (fort) and kiwi orchards\"]}, {\"day\": 3, \"title\": \"Crossing Sela Pass (13,700 ft) to Tawang\", \"stay\": \"Tawang Monpa Homestay\", \"activities\": [\"Shared Sumo from Dirang towards Tawang (\\u20b9650)\", \"Stop at frozen Sela Pass (13,700 ft) and sacred Sela Lake\", \"Pay respects at Jaswant Garh War Memorial (free army tea & samosa!)\", \"Marvel at Nuranang (Jang) 100-meter waterfall\", \"Arrive in Tawang (10,000 ft) and settle into Monpa homestay\"]}, {\"day\": 4, \"title\": \"Tawang Monastery & Heritage Exploration\", \"stay\": \"Tawang Monpa Homestay\", \"activities\": [\"Dawn prayer chants at 400-year-old Tawang Monastery (India's largest)\", \"Explore the ancient library of gold-lettered Buddhist scriptures\", \"Visit Urgelling Monastery (birthplace of the 6th Dalai Lama)\", \"Tawang War Memorial light and sound tribute\", \"Hot butter tea and steaming thukpa dinner\"]}, {\"day\": 5, \"title\": \"Excursion to Madhuri (Sangetsar) Lake\", \"stay\": \"Tawang Monpa Homestay\", \"activities\": [\"Share a 4x4 cab with fellow travellers to Madhuri Lake (\\u20b9700/head)\", \"Surreal lake formed by 1950 earthquake with dead tree trunks\", \"Bum La Indo-China border viewpoint (subject to army pass)\", \"Warm Maggi and momos at Army cafeteria\"]}, {\"day\": 6, \"title\": \"Tawang to Bomdila Descent\", \"stay\": \"Bomdila Monastery Guest House\", \"activities\": [\"Early morning shared Sumo from Tawang to Bomdila (\\u20b9650)\", \"Visit Gontse Gaden Rabgyel Lling Monastery in Bomdila\", \"Sunset view of Himalayan peaks from Bomdila viewpoint\"]}, {\"day\": 7, \"title\": \"Bomdila to Guwahati Return\", \"stay\": \"Guwahati\", \"activities\": [\"Morning shared Sumo from Bomdila to Tezpur/Guwahati (\\u20b9700)\", \"Arrive in Guwahati by late afternoon\", \"Brahmaputra sunset ferry ride or Kamakhya temple visit\"]}]",
+    "packing_tips": "Thermal innerwear (temperatures drop below freezing), Heavy fleece / down jacket, Gloves and woolen beanie, High-altitude sunglasses (UV protection on snow), Sunscreen SPF 50+, Diamox or camphor for acclimatization, 4 passport photos + printed ILP copies.",
+    "day_plans": [
+      {
+        "day": 1,
+        "title": "Guwahati to Tezpur Gateway",
+        "stay": "Tezpur Budget Hotel",
+        "activities": [
+          "ASTC bus from Guwahati to Tezpur (\u20b9200)",
+          "Verify Arunachal ILP at check counter",
+          "Visit Agnigarh Hill overlooking Brahmaputra",
+          "Pre-book shared Sumo seat at Tezpur counter for next morning (\u20b9600)"
+        ]
+      },
+      {
+        "day": 2,
+        "title": "Tezpur to Dirang Valley Acclimatization",
+        "stay": "Dirang Valley Homestay",
+        "activities": [
+          "5:30 AM Shared Tata Sumo into Arunachal hills",
+          "Check-in at Bhalukpong police checkpoint with ILP",
+          "Drive past Tipi Orchidarium and Bomdila",
+          "Arrive in picturesque Dirang valley (5,000 ft) for acclimatization",
+          "Visit Dirang Dzong (fort) and kiwi orchards"
+        ]
+      },
+      {
+        "day": 3,
+        "title": "Crossing Sela Pass (13,700 ft) to Tawang",
+        "stay": "Tawang Monpa Homestay",
+        "activities": [
+          "Shared Sumo from Dirang towards Tawang (\u20b9650)",
+          "Stop at frozen Sela Pass (13,700 ft) and sacred Sela Lake",
+          "Pay respects at Jaswant Garh War Memorial (free army tea & samosa!)",
+          "Marvel at Nuranang (Jang) 100-meter waterfall",
+          "Arrive in Tawang (10,000 ft) and settle into Monpa homestay"
+        ]
+      },
+      {
+        "day": 4,
+        "title": "Tawang Monastery & Heritage Exploration",
+        "stay": "Tawang Monpa Homestay",
+        "activities": [
+          "Dawn prayer chants at 400-year-old Tawang Monastery (India's largest)",
+          "Explore the ancient library of gold-lettered Buddhist scriptures",
+          "Visit Urgelling Monastery (birthplace of the 6th Dalai Lama)",
+          "Tawang War Memorial light and sound tribute",
+          "Hot butter tea and steaming thukpa dinner"
+        ]
+      },
+      {
+        "day": 5,
+        "title": "Excursion to Madhuri (Sangetsar) Lake",
+        "stay": "Tawang Monpa Homestay",
+        "activities": [
+          "Share a 4x4 cab with fellow travellers to Madhuri Lake (\u20b9700/head)",
+          "Surreal lake formed by 1950 earthquake with dead tree trunks",
+          "Bum La Indo-China border viewpoint (subject to army pass)",
+          "Warm Maggi and momos at Army cafeteria"
+        ]
+      },
+      {
+        "day": 6,
+        "title": "Tawang to Bomdila Descent",
+        "stay": "Bomdila Monastery Guest House",
+        "activities": [
+          "Early morning shared Sumo from Tawang to Bomdila (\u20b9650)",
+          "Visit Gontse Gaden Rabgyel Lling Monastery in Bomdila",
+          "Sunset view of Himalayan peaks from Bomdila viewpoint"
+        ]
+      },
+      {
+        "day": 7,
+        "title": "Bomdila to Guwahati Return",
+        "stay": "Guwahati",
+        "activities": [
+          "Morning shared Sumo from Bomdila to Tezpur/Guwahati (\u20b9700)",
+          "Arrive in Guwahati by late afternoon",
+          "Brahmaputra sunset ferry ride or Kamakhya temple visit"
+        ]
+      }
+    ],
+    "image_url": "/images/itineraries/arunachal-tawang-high-altitude-7d.jpg"
+  },
+  {
+    "id": 3,
+    "slug": "assam-wildlife-and-majuli-6d",
+    "title": "Wild Assam & River Island: Kaziranga, Majuli & Ahoms",
+    "states": "AS",
+    "duration_days": 6,
+    "budget_level": "budget",
+    "est_total_cost_inr": 9200,
+    "pace": "Relaxed & Cultural",
+    "summary": "Encounter prehistoric one-horned rhinos in Kaziranga National Park, cross the mighty Brahmaputra to cycle through the peaceful river island of Majuli, and walk among the 600-year-old imperial monuments of the Ahom Kingdom in Sivasagar.",
+    "day_plans_json": "[{\"day\": 1, \"title\": \"Guwahati to Kaziranga National Park\", \"stay\": \"Kaziranga Eco Cottage\", \"activities\": [\"Morning ASTC bus from Guwahati ISBT to Kohora (\\u20b9280, 4.5 hrs)\", \"Check into eco-cottage near tea gardens\", \"Afternoon Jeep safari in Bagori Western Range (rhinos & buffaloes)\", \"Visit Kaziranga Orchid Park: 500+ indigenous orchid varieties & cultural dance\"]}, {\"day\": 2, \"title\": \"Dawn Elephant Safari & Move to Jorhat\", \"stay\": \"Jorhat Budget Stay\", \"activities\": [\"Early 5:30 AM elephant safari in Kohora Range (closest rhino encounters)\", \"Traditional Assamese breakfast: Jolpan, pitha, and curd\", \"Afternoon local bus to Jorhat tea city (\\u20b9120, 2 hrs)\", \"Explore Tocklai Tea Research Institute or Jorhat tea gardens\"]}, {\"day\": 3, \"title\": \"Nimati Ghat Ferry to Majuli River Island\", \"stay\": \"La Lolat Eco Bamboo Camp\", \"activities\": [\"Shared auto to Nimati Ghat (\\u20b940), Ro-Pax river ferry across Brahmaputra (\\u20b915!)\", \"Arrive in Majuli and rent a bicycle (\\u20b9100/day)\", \"Visit Uttar Kamalabari Satra to watch monks practice Sattriya dance\", \"Sunset over the water hyacinth marshes\"]}, {\"day\": 4, \"title\": \"Mask Making & Mishing Tribal Immersion\", \"stay\": \"La Lolat Eco Bamboo Camp\", \"activities\": [\"Cycle to Natun Samaguri Satra: Live bamboo & clay mask making demonstration\", \"Interact with master artisans preserving 500-year-old Ramayana masks\", \"Lunch at Mishing tribal village: rice beer (Apong) & steamed fish in banana leaves\", \"Birdwatching along Kherkatia Suti\"]}, {\"day\": 5, \"title\": \"Sivasagar: Imperial Monuments of the Ahoms\", \"stay\": \"Sivasagar Town Hotel\", \"activities\": [\"Morning ferry back to Nimati Ghat, shared cab to Sivasagar (\\u20b9100)\", \"Rang Ghar: Royal 2-story pavilion and Asia's oldest sports amphitheater\", \"Talatal Ghar underground palace secrets\", \"Shiva Dol: Tallest Shiva temple tower in India on Borpukhuri tank\", \"UNESCO heritage Charaideo royal burial Maidams\"]}, {\"day\": 6, \"title\": \"Overnight Broad Gauge Train back to Guwahati\", \"stay\": \"Return Trip\", \"activities\": [\"Morning tea tasting in historic Sivasagar\", \"Board Jan Shatabdi or intercity train to Guwahati (\\u20b9160)\", \"Scenic ride through Assamese paddy fields and forests\"]}]",
+    "packing_tips": "Earth-toned cotton clothes for safari (avoid loud colors), Binoculars (critical for bird and wildlife spotting), Mosquito spray, Bicycle-friendly shorts/pants, Slip-on shoes (for frequent monastery temple visits).",
+    "day_plans": [
+      {
+        "day": 1,
+        "title": "Guwahati to Kaziranga National Park",
+        "stay": "Kaziranga Eco Cottage",
+        "activities": [
+          "Morning ASTC bus from Guwahati ISBT to Kohora (\u20b9280, 4.5 hrs)",
+          "Check into eco-cottage near tea gardens",
+          "Afternoon Jeep safari in Bagori Western Range (rhinos & buffaloes)",
+          "Visit Kaziranga Orchid Park: 500+ indigenous orchid varieties & cultural dance"
+        ]
+      },
+      {
+        "day": 2,
+        "title": "Dawn Elephant Safari & Move to Jorhat",
+        "stay": "Jorhat Budget Stay",
+        "activities": [
+          "Early 5:30 AM elephant safari in Kohora Range (closest rhino encounters)",
+          "Traditional Assamese breakfast: Jolpan, pitha, and curd",
+          "Afternoon local bus to Jorhat tea city (\u20b9120, 2 hrs)",
+          "Explore Tocklai Tea Research Institute or Jorhat tea gardens"
+        ]
+      },
+      {
+        "day": 3,
+        "title": "Nimati Ghat Ferry to Majuli River Island",
+        "stay": "La Lolat Eco Bamboo Camp",
+        "activities": [
+          "Shared auto to Nimati Ghat (\u20b940), Ro-Pax river ferry across Brahmaputra (\u20b915!)",
+          "Arrive in Majuli and rent a bicycle (\u20b9100/day)",
+          "Visit Uttar Kamalabari Satra to watch monks practice Sattriya dance",
+          "Sunset over the water hyacinth marshes"
+        ]
+      },
+      {
+        "day": 4,
+        "title": "Mask Making & Mishing Tribal Immersion",
+        "stay": "La Lolat Eco Bamboo Camp",
+        "activities": [
+          "Cycle to Natun Samaguri Satra: Live bamboo & clay mask making demonstration",
+          "Interact with master artisans preserving 500-year-old Ramayana masks",
+          "Lunch at Mishing tribal village: rice beer (Apong) & steamed fish in banana leaves",
+          "Birdwatching along Kherkatia Suti"
+        ]
+      },
+      {
+        "day": 5,
+        "title": "Sivasagar: Imperial Monuments of the Ahoms",
+        "stay": "Sivasagar Town Hotel",
+        "activities": [
+          "Morning ferry back to Nimati Ghat, shared cab to Sivasagar (\u20b9100)",
+          "Rang Ghar: Royal 2-story pavilion and Asia's oldest sports amphitheater",
+          "Talatal Ghar underground palace secrets",
+          "Shiva Dol: Tallest Shiva temple tower in India on Borpukhuri tank",
+          "UNESCO heritage Charaideo royal burial Maidams"
+        ]
+      },
+      {
+        "day": 6,
+        "title": "Overnight Broad Gauge Train back to Guwahati",
+        "stay": "Return Trip",
+        "activities": [
+          "Morning tea tasting in historic Sivasagar",
+          "Board Jan Shatabdi or intercity train to Guwahati (\u20b9160)",
+          "Scenic ride through Assamese paddy fields and forests"
+        ]
+      }
+    ],
+    "image_url": "/images/itineraries/assam-wildlife-and-majuli-6d.jpg"
+  },
+  {
+    "id": 4,
+    "slug": "nagaland-dzukou-and-hornbill-5d",
+    "title": "Nagaland Tribal Trails: Dzukou Valley Trek & Khonoma Green Village",
+    "states": "NL",
+    "duration_days": 5,
+    "budget_level": "budget",
+    "est_total_cost_inr": 8100,
+    "pace": "Active Trekking & Culture",
+    "summary": "Hike into the surreal dwarf bamboo meadows of Dzukou Valley, camp in dormitory caves, explore India's first green village Khonoma, and immerse yourself in proud Angami warrior heritage.",
+    "day_plans_json": "[{\"day\": 1, \"title\": \"Dimapur to Kohima Highland Ridge\", \"stay\": \"Kohima Backpackers Lodge\", \"activities\": [\"Arrive at Dimapur railhead, shared cab to Kohima (\\u20b9250, 2.5 hrs)\", \"Check ILP at Chumukedima police post\", \"Walk through Kohima WWII Commonwealth War Cemetery\", \"Explore local night market for Naga smoked delicacies\"]}, {\"day\": 2, \"title\": \"Trek up to Dzukou Valley\", \"stay\": \"Dzukou Valley Rest House Dorm\", \"activities\": [\"Shared taxi to Viswema village gate (\\u20b980)\", \"Hike up the Viswema stone steps through mossy rainforest (2-3 hrs)\", \"Emerge onto the breathtaking undulating plateau of dwarf bamboo\", \"Wander along crystal serpentine streams\", \"Sunset over rolling green knolls; sleep in basic rest house dorm (\\u20b9150)\"]}, {\"day\": 3, \"title\": \"Sunrise over Dzukou & Descent to Jakhama\", \"stay\": \"Khonoma Village Homestay\", \"activities\": [\"Incredible 5:30 AM sunrise over Dzukou floral meadows\", \"Hike to Ghost Cave and natural cold-spring pools\", \"Descend via the steeper Jakhama trail (2 hrs)\", \"Shared cab to Khonoma Green Village (\\u20b9100)\", \"Evening village walk through ancient stone defensive forts\"]}, {\"day\": 4, \"title\": \"Khonoma Eco-Village & Kisama Heritage\", \"stay\": \"Kohima / Khonoma Homestay\", \"activities\": [\"Guided tour of Khonoma terrace farming and Tragopan sanctuary\", \"Visit Angami wood-carvers and traditional Morungs (youth dorms)\", \"Afternoon visit to Kisama Heritage Village (Hornbill Festival venue)\", \"Traditional Naga dinner with Axone and smoked pork/mushrooms\"]}, {\"day\": 5, \"title\": \"Kohima to Dimapur Return\", \"stay\": \"Return Trip\", \"activities\": [\"Visit Kohima State Museum (Naga tribal ornaments & weapons)\", \"Shared cab back down to Dimapur railway station (\\u20b9250)\", \"Catch train to Guwahati or flight home\"]}]",
+    "packing_tips": "Warm sleeping bag liner / thermal innerwear for Dzukou, Rain poncho / waterproof jacket, Sturdy hiking boots, Reusable water flask (No single-use plastic bottles permitted in Dzukou), Power bank (no electricity in Dzukou valley), Nagaland ILP hard copies.",
+    "day_plans": [
+      {
+        "day": 1,
+        "title": "Dimapur to Kohima Highland Ridge",
+        "stay": "Kohima Backpackers Lodge",
+        "activities": [
+          "Arrive at Dimapur railhead, shared cab to Kohima (\u20b9250, 2.5 hrs)",
+          "Check ILP at Chumukedima police post",
+          "Walk through Kohima WWII Commonwealth War Cemetery",
+          "Explore local night market for Naga smoked delicacies"
+        ]
+      },
+      {
+        "day": 2,
+        "title": "Trek up to Dzukou Valley",
+        "stay": "Dzukou Valley Rest House Dorm",
+        "activities": [
+          "Shared taxi to Viswema village gate (\u20b980)",
+          "Hike up the Viswema stone steps through mossy rainforest (2-3 hrs)",
+          "Emerge onto the breathtaking undulating plateau of dwarf bamboo",
+          "Wander along crystal serpentine streams",
+          "Sunset over rolling green knolls; sleep in basic rest house dorm (\u20b9150)"
+        ]
+      },
+      {
+        "day": 3,
+        "title": "Sunrise over Dzukou & Descent to Jakhama",
+        "stay": "Khonoma Village Homestay",
+        "activities": [
+          "Incredible 5:30 AM sunrise over Dzukou floral meadows",
+          "Hike to Ghost Cave and natural cold-spring pools",
+          "Descend via the steeper Jakhama trail (2 hrs)",
+          "Shared cab to Khonoma Green Village (\u20b9100)",
+          "Evening village walk through ancient stone defensive forts"
+        ]
+      },
+      {
+        "day": 4,
+        "title": "Khonoma Eco-Village & Kisama Heritage",
+        "stay": "Kohima / Khonoma Homestay",
+        "activities": [
+          "Guided tour of Khonoma terrace farming and Tragopan sanctuary",
+          "Visit Angami wood-carvers and traditional Morungs (youth dorms)",
+          "Afternoon visit to Kisama Heritage Village (Hornbill Festival venue)",
+          "Traditional Naga dinner with Axone and smoked pork/mushrooms"
+        ]
+      },
+      {
+        "day": 5,
+        "title": "Kohima to Dimapur Return",
+        "stay": "Return Trip",
+        "activities": [
+          "Visit Kohima State Museum (Naga tribal ornaments & weapons)",
+          "Shared cab back down to Dimapur railway station (\u20b9250)",
+          "Catch train to Guwahati or flight home"
+        ]
+      }
+    ],
+    "image_url": "/images/itineraries/nagaland-dzukou-and-hornbill-5d.jpg"
+  },
+  {
+    "id": 5,
+    "slug": "sikkim-himalayan-majesty-7d",
+    "title": "Sikkim Himalayan Magic: Gurudongmar Lake, Yumthang & Pelling",
+    "states": "SK",
+    "duration_days": 7,
+    "budget_level": "budget",
+    "est_total_cost_inr": 14500,
+    "pace": "High Altitude Mountain Magic",
+    "summary": "From the sacred turquoise waters of Gurudongmar Lake at 17,800 feet to the blooming rhododendrons of Yumthang Valley and the close-up sunrise views of Mount Kanchenjunga from Pelling Skywalk.",
+    "day_plans_json": "[{\"day\": 1, \"title\": \"NJP/Siliguri to Gangtok City\", \"stay\": \"Gangtok Budget Hotel\", \"activities\": [\"Shared Tata Sumo from NJP Station to Gangtok (\\u20b9350, 4.5 hrs)\", \"Submit ID and photos at local agency for North Sikkim PAP permit\", \"Evening stroll on the pedestrian-only MG Marg\", \"Taste steaming mutton momos and hot Thukpa\"]}, {\"day\": 2, \"title\": \"Gangtok to Lachen (North Sikkim Expedition)\", \"stay\": \"Lachen Wooden Homestay\", \"activities\": [\"Board shared North Sikkim package Sumo from Vajra stand\", \"Drive past Seven Sisters Waterfall and Singhik viewpoint\", \"Cross Mangan and Chungthang river confluence\", \"Arrive in Lachen mountain village (9,000 ft), settle into wooden homestay\", \"Early sleep to prepare for 4 AM start\"]}, {\"day\": 3, \"title\": \"Sacred Gurudongmar Lake (17,800 ft) to Lachung\", \"stay\": \"Lachung Homestay\", \"activities\": [\"4:00 AM start towards high alpine Tibetan plateau\", \"Breakfast at Thangu valley military outpost\", \"Arrive at awe-inspiring Gurudongmar Lake (17,800 ft) with prayer flags fluttering against snow peaks\", \"Descend to Chopta Valley and drive to Lachung village for night stay\"]}, {\"day\": 4, \"title\": \"Yumthang Valley of Flowers & Return to Gangtok\", \"stay\": \"Gangtok Budget Hotel\", \"activities\": [\"Drive up to Yumthang Valley of Flowers (Rhododendron Sanctuary)\", \"Optional excursion to Zero Point (15,300 ft snow wonderland)\", \"Warm up at Yumthang natural sulfur hot springs\", \"Scenic return drive back to Gangtok by evening\"]}, {\"day\": 5, \"title\": \"Gangtok to Pelling (West Sikkim)\", \"stay\": \"Pelling Kanchenjunga View Homestay\", \"activities\": [\"Shared Tata Sumo from Deorali stand to Pelling (\\u20b9320, 4.5 hrs)\", \"En-route stop at Ravangla Buddha Park (130ft giant Buddha statue)\", \"Arrive in Pelling and witness Mount Kanchenjunga turning golden at sunset\"]}, {\"day\": 6, \"title\": \"Pelling Glass Skywalk & Ancient Monasteries\", \"stay\": \"Pelling Homestay\", \"activities\": [\"5:15 AM majestic sunrise over Kanchenjunga from balcony\", \"Walk on India's first Glass Skywalk leading to Chenrezig statue\", \"Visit 300-year-old Pemayangtse Monastery\", \"Hike through forest to ancient Rabdentse royal stone palace ruins\", \"Visit wish-fulfilling Khecheopalri sacred lake\"]}, {\"day\": 7, \"title\": \"Pelling to NJP/Bagdogra Departure\", \"stay\": \"Return Trip\", \"activities\": [\"Shared Sumo from Pelling back to Siliguri/NJP (\\u20b9350, 4.5 hrs)\", \"Catch onward train from NJP or flight from Bagdogra\"]}]",
+    "packing_tips": "Heavy down jacket, Gloves and thermal inners, UV protection sunglasses, High-altitude sickness medicine (Diamox), 4 passport photos and Voter ID/Aadhaar card copies for Sikkim permits.",
+    "day_plans": [
+      {
+        "day": 1,
+        "title": "NJP/Siliguri to Gangtok City",
+        "stay": "Gangtok Budget Hotel",
+        "activities": [
+          "Shared Tata Sumo from NJP Station to Gangtok (\u20b9350, 4.5 hrs)",
+          "Submit ID and photos at local agency for North Sikkim PAP permit",
+          "Evening stroll on the pedestrian-only MG Marg",
+          "Taste steaming mutton momos and hot Thukpa"
+        ]
+      },
+      {
+        "day": 2,
+        "title": "Gangtok to Lachen (North Sikkim Expedition)",
+        "stay": "Lachen Wooden Homestay",
+        "activities": [
+          "Board shared North Sikkim package Sumo from Vajra stand",
+          "Drive past Seven Sisters Waterfall and Singhik viewpoint",
+          "Cross Mangan and Chungthang river confluence",
+          "Arrive in Lachen mountain village (9,000 ft), settle into wooden homestay",
+          "Early sleep to prepare for 4 AM start"
+        ]
+      },
+      {
+        "day": 3,
+        "title": "Sacred Gurudongmar Lake (17,800 ft) to Lachung",
+        "stay": "Lachung Homestay",
+        "activities": [
+          "4:00 AM start towards high alpine Tibetan plateau",
+          "Breakfast at Thangu valley military outpost",
+          "Arrive at awe-inspiring Gurudongmar Lake (17,800 ft) with prayer flags fluttering against snow peaks",
+          "Descend to Chopta Valley and drive to Lachung village for night stay"
+        ]
+      },
+      {
+        "day": 4,
+        "title": "Yumthang Valley of Flowers & Return to Gangtok",
+        "stay": "Gangtok Budget Hotel",
+        "activities": [
+          "Drive up to Yumthang Valley of Flowers (Rhododendron Sanctuary)",
+          "Optional excursion to Zero Point (15,300 ft snow wonderland)",
+          "Warm up at Yumthang natural sulfur hot springs",
+          "Scenic return drive back to Gangtok by evening"
+        ]
+      },
+      {
+        "day": 5,
+        "title": "Gangtok to Pelling (West Sikkim)",
+        "stay": "Pelling Kanchenjunga View Homestay",
+        "activities": [
+          "Shared Tata Sumo from Deorali stand to Pelling (\u20b9320, 4.5 hrs)",
+          "En-route stop at Ravangla Buddha Park (130ft giant Buddha statue)",
+          "Arrive in Pelling and witness Mount Kanchenjunga turning golden at sunset"
+        ]
+      },
+      {
+        "day": 6,
+        "title": "Pelling Glass Skywalk & Ancient Monasteries",
+        "stay": "Pelling Homestay",
+        "activities": [
+          "5:15 AM majestic sunrise over Kanchenjunga from balcony",
+          "Walk on India's first Glass Skywalk leading to Chenrezig statue",
+          "Visit 300-year-old Pemayangtse Monastery",
+          "Hike through forest to ancient Rabdentse royal stone palace ruins",
+          "Visit wish-fulfilling Khecheopalri sacred lake"
+        ]
+      },
+      {
+        "day": 7,
+        "title": "Pelling to NJP/Bagdogra Departure",
+        "stay": "Return Trip",
+        "activities": [
+          "Shared Sumo from Pelling back to Siliguri/NJP (\u20b9350, 4.5 hrs)",
+          "Catch onward train from NJP or flight from Bagdogra"
+        ]
+      }
+    ],
+    "image_url": "/images/itineraries/sikkim-himalayan-majesty-7d.jpg"
+  },
+  {
+    "id": 6,
+    "slug": "seven-sisters-grand-explorer-12d",
+    "title": "The Grand North East Odyssey: 4 States in 12 Days",
+    "states": "AS,ML,NL,MN",
+    "duration_days": 12,
+    "budget_level": "budget",
+    "est_total_cost_inr": 21500,
+    "pace": "Comprehensive Grand Tour",
+    "summary": "The ultimate overland loop connecting Assam's wildlife, Meghalaya's cloud canyons, Nagaland's tribal heritage, and Manipur's floating islands. Built specifically for budget overland backpackers using trains and shared transport.",
+    "day_plans_json": "[{\"day\": 1, \"title\": \"Guwahati: Kamakhya & Brahmaputra Sunset\", \"stay\": \"Guwahati Backpacker Hostel\", \"activities\": [\"Kamakhya Temple perched on Nilachal Hill\", \"Umananda Island (smallest inhabited river island in the world)\", \"Sunset cruise / ferry on the Brahmaputra\"]}, {\"day\": 2, \"title\": \"Guwahati to Shillong & Cherrapunji\", \"stay\": \"Cherrapunji Homestay\", \"activities\": [\"Shared cab to Shillong and onward to Cherrapunji\", \"Nohkalikai Falls & Mawsmai cave exploration\"]}, {\"day\": 3, \"title\": \"Double Decker Root Bridge Hike & Dawki\", \"stay\": \"Shnongpdeng Camp\", \"activities\": [\"Hike Nongriat root bridges, drive to Shnongpdeng\", \"Camp by the clear Umngot river\"]}, {\"day\": 4, \"title\": \"Mawlynnong to Kaziranga National Park\", \"stay\": \"Kaziranga Eco Camp\", \"activities\": [\"Cleanest village Mawlynnong, shared cab back to Guwahati\", \"Afternoon bus directly to Kaziranga (Kohora)\"]}, {\"day\": 5, \"title\": \"Kaziranga Rhino Safari & Majuli Ferry\", \"stay\": \"Majuli Bamboo Cottage\", \"activities\": [\"Dawn rhino safari in Kaziranga\", \"Afternoon ferry from Nimati Ghat to Majuli River Island\"]}, {\"day\": 6, \"title\": \"Majuli Satras to Dimapur (Nagaland)\", \"stay\": \"Dimapur Stay\", \"activities\": [\"Mask making at Samaguri Satra\", \"Ferry back to Jorhat, evening train to Dimapur\"]}, {\"day\": 7, \"title\": \"Dimapur to Kohima & Dzukou Base\", \"stay\": \"Viswema Homestay\", \"activities\": [\"Shared cab to Kohima, WWII Cemetery, base camp for Dzukou\"]}, {\"day\": 8, \"title\": \"Dzukou Valley Trekking Day\", \"stay\": \"Dzukou Dormitory\", \"activities\": [\"Trek up Viswema trail into the dwarf bamboo wonderland\"]}, {\"day\": 9, \"title\": \"Descend Dzukou & Drive to Imphal (Manipur)\", \"stay\": \"Imphal Budget Hotel\", \"activities\": [\"Descend via Jakhama, shared winger via Mao gate to Imphal\", \"Check Manipur ILP at Mao checkpost\"]}, {\"day\": 10, \"title\": \"Loktak Floating Lake & Sangai Deer\", \"stay\": \"Phumdi Floating Homestay\", \"activities\": [\"Sendra Island, Keibul Lamjao National Park (dancing Sangai deer)\", \"Night stay in floating cottage on Loktak Lake\"]}, {\"day\": 11, \"title\": \"Ima Keithel Women's Market & Kangla Fort\", \"stay\": \"Imphal Hotel\", \"activities\": [\"Kangla Fort, explore Asia's 5,000 all-women traders market Ima Keithel\"]}, {\"day\": 12, \"title\": \"Departure from Imphal Airport\", \"stay\": \"Return Trip\", \"activities\": [\"Flight home from Imphal or shared road transit back to Guwahati\"]}]",
+    "packing_tips": "Multi-state ILP documents (printed copies for Nagaland & Manipur), Multi-terrain footwear, Universal adapter, Thermal layers, Waterproof dry bag.",
+    "day_plans": [
+      {
+        "day": 1,
+        "title": "Guwahati: Kamakhya & Brahmaputra Sunset",
+        "stay": "Guwahati Backpacker Hostel",
+        "activities": [
+          "Kamakhya Temple perched on Nilachal Hill",
+          "Umananda Island (smallest inhabited river island in the world)",
+          "Sunset cruise / ferry on the Brahmaputra"
+        ]
+      },
+      {
+        "day": 2,
+        "title": "Guwahati to Shillong & Cherrapunji",
+        "stay": "Cherrapunji Homestay",
+        "activities": [
+          "Shared cab to Shillong and onward to Cherrapunji",
+          "Nohkalikai Falls & Mawsmai cave exploration"
+        ]
+      },
+      {
+        "day": 3,
+        "title": "Double Decker Root Bridge Hike & Dawki",
+        "stay": "Shnongpdeng Camp",
+        "activities": [
+          "Hike Nongriat root bridges, drive to Shnongpdeng",
+          "Camp by the clear Umngot river"
+        ]
+      },
+      {
+        "day": 4,
+        "title": "Mawlynnong to Kaziranga National Park",
+        "stay": "Kaziranga Eco Camp",
+        "activities": [
+          "Cleanest village Mawlynnong, shared cab back to Guwahati",
+          "Afternoon bus directly to Kaziranga (Kohora)"
+        ]
+      },
+      {
+        "day": 5,
+        "title": "Kaziranga Rhino Safari & Majuli Ferry",
+        "stay": "Majuli Bamboo Cottage",
+        "activities": [
+          "Dawn rhino safari in Kaziranga",
+          "Afternoon ferry from Nimati Ghat to Majuli River Island"
+        ]
+      },
+      {
+        "day": 6,
+        "title": "Majuli Satras to Dimapur (Nagaland)",
+        "stay": "Dimapur Stay",
+        "activities": [
+          "Mask making at Samaguri Satra",
+          "Ferry back to Jorhat, evening train to Dimapur"
+        ]
+      },
+      {
+        "day": 7,
+        "title": "Dimapur to Kohima & Dzukou Base",
+        "stay": "Viswema Homestay",
+        "activities": [
+          "Shared cab to Kohima, WWII Cemetery, base camp for Dzukou"
+        ]
+      },
+      {
+        "day": 8,
+        "title": "Dzukou Valley Trekking Day",
+        "stay": "Dzukou Dormitory",
+        "activities": [
+          "Trek up Viswema trail into the dwarf bamboo wonderland"
+        ]
+      },
+      {
+        "day": 9,
+        "title": "Descend Dzukou & Drive to Imphal (Manipur)",
+        "stay": "Imphal Budget Hotel",
+        "activities": [
+          "Descend via Jakhama, shared winger via Mao gate to Imphal",
+          "Check Manipur ILP at Mao checkpost"
+        ]
+      },
+      {
+        "day": 10,
+        "title": "Loktak Floating Lake & Sangai Deer",
+        "stay": "Phumdi Floating Homestay",
+        "activities": [
+          "Sendra Island, Keibul Lamjao National Park (dancing Sangai deer)",
+          "Night stay in floating cottage on Loktak Lake"
+        ]
+      },
+      {
+        "day": 11,
+        "title": "Ima Keithel Women's Market & Kangla Fort",
+        "stay": "Imphal Hotel",
+        "activities": [
+          "Kangla Fort, explore Asia's 5,000 all-women traders market Ima Keithel"
+        ]
+      },
+      {
+        "day": 12,
+        "title": "Departure from Imphal Airport",
+        "stay": "Return Trip",
+        "activities": [
+          "Flight home from Imphal or shared road transit back to Guwahati"
+        ]
+      }
+    ],
+    "image_url": "/images/itineraries/seven-sisters-grand-explorer-12d.jpg"
+  }
+]

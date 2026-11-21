@@ -1,0 +1,90 @@
+[
+  {
+    "id": 1,
+    "state_code": "ML",
+    "destination_name": "Nongriat Living Root Bridges",
+    "author_name": "Aniket Sharma",
+    "author_city": "Pune",
+    "category": "Budget",
+    "tip_text": "Don't pay \u20b92,000 for a private cab to Sohra! Take the shared yellow sumo from Lewduh Bara Bazar for \u20b9120. Stay overnight in Byron's homestay at Nongriat\u2014the morning mist over the double-decker bridge before day-trippers arrive is pure magic.",
+    "upvotes": 28,
+    "created_at": "2026-11-21 04:20:48"
+  },
+  {
+    "id": 2,
+    "state_code": "AR",
+    "destination_name": "Tawang & Sela Pass",
+    "author_name": "Devika Nambiar",
+    "author_city": "Bengaluru",
+    "category": "Transport",
+    "tip_text": "Always book your shared Sumo seat the evening before at the Tezpur or Bomdila stand. Request seat #1 or #2 (front cabin next to driver) for the most legroom and jaw-dropping mountain views across Sela Pass.",
+    "upvotes": 35,
+    "created_at": "2026-11-21 04:20:48"
+  },
+  {
+    "id": 3,
+    "state_code": "SK",
+    "destination_name": "Gurudongmar Lake & North Sikkim",
+    "author_name": "Rohan Das",
+    "author_city": "Kolkata",
+    "category": "Permits",
+    "tip_text": "Never book a private cab for North Sikkim if traveling solo or as a couple (costs \u20b918,000+). Walk into any travel desk on MG Marg Gangtok and ask for a shared seat in a North Sikkim Sumo package (\u20b93,500-4,200 per person all-inclusive with food and lodging).",
+    "upvotes": 42,
+    "created_at": "2026-11-21 04:20:48"
+  },
+  {
+    "id": 4,
+    "state_code": "AS",
+    "destination_name": "Majuli Island",
+    "author_name": "Priyanka Bora",
+    "author_city": "Guwahati",
+    "category": "Local Culture",
+    "tip_text": "The government Ro-Pax ferry from Nimati Ghat to Majuli costs only \u20b915 per person! Rent a bicycle in Kamalabari for \u20b9100/day. Spend an hour with master Hemchandra Goswami at Samaguri Satra\u2014he explains how traditional masks are made from river clay and bamboo.",
+    "upvotes": 19,
+    "created_at": "2026-11-21 04:20:48"
+  },
+  {
+    "id": 5,
+    "state_code": "NL",
+    "destination_name": "Dzukou Valley",
+    "author_name": "Toshi Jamir",
+    "author_city": "Kohima",
+    "category": "Eco & Packing",
+    "tip_text": "Do not carry plastic disposable water bottles to Dzukou! The forest committee at Viswema gate strictly checks your backpack and fines violators. Bring a stainless steel bottle\u2014the spring water in the valley is 100% pure and delicious.",
+    "upvotes": 31,
+    "created_at": "2026-11-21 04:20:48"
+  },
+  {
+    "id": 6,
+    "state_code": "MN",
+    "destination_name": "Loktak Lake & Keibul Lamjao",
+    "author_name": "Siddharth Menon",
+    "author_city": "Chennai",
+    "category": "Experience",
+    "tip_text": "Stay at a floating hut homestay in Thanga village on Loktak. You wake up with the hut gently swaying on the water, surrounded by fishermen in dugout canoes and purple water lilies. It costs only \u20b91,200 including dinner and boat ride.",
+    "upvotes": 24,
+    "created_at": "2026-11-21 04:20:48"
+  },
+  {
+    "id": 7,
+    "state_code": "TR",
+    "destination_name": "Unakoti Rock Carvings",
+    "author_name": "Arup Roy",
+    "author_city": "Silchar",
+    "category": "Transport",
+    "tip_text": "Take the morning Jan Shatabdi train from Agartala to Kumarghat for just \u20b975! Shared autos outside Kumarghat station take you directly to the Unakoti Shiva carvings in 30 minutes for \u20b940. Very peaceful and almost no tourists on weekdays.",
+    "upvotes": 15,
+    "created_at": "2026-11-21 04:20:48"
+  },
+  {
+    "id": 8,
+    "state_code": "AS",
+    "destination_name": "Majuli Island",
+    "author_name": "Test Traveller",
+    "author_city": "Tezpur",
+    "category": "Budget",
+    "tip_text": "Always catch the early morning ferry from Nimati Ghat to see river dolphins!",
+    "upvotes": 6,
+    "created_at": "2026-11-21 04:22:04"
+  }
+]

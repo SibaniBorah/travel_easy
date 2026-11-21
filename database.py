@@ -59,6 +59,7 @@ def init_db():
         cultural_etiquette TEXT NOT NULL,
         rating REAL DEFAULT 4.8,
         reviews_count INTEGER DEFAULT 24,
+        image_url TEXT,
         FOREIGN KEY (state_code) REFERENCES states (code)
     );
 
@@ -102,7 +103,8 @@ def init_db():
         pace TEXT NOT NULL,
         summary TEXT NOT NULL,
         day_plans_json TEXT NOT NULL,
-        packing_tips TEXT NOT NULL
+        packing_tips TEXT NOT NULL,
+        image_url TEXT
     );
 
     CREATE TABLE IF NOT EXISTS community_tips (
@@ -141,6 +143,43 @@ def init_db():
         notes TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
+
+    CREATE TABLE IF NOT EXISTS events (
+        id TEXT PRIMARY KEY,
+        state_code TEXT NOT NULL,
+        name TEXT NOT NULL,
+        start_date TEXT,
+        end_date TEXT,
+        location_name TEXT NOT NULL,
+        description TEXT NOT NULL,
+        category TEXT NOT NULL,
+        annual_month INTEGER NOT NULL,
+        cultural_significance TEXT NOT NULL,
+        visitor_tips TEXT NOT NULL,
+        FOREIGN KEY (state_code) REFERENCES states (code)
+    );
+
+    CREATE TABLE IF NOT EXISTS reports (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        entity_type TEXT NOT NULL,
+        entity_id TEXT NOT NULL,
+        report_type TEXT NOT NULL,
+        description TEXT NOT NULL,
+        status TEXT DEFAULT 'open',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        email TEXT UNIQUE NOT NULL,
+        phone TEXT,
+        state TEXT NOT NULL,
+        country TEXT NOT NULL,
+        token TEXT UNIQUE,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        last_login_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
     """)
 
     conn.commit()
@@ -150,11 +189,14 @@ def init_db():
     print("Database initialized successfully.")
 
 def seed_data(cursor):
-    # Check if states already exist
     cursor.execute("SELECT COUNT(*) FROM states")
-    if cursor.fetchone()[0] > 0:
-        return
+    if cursor.fetchone()[0] == 0:
+        seed_states_and_core(cursor)
+    cursor.execute("SELECT COUNT(*) FROM events")
+    if cursor.fetchone()[0] == 0:
+        seed_events_data(cursor)
 
+def seed_states_and_core(cursor):
     # Seed 8 States
     states = [
         (
@@ -762,6 +804,120 @@ def seed_data(cursor):
         destination_slug, user_name, user_origin, rating, review_text, travel_month
     ) VALUES (?, ?, ?, ?, ?, ?)
     """, reviews)
+
+def seed_events_data(cursor):
+    # Seed Authentic Festivals & Cultural Events
+    events = [
+            (
+                "hornbill", "NL", "Hornbill Festival", "Dec 1", "Dec 10",
+                "Kisama Heritage Village, Kohima",
+                "The world-renowned 'Festival of Festivals' celebrating all 16 major Naga tribes in their authentic architectural morungs.",
+                "tribal-festival", 12,
+                "Spectacular tribal unity, warrior songs, folk dances, indigenous wrestling, traditional fire-making, Naga chilli eating contest, and nightly rock concerts.",
+                "Book accommodation in Kisama or Kohima 3-4 months ahead. Tents and home-stays fill completely. Carry warm thermals as evening temperatures dip below 5°C."
+            ),
+            (
+                "bihu-rongali", "AS", "Rongali Bihu (Bohag Bihu)", "Apr 14", "Apr 20",
+                "State-wide (Guwahati Latasil field, Sivasagar, villages)",
+                "The heart and soul of Assamese culture, celebrating the arrival of spring, seeding season, and Assamese New Year.",
+                "cultural-festival", 4,
+                "Graceful Bihu dance accompanied by Pepa (buffalo horn flute), Dhol, and Toka. Community feasts of Jolpan, Pitha, and Laroo.",
+                "Visit open-air Bihu Sanmilans in Guwahati (Latasil, Judges Field). Taste authentic pitha from local village stalls. Friendly festive atmosphere everywhere."
+            ),
+            (
+                "ziro-music", "AR", "Ziro Festival of Music", "Sep 25", "Sep 29",
+                "Ziro Valley (Hong Village paddy fields)",
+                "India's iconic eco-friendly outdoor indie music festival set against the pine-clad hills of the Apatani valley.",
+                "music-festival", 9,
+                "Two solar-powered bamboo stages ('Donyi' and 'Polo') hosting independent artists from India and worldwide, surrounded by golden paddy fields.",
+                "Camp in festival tents or book Hong village Apatani homestays early. Arunachal ILP is mandatory. Strictly single-use-plastic-free policy."
+            ),
+            (
+                "sangai", "MN", "Manipur Sangai Festival", "Nov 21", "Nov 30",
+                "Imphal (Hapta Kangjeibung) & Moirang (Loktak Lake)",
+                "Named after the rare, dancing brow-antlered Sangai deer found only in Keibul Lamjao National Park on Loktak Lake.",
+                "cultural-festival", 11,
+                "Mesmerizing classical Manipuri Raas Leela dance, indigenous Sagol Kangjei (ancestral polo), Thang-Ta martial arts, boat races, and hill-tribe handicrafts.",
+                "Combine with canoe rides at Loktak Lake. Evenings in Imphal are lively with night food markets serving Singju and Eromba."
+            ),
+            (
+                "chapchar-kut", "MZ", "Chapchar Kut Spring Festival", "Mar 5", "Mar 7",
+                "Assam Rifles Ground (Lammual), Aizawl",
+                "The grandest, most colorful Mizo spring festival celebrated with immense enthusiasm after the completion of bamboo jhum clearing.",
+                "tribal-festival", 3,
+                "Iconic Cheraw bamboo dance where agile performers step between clapping bamboo poles, traditional Vakiria feather headdresses, and community singing.",
+                "Arrive at the Lammual ground by 9:30 AM for good viewing seats. Modest dress recommended. Taste festive Mizo Bai and smoked pork."
+            ),
+            (
+                "wangala", "ML", "Wangala 100 Drums Festival", "Nov 10", "Nov 12",
+                "Asanang (near Tura), West Garo Hills",
+                "The signature harvest thanksgiving festival of the Garo tribe dedicated to the sun-god Misi Saljong.",
+                "harvest-festival", 11,
+                "100 master drummers beating long cylindrical drums (Dama) in hypnotic synchronization, accompanied by buffalo horn flutes and energetic line dancing.",
+                "Stay in Tura town or village eco-camps. Try Garo festive rice beer (Chu) and spicy bamboo shoot chicken (Wak Gominda)."
+            ),
+            (
+                "torgya-losar", "AR", "Torgya & Losar Monastic Festival", "Jan 15", "Jan 18",
+                "Tawang Monastery Courtyard",
+                "Ancient Monpa Buddhist festival to drive out evil spirits and welcome peace and prosperity in the new year.",
+                "monastic-festival", 1,
+                "Lamas clad in intricate silk robes and ornate animal masks perform sacred monastic Cham dances in the snow-dusted monastery courtyard.",
+                "Dress in heavy sub-zero woolens. Sela Pass may have snow; check road status. Photography of Cham dances is welcomed respectfully."
+            ),
+            (
+                "kharchi-puja", "TR", "Kharchi Puja (Fourteen Deities Festival)", "Jul 10", "Jul 17",
+                "Old Agartala (Puran Agartala)",
+                "Centuries-old royal and tribal festival worshiping the 14 patron deities of Tripura to cleanse the Earth and Mother Nature.",
+                "religious-festival", 7,
+                "Immersion of royal deity idols in the sacred Howrah river, royal brass drums, tribal dances, and enormous seven-day cultural mela.",
+                "Just 20 minutes by auto from Agartala city center. Open to all visitors. Great street food stalls featuring Tripuri bamboo snacks."
+            ),
+            (
+                "pang-lhabsol", "SK", "Pang Lhabsol Kanchenjunga Festival", "Sep 5", "Sep 7",
+                "Tsuklakhang Palace & Rumtek Monastery, Gangtok",
+                "Unique festival honoring Mount Kanchenjunga as the supreme protective guardian deity of Sikkim.",
+                "monastic-festival", 9,
+                "Spectacular warrior dances (Dzonga dance) with dancers wielding swords and shields, dramatizing the historic brotherhood oath between Lepchas and Bhutias.",
+                "Takes place in Gangtok palace monastery. Clear mountain mornings provide majestic glimpses of Kanchenjunga."
+            ),
+            (
+                "majuli-raas", "AS", "Majuli Raas Mahotsav", "Nov 15", "Nov 18",
+                "Across Majuli Satras (Kamalabari, Garmur, Dakhinpat)",
+                "500-year-old neo-Vaishnavite theatrical spectacle depicting Lord Krishna's divine life, enacted by thousands of islanders.",
+                "cultural-festival", 11,
+                "Traditional handmade river-clay masks (Mukha) of demons and gods, classical Sattriya music, and all-night village plays across dozens of village stages.",
+                "Ferries from Nimati Ghat run special night services. Book Majuli homestays well in advance; island atmosphere is electric."
+            ),
+            (
+                "nongkrem-dance", "ML", "Nongkrem Royal Dance Festival", "Nov 18", "Nov 22",
+                "Smit (Khasi Royal Seat), 15km from Shillong",
+                "Sacred thanksgiving harvest ritual of the Khyrim Syiemship (Khasi Kingdom) praying for peace and abundant crops.",
+                "tribal-festival", 11,
+                "Khasi royal maidens in pure gold and silver crowns and silk jainsems perform slow, dignified steps to the rhythm of Tangmuri pipes and drums.",
+                "Smit is easily reached by shared taxi from Shillong. Silence and decorum should be maintained around the sacred thatch palace (Ling Sad)."
+            ),
+            (
+                "brahmaputra-beach", "AS", "Brahmaputra River Beach Festival", "Jan 22", "Jan 26",
+                "Guwahati Brahmaputra Riverfront Beaches",
+                "Winter river carnival transforming Guwahati's seasonal sandy river beaches into a vibrant celebration of food, music, and adventure.",
+                "beach-festival", 1,
+                "Traditional boat racing, beach volleyball, indigenous Assamese folk sports, paramotoring, sand art sculptures, and sunset folk concerts.",
+                "Walking distance from Fancy Bazar and Umananda ghat. Free entry. Best sunset views across the mighty Brahmaputra."
+            )
+        ]
+
+    cursor.executemany("""
+    INSERT OR REPLACE INTO events (
+        id, state_code, name, start_date, end_date, location_name,
+        description, category, annual_month, cultural_significance, visitor_tips
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, events)
+
+    # Ensure image_url is populated for all destinations and itineraries
+    cursor.execute("UPDATE destinations SET image_url = '/images/destinations/' || slug || '.jpg' WHERE image_url IS NULL OR image_url = ''")
+    cursor.execute("UPDATE prebuilt_itineraries SET image_url = '/images/itineraries/' || slug || '.jpg' WHERE image_url IS NULL OR image_url = ''")
+    conn.commit()
+    conn.close()
 
 if __name__ == "__main__":
     init_db()

@@ -1,0 +1,151 @@
+[
+  {
+    "id": "AR-ILP",
+    "state_code": "AR",
+    "area": "Arunachal Pradesh (all areas)",
+    "applies_to": "indian",
+    "type": "ILP",
+    "documents_required": [
+      "Aadhaar card or passport",
+      "2 passport photos",
+      "Online application form"
+    ],
+    "lead_time_days": 2,
+    "fee": 100,
+    "official_url": "https://arunachalilp.com",
+    "notes": "Inner Line Permit required for ALL Indian nationals. Valid 15-30 days. Apply online. Can also get at Tezpur, Guwahati, Delhi offices.",
+    "verified_at": "2026-11-21T10:25:18.938163792+05:30",
+    "expires_at": "2026-12-21T10:25:18.938163882+05:30",
+    "status": "published"
+  },
+  {
+    "id": "AR-PAP",
+    "state_code": "AR",
+    "area": "Arunachal Pradesh (all areas)",
+    "applies_to": "foreign",
+    "type": "PAP",
+    "documents_required": [
+      "Passport",
+      "Visa",
+      "PAP application form",
+      "Itinerary"
+    ],
+    "lead_time_days": 10,
+    "fee": 0,
+    "official_url": "https://arunachalilp.com",
+    "notes": "Protected Area Permit required for all foreign nationals. Apply through Ministry of Home Affairs or state government. Much harder to obtain than ILP. Some areas (Bumla, Tawang borders) require additional clearance.",
+    "verified_at": "2026-11-21T10:25:18.938164229+05:30",
+    "expires_at": "2026-12-21T10:25:18.938164279+05:30",
+    "status": "published"
+  },
+  {
+    "id": "MN-ILP",
+    "state_code": "MN",
+    "area": "Manipur (all areas)",
+    "applies_to": "indian",
+    "type": "ILP",
+    "documents_required": [
+      "Aadhaar card or any government photo ID",
+      "2 passport photos"
+    ],
+    "lead_time_days": 1,
+    "fee": 120,
+    "official_url": "https://manipurilponline.mn.gov.in",
+    "notes": "ILP required for Indian nationals. Can apply online or at checkpoints. Valid 15 days. Carry physical copy always.",
+    "verified_at": "2026-11-21T10:25:18.93816439+05:30",
+    "expires_at": "2026-12-21T10:25:18.938164433+05:30",
+    "status": "published"
+  },
+  {
+    "id": "MZ-ILP",
+    "state_code": "MZ",
+    "area": "Mizoram (all areas)",
+    "applies_to": "indian",
+    "type": "ILP",
+    "documents_required": [
+      "Any government photo ID",
+      "2 passport photos"
+    ],
+    "lead_time_days": 0,
+    "fee": 0,
+    "official_url": "https://mizoramilp.com",
+    "notes": "ILP obtainable on arrival at Lengpui Airport or at Vairengte/Jiribam checkpoints. No fee for Indians. Free for 15 days, extendable.",
+    "verified_at": "2026-11-21T10:25:18.938164524+05:30",
+    "expires_at": "2026-12-21T10:25:18.938164567+05:30",
+    "status": "published"
+  },
+  {
+    "id": "SK-PAP-NATHULA",
+    "state_code": "SK",
+    "area": "Nathula Pass / North Sikkim",
+    "applies_to": "indian",
+    "type": "PAP",
+    "documents_required": [
+      "Aadhaar card or passport",
+      "Sikkim PAP application"
+    ],
+    "lead_time_days": 1,
+    "fee": 200,
+    "official_url": "https://sikkimtourism.gov.in",
+    "notes": "PAP (Protected Area Permit) required for Nathula, Tsomgo Lake (sometimes), and North Sikkim (Lachung/Yumthang). Obtainable at Sikkim Tourism offices in Gangtok or through registered tour operators. Foreign nationals have more restrictions.",
+    "verified_at": "2026-11-21T10:25:18.938164657+05:30",
+    "expires_at": "2026-12-21T10:25:18.938164699+05:30",
+    "status": "published"
+  },
+  {
+    "id": "NL-RAP-BORDER",
+    "state_code": "NL",
+    "area": "Nagaland border districts (Mon, Tuensang)",
+    "applies_to": "all",
+    "type": "RAP",
+    "documents_required": [
+      "Photo ID",
+      "RAP application form"
+    ],
+    "lead_time_days": 2,
+    "fee": 0,
+    "official_url": "https://nagalandtourism.com",
+    "notes": "Restricted Area Permit needed for Mon (Konyak tribe) and Tuensang districts only. Not needed for Kohima, Dimapur, or Hornbill Festival.",
+    "verified_at": "2026-11-21T10:25:18.938164777+05:30",
+    "expires_at": "2026-12-21T10:25:18.93816482+05:30",
+    "status": "published"
+  },
+  {
+    "id": "MN-PAP",
+    "state_code": "MN",
+    "area": "Manipur (all areas)",
+    "applies_to": "foreign",
+    "type": "PAP",
+    "documents_required": [
+      "Passport",
+      "Valid Indian visa",
+      "PAP form from MHA"
+    ],
+    "lead_time_days": 15,
+    "fee": 0,
+    "official_url": "https://www.mha.gov.in",
+    "notes": "Foreign nationals need PAP for Manipur. Apply through Ministry of Home Affairs. Very restricted entry — most areas off-limits to foreign tourists. Very limited tourism infrastructure for foreign nationals.",
+    "verified_at": "2026-11-21T10:25:18.938164898+05:30",
+    "expires_at": "2026-12-21T10:25:18.938164942+05:30",
+    "status": "published"
+  },
+  {
+    "id": "MZ-PAP",
+    "state_code": "MZ",
+    "area": "Mizoram (all areas)",
+    "applies_to": "foreign",
+    "type": "PAP",
+    "documents_required": [
+      "Passport",
+      "Valid Indian visa",
+      "PAP application"
+    ],
+    "lead_time_days": 10,
+    "fee": 0,
+    "official_url": "https://www.mha.gov.in",
+    "notes": "Foreign nationals require Protected Area Permit for Mizoram. Apply at MHA in Delhi. Very limited foreign tourist access. Contact Mizoram Tourism for current status.",
+    "verified_at": "2026-11-21T10:25:18.938165032+05:30",
+    "expires_at": "2026-12-21T10:25:18.938165075+05:30",
+    "status": "published"
+  }
+]

@@ -49,6 +49,7 @@ type Destination struct {
 	EmergencyContact   string    `json:"emergency_contact"`
 	Rating             float64   `json:"rating"`
 	ReviewsCount       int       `json:"reviews_count"`
+	ImageURL           string    `json:"image_url,omitempty"`
 	SourceID           string    `json:"source_id"`
 	VerifiedAt         time.Time `json:"verified_at"`
 	ExpiresAt          time.Time `json:"expires_at"`
@@ -101,15 +102,17 @@ type PermitRule struct {
 
 // Event represents a cultural or seasonal event.
 type Event struct {
-	ID           string    `json:"id"`
-	StateCode    string    `json:"state_code"`
-	Name         string    `json:"name"`
-	StartDate    time.Time `json:"start_date"`
-	EndDate      time.Time `json:"end_date"`
-	LocationName string    `json:"location_name"`
-	Description  string    `json:"description"`
-	Category     string    `json:"category"`
-	AnnualMonth  int       `json:"annual_month"`
+	ID                   string `json:"id"`
+	StateCode            string `json:"state_code"`
+	Name                 string `json:"name"`
+	StartDate            string `json:"start_date"`
+	EndDate              string `json:"end_date"`
+	LocationName         string `json:"location_name"`
+	Description          string `json:"description"`
+	Category             string `json:"category"`
+	AnnualMonth          int    `json:"annual_month"`
+	CulturalSignificance string `json:"cultural_significance,omitempty"`
+	VisitorTips          string `json:"visitor_tips,omitempty"`
 }
 
 // BudgetEstimate represents a cost estimate for a destination.
@@ -142,6 +145,7 @@ type Itinerary struct {
 	EstTotalCostINR  CostMinMax `json:"est_total_cost_inr"`
 	Pace             string     `json:"pace"` // relaxed/moderate/active
 	Summary          string     `json:"summary"`
+	ImageURL         string     `json:"image_url,omitempty"`
 	Status           string     `json:"status"`
 	PlannerGenerated bool       `json:"planner_generated"`
 }
@@ -154,6 +158,7 @@ type ItineraryDay struct {
 	Title           string   `json:"title"`
 	DestinationSlug string   `json:"destination_slug"`
 	Stay            string   `json:"stay"`
+	ImageURL        string   `json:"image_url,omitempty"`
 	Activities      []string `json:"activities"`
 	Notes           string   `json:"notes"`
 }
@@ -211,4 +216,32 @@ type SavedTrip struct {
 	ShareCode string        `json:"share_code"`
 	Plan      interface{}   `json:"plan"`
 	CreatedAt time.Time     `json:"created_at"`
+}
+
+// Homestay represents a verified eco-homestay.
+type Homestay struct {
+	ID              int     `json:"id"`
+	StateCode       string  `json:"state_code"`
+	DestinationSlug string  `json:"destination_slug"`
+	Name            string  `json:"name"`
+	HostName        string  `json:"host_name"`
+	VillageLocation string  `json:"village_location"`
+	PricePerNight   int     `json:"price_per_night"`
+	ContactPhone    string  `json:"contact_phone"`
+	Rating          float64 `json:"rating"`
+	Amenities       string  `json:"amenities"`
+	EcoCertified    int     `json:"eco_certified"`
+	Description     string  `json:"description"`
+}
+
+// User represents a registered or logged-in traveller.
+type User struct {
+	ID        int       `json:"id"`
+	Name      string    `json:"name"`
+	Email     string    `json:"email"`
+	Phone     string    `json:"phone,omitempty"`
+	State     string    `json:"state"`
+	Country   string    `json:"country"`
+	Token     string    `json:"token"`
+	CreatedAt time.Time `json:"created_at,omitempty"`
 }

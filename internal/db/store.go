@@ -447,6 +447,73 @@ type Stats struct {
 	Itineraries  int `json:"itineraries"`
 }
 
+func (s *Store) ListHomestays(destinationSlug, stateCode string) ([]Homestay, error) {
+	var out []Homestay
+	if err := readJSON(s.path("homestays.json"), &out); err != nil {
+		return nil, err
+	}
+	if destinationSlug == "" && stateCode == "" {
+		return out, nil
+	}
+	var filtered []Homestay
+	for _, h := range out {
+		if destinationSlug != "" && !strings.EqualFold(h.DestinationSlug, destinationSlug) {
+			continue
+		}
+		if stateCode != "" && !strings.EqualFold(h.StateCode, stateCode) {
+			continue
+		}
+		filtered = append(filtered, h)
+	}
+	return filtered, nil
+}
+
+func (s *Store) ListUsers() ([]User, error) {
+	var out []User
+	return out, readJSON(s.path("users.json"), &out)
+}
+
+func (s *Store) UpsertUser(u User) (*User, error) {
+	users, _ := s.ListUsers()
+	found := false
+	maxID := 0
+	for i, existing := range users {
+		if existing.ID > maxID {
+			maxID = existing.ID
+		}
+		if strings.EqualFold(existing.Email, u.Email) {
+			u.ID = existing.ID
+			users[i] = u
+			found = true
+			break
+		}
+	}
+	if !found {
+		u.ID = maxID + 1
+		users = append(users, u)
+	}
+	if err := writeJSON(s.path("users.json"), users); err != nil {
+		return nil, err
+	}
+	return &u, nil
+}
+
+func (s *Store) GetUserByToken(token string) (*User, error) {
+	if token == "" {
+		return nil, fmt.Errorf("empty token")
+	}
+	users, err := s.ListUsers()
+	if err != nil {
+		return nil, err
+	}
+	for _, u := range users {
+		if u.Token == token {
+			return &u, nil
+		}
+	}
+	return nil, fmt.Errorf("user not found")
+}
+
 func (s *Store) GetStats() (Stats, error) {
 	var st Stats
 	dests, _ := s.ListDestinations(nil)

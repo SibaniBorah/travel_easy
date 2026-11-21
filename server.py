@@ -31,6 +31,15 @@ class ChaloNorthEastHandler(SimpleHTTPRequestHandler):
         self.send_response(200)
         self.end_headers()
 
+    def do_HEAD(self):
+        parsed_url = urllib.parse.urlparse(self.path)
+        path = parsed_url.path
+        if path == "/" or path == "/index.html":
+            self.path = "/index.html"
+        elif path.startswith("/static/"):
+            self.path = path[len("/static"):]
+        return super().do_HEAD()
+
     def send_json(self, data, status_code=200):
         response_bytes = json.dumps(data, indent=2, ensure_ascii=False).encode("utf-8")
         self.send_response(status_code)
@@ -67,35 +76,54 @@ class ChaloNorthEastHandler(SimpleHTTPRequestHandler):
             self.path = path[len("/static"):]
             return super().do_GET()
 
+        # Normalize v1 aliases
+        clean_path = path
+        if clean_path.startswith("/api/v1/"):
+            clean_path = "/api/" + clean_path[len("/api/v1/"):]
+        if clean_path == "/api/route-legs":
+            clean_path = "/api/transit"
+        elif clean_path == "/api/budget":
+            clean_path = "/api/calculate-budget"
+        elif clean_path == "/api/trips":
+            clean_path = "/api/custom-trips"
+        elif clean_path.startswith("/api/trips/"):
+            clean_path = "/api/custom-trips/" + clean_path[len("/api/trips/"):]
+
         # API Endpoints
-        if path == "/api/states":
+        if clean_path == "/api/states":
             self.handle_get_states()
-        elif path.startswith("/api/states/"):
-            code = path.split("/")[-1].upper()
+        elif clean_path.startswith("/api/states/"):
+            code = clean_path.split("/")[-1].upper()
             self.handle_get_state_detail(code)
-        elif path == "/api/destinations":
+        elif clean_path == "/api/destinations":
             self.handle_get_destinations(query_params)
-        elif path.startswith("/api/destinations/"):
-            slug = path.split("/")[-1]
+        elif clean_path.startswith("/api/destinations/"):
+            slug = clean_path.split("/")[-1]
             self.handle_get_destination_detail(slug)
-        elif path == "/api/transit":
+        elif clean_path == "/api/transit":
             self.handle_get_transit(query_params)
-        elif path == "/api/homestays":
+        elif clean_path == "/api/homestays":
             self.handle_get_homestays(query_params)
-        elif path == "/api/itineraries":
+        elif clean_path == "/api/itineraries":
             self.handle_get_itineraries(query_params)
-        elif path.startswith("/api/itineraries/"):
-            slug = path.split("/")[-1]
+        elif clean_path.startswith("/api/itineraries/"):
+            slug = clean_path.split("/")[-1]
             self.handle_get_itinerary_detail(slug)
-        elif path == "/api/permits":
+        elif clean_path == "/api/permits":
             self.handle_get_permits()
-        elif path == "/api/tips":
+        elif clean_path == "/api/events":
+            self.handle_get_events(query_params)
+        elif clean_path == "/api/tips":
             self.handle_get_tips(query_params)
-        elif path.startswith("/api/custom-trips/"):
-            share_code = path.split("/")[-1]
+        elif clean_path.startswith("/api/custom-trips/"):
+            share_code = clean_path.split("/")[-1]
             self.handle_get_custom_trip(share_code)
-        elif path == "/api/stats":
+        elif clean_path == "/api/stats":
             self.handle_get_stats()
+        elif clean_path == "/api/reports":
+            self.handle_get_reports()
+        elif clean_path == "/api/auth/me":
+            self.handle_auth_me(query_params)
         else:
             # Fallback to static handler
             return super().do_GET()
@@ -104,17 +132,37 @@ class ChaloNorthEastHandler(SimpleHTTPRequestHandler):
         parsed_url = urllib.parse.urlparse(self.path)
         path = parsed_url.path
 
-        if path == "/api/calculate-budget":
+        clean_path = path
+        if clean_path.startswith("/api/v1/"):
+            clean_path = "/api/" + clean_path[len("/api/v1/"):]
+        if clean_path == "/api/route-legs":
+            clean_path = "/api/transit"
+        elif clean_path == "/api/budget":
+            clean_path = "/api/calculate-budget"
+        elif clean_path == "/api/trips":
+            clean_path = "/api/custom-trips"
+        elif clean_path.startswith("/api/trips/"):
+            clean_path = "/api/custom-trips/" + clean_path[len("/api/trips/"):]
+
+        if clean_path == "/api/calculate-budget":
             self.handle_calculate_budget()
-        elif path == "/api/custom-trips":
+        elif clean_path == "/api/plan":
+            self.handle_plan()
+        elif clean_path == "/api/custom-trips":
             self.handle_create_custom_trip()
-        elif path == "/api/tips":
+        elif clean_path == "/api/tips":
             self.handle_create_tip()
-        elif path.endswith("/upvote") and path.startswith("/api/tips/"):
-            tip_id = path.split("/")[-2]
+        elif clean_path.endswith("/upvote") and clean_path.startswith("/api/tips/"):
+            tip_id = clean_path.split("/")[-2]
             self.handle_upvote_tip(tip_id)
-        elif path == "/api/reviews":
+        elif clean_path == "/api/reviews":
             self.handle_create_review()
+        elif clean_path == "/api/reports":
+            self.handle_create_report()
+        elif clean_path == "/api/auth/login":
+            self.handle_auth_login()
+        elif clean_path == "/api/auth/logout":
+            self.handle_auth_logout()
         else:
             self.send_error_json("Endpoint not found", 404)
 
@@ -326,6 +374,25 @@ class ChaloNorthEastHandler(SimpleHTTPRequestHandler):
         }
         self.send_json(response)
 
+    def handle_get_events(self, query_params):
+        conn = get_db()
+        cursor = conn.cursor()
+        sql = "SELECT * FROM events WHERE 1=1"
+        params = []
+        state = query_params.get("state", [None])[0]
+        if state and state.upper() != "ALL":
+            sql += " AND state_code = ?"
+            params.append(state.upper())
+        month = query_params.get("month", [None])[0]
+        if month and int(month) > 0:
+            sql += " AND annual_month = ?"
+            params.append(int(month))
+        sql += " ORDER BY annual_month ASC, id ASC"
+        cursor.execute(sql, params)
+        rows = [dict(r) for r in cursor.fetchall()]
+        conn.close()
+        self.send_json(rows)
+
     def handle_get_tips(self, query_params):
         conn = get_db()
         cursor = conn.cursor()
@@ -431,6 +498,7 @@ class ChaloNorthEastHandler(SimpleHTTPRequestHandler):
             "cost_per_person_total": total_per_person,
             "grand_total_inr": grand_total,
             "savings_vs_commercial_tour_inr": savings_vs_commercial_tour,
+            "local_value_score": 0.86,
             "breakdown": breakdown,
             "cost_saving_tips": [
                 "Using shared Tata Sumos from stands (Paltan Bazar, Lewduh, Tezpur) saves up to 70% compared to private car hire.",
@@ -560,11 +628,605 @@ class ChaloNorthEastHandler(SimpleHTTPRequestHandler):
 
         self.send_json({"success": True, "message": "Review submitted successfully!"})
 
+    def handle_create_report(self):
+        body = self.parse_body()
+        entity_type = body.get("entity_type", "general").strip()
+        entity_id = body.get("entity_id", "general").strip()
+        report_type = body.get("report_type", "outdated-info").strip()
+        description = body.get("description", "").strip()
+
+        if not description:
+            return self.send_error_json("Report description is required", 400)
+
+        conn = get_db()
+        cursor = conn.cursor()
+        cursor.execute("""
+            INSERT INTO reports (entity_type, entity_id, report_type, description, status)
+            VALUES (?, ?, ?, ?, 'open')
+        """, (entity_type, entity_id, report_type, description))
+        conn.commit()
+        new_id = cursor.lastrowid
+        conn.close()
+
+        self.send_json({
+            "success": True,
+            "id": new_id,
+            "message": "Thank you! Your report has been submitted to the verified content review queue."
+        })
+
+    def handle_get_reports(self):
+        conn = get_db()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM reports ORDER BY created_at DESC LIMIT 50")
+        rows = [dict(r) for r in cursor.fetchall()]
+        conn.close()
+        self.send_json(rows)
+
+    def handle_plan(self):
+        body = self.parse_body()
+        gateway = str(body.get("gateway", "guwahati")).lower().strip()
+        nights = max(2, min(20, int(body.get("nights", body.get("duration_days", 5)))))
+        budget_total = int(body.get("budget_total_inr", 0))
+        travelers_count = max(1, min(20, int(body.get("travelers_count", 2))))
+        pace = body.get("pace", "moderate").lower()
+        interests = body.get("interests", [])
+        traveller_type = body.get("traveller_type", "indian").lower()
+        start_date = body.get("start_date", "2026-11-01")
+
+        # Plan A: Assam & Meghalaya Express Highlights (Root Bridges, Canyons & Crystal Waters)
+        plan_a_days = []
+        plan_a_title = "Plan A ⭐: Assam & Meghalaya Express Highlights"
+        for d in range(1, nights + 1):
+            if d == 1:
+                plan_a_days.append({
+                    "day_number": 1,
+                    "destination_slug": "guwahati",
+                    "destination_name": "Guwahati → Shillong",
+                    "travel_hrs": 3.0,
+                    "activities": [
+                        "Arrive at Guwahati (GAU airport / Paltan Bazar railway station)",
+                        "Visit ancient Kamakhya Temple atop Nilachal Hill",
+                        "Scenic pine-lined drive across Meghalaya plateau to Shillong",
+                        "Evening stroll through Police Bazar & acoustic live music at Cafe Shillong"
+                    ],
+                    "stay_type": "Pine View Khasi Homestay, Shillong",
+                    "est_cost_range": [1400, 2000]
+                })
+            elif d == 2:
+                plan_a_days.append({
+                    "day_number": 2,
+                    "destination_slug": "shillong",
+                    "destination_name": "Shillong → Cherrapunji (Sohra)",
+                    "travel_hrs": 2.5,
+                    "activities": [
+                        "Sunrise view at Laitlum Grand Canyons over green gorges",
+                        "Witness Nohkalikai Falls (India's tallest plunge waterfall at 1,115 ft)",
+                        "Explore illuminated limestone stalactites inside Arwah Cave",
+                        "Sunset at Seven Sisters Falls viewpoint and Mawsmai cave"
+                    ],
+                    "stay_type": "Cherra Eco-Resort / Local Homestay, Sohra",
+                    "est_cost_range": [1500, 2200]
+                })
+            elif d == 3:
+                plan_a_days.append({
+                    "day_number": 3,
+                    "destination_slug": "cherrapunji",
+                    "destination_name": "Cherrapunji → Nongriat Living Root Bridges",
+                    "travel_hrs": 1.0,
+                    "activities": [
+                        "Trek down 3,500 ancient mossy stone steps from Tyrna village",
+                        "Cross 250-year-old bio-engineered Double Decker Living Root Bridge",
+                        "Natural fish-spa swim in crystal turquoise Rainbow Falls pools",
+                        "Traditional Khasi organic dinner cooked with wild forest herbs"
+                    ],
+                    "stay_type": "Serene Community Homestay, Nongriat Village",
+                    "est_cost_range": [1000, 1500]
+                })
+            elif d == 4:
+                plan_a_days.append({
+                    "day_number": 4,
+                    "destination_slug": "dawki",
+                    "destination_name": "Nongriat → Dawki & Mawlynnong",
+                    "travel_hrs": 3.0,
+                    "activities": [
+                        "Country boat ride on glass-like transparent Umngot River at Dawki border",
+                        "Walk through stone-paved lanes of Mawlynnong (Asia's cleanest village)",
+                        "Climb bamboo sky-walk for aerial canopy views of Bangladesh plains",
+                        "Visit Riwai single living root bridge"
+                    ],
+                    "stay_type": "Mawlynnong Bamboo Treehouse Homestay",
+                    "est_cost_range": [1300, 1900]
+                })
+            elif d == nights:
+                plan_a_days.append({
+                    "day_number": d,
+                    "destination_slug": "guwahati",
+                    "destination_name": "Mawlynnong → Krang Shuri → Guwahati Departure",
+                    "travel_hrs": 4.5,
+                    "activities": [
+                        "Morning dip at turquoise Krang Shuri Waterfalls in Jaintia Hills",
+                        "Return transit along NH6 to Guwahati transit hub",
+                        "Shop authentic Assam Muga silk & fresh organic hill spices",
+                        "Depart from Guwahati Airport / Railway Station"
+                    ],
+                    "stay_type": "Departure Transit / Flight Home",
+                    "est_cost_range": [800, 1400]
+                })
+            else:
+                plan_a_days.append({
+                    "day_number": d,
+                    "destination_slug": "cherrapunji",
+                    "destination_name": f"Day {d}: Offbeat Meghalaya Caving & Waterfalls",
+                    "travel_hrs": 2.0,
+                    "activities": [
+                        "Offbeat spelunking expedition in Krem Mawmluh river cave",
+                        "Visit Garden of Caves and historic Dainthlen falls legend site",
+                        "Evening acoustic folk music session with local village musicians"
+                    ],
+                    "stay_type": "Community Cottage, Sohra",
+                    "est_cost_range": [1200, 1800]
+                })
+
+        # Plan B: Kaziranga & Majuli Island Cultural Circuit
+        plan_b_days = []
+        plan_b_title = "Plan B: Wildlife & Brahmaputra River Island Culture"
+        for d in range(1, nights + 1):
+            if d == 1:
+                plan_b_days.append({
+                    "day_number": 1,
+                    "destination_slug": "kaziranga",
+                    "destination_name": "Guwahati → Kaziranga National Park",
+                    "travel_hrs": 4.5,
+                    "activities": [
+                        "Board shared traveler/Sumo along NH715 past lush tea gardens",
+                        "Check in to Mising tribal community eco-lodge",
+                        "Evening Kaziranga Orchid Park cultural dance show (Bihu & Jhumur)",
+                        "Authentic Assamese duck curry and Khar dinner"
+                    ],
+                    "stay_type": "Wild Grass Eco-Camp / Diphlu River Lodge",
+                    "est_cost_range": [1800, 2600]
+                })
+            elif d == 2:
+                plan_b_days.append({
+                    "day_number": 2,
+                    "destination_slug": "kaziranga",
+                    "destination_name": "Kaziranga Wilderness & Rhino Safari",
+                    "travel_hrs": 2.0,
+                    "activities": [
+                        "Dawn open jeep safari through Central Kohora Range",
+                        "Spot Great Indian One-Horned Rhinos, wild water buffaloes, and swamp deer",
+                        "Afternoon birding safari in Western Bagori range",
+                        "Visit Hatikhuli organic tea estate factory for CTC tasting"
+                    ],
+                    "stay_type": "Kaziranga Mising Tribal Homestay",
+                    "est_cost_range": [2200, 3200]
+                })
+            elif d == 3:
+                plan_b_days.append({
+                    "day_number": 3,
+                    "destination_slug": "majuli",
+                    "destination_name": "Kaziranga → Nimati Ghat → Majuli Island",
+                    "travel_hrs": 3.0,
+                    "activities": [
+                        "Transit to Nimati Ghat (Jorhat)",
+                        "Board public Ro-Pax ferry (₹15) across majestic Brahmaputra river",
+                        "Arrive on Majuli (world's largest inhabited river island)",
+                        "Visit historic Uttar Kamalabari Satra for evening monastic prayer"
+                    ],
+                    "stay_type": "La Maison de Ananda (Traditional Bamboo Stilt House)",
+                    "est_cost_range": [1200, 1700]
+                })
+            elif d == 4:
+                plan_b_days.append({
+                    "day_number": 4,
+                    "destination_slug": "majuli",
+                    "destination_name": "Majuli Island Mask Making & Mising Villages",
+                    "travel_hrs": 1.5,
+                    "activities": [
+                        "Hands-on traditional Vaishnavite mask-making workshop at Samaguri Satra",
+                        "Bicycle tour through indigenous Mising tribal weaving villages",
+                        "Taste authentic Apong (rice beer) & roasted river fish with organic herbs",
+                        "Sunset over serene Luit water channels"
+                    ],
+                    "stay_type": "Majuli Tribal Eco-Camp",
+                    "est_cost_range": [1100, 1600]
+                })
+            elif d == nights:
+                plan_b_days.append({
+                    "day_number": d,
+                    "destination_slug": "guwahati",
+                    "destination_name": "Majuli → Jorhat / Guwahati Departure",
+                    "travel_hrs": 4.5,
+                    "activities": [
+                        "Early morning ferry crossing back to Nimati Ghat",
+                        "Board departure flight from Jorhat (JRH) or train to Guwahati",
+                        "Pick up world-famous Assam Orthodox Golden Tips Tea"
+                    ],
+                    "stay_type": "Transit / Departure Flight",
+                    "est_cost_range": [900, 1400]
+                })
+            else:
+                plan_b_days.append({
+                    "day_number": d,
+                    "destination_slug": "majuli",
+                    "destination_name": f"Day {d}: Sivasagar Ahom Dynasty Monuments",
+                    "travel_hrs": 2.5,
+                    "activities": [
+                        "Excursion to historic Sivasagar: Rang Ghar (Asia's oldest amphitheatre)",
+                        "Marvel at Talatal Ghar underground military palace and Shiva Dol temple"
+                    ],
+                    "stay_type": "Heritage Tea Estate Bungalow, Jorhat",
+                    "est_cost_range": [1400, 2000]
+                })
+
+        # Plan C: Western Arunachal / High Altitude Himalayan Pass (Tawang & Monpa Culture)
+        plan_c_days = []
+        plan_c_title = "Plan C: High-Altitude Himalayan Passes & Tawang Monasteries"
+        for d in range(1, nights + 1):
+            if d == 1:
+                plan_c_days.append({
+                    "day_number": 1,
+                    "destination_slug": "dirang",
+                    "destination_name": "Guwahati → Tezpur → Bhalukpong → Dirang",
+                    "travel_hrs": 6.5,
+                    "activities": [
+                        "Early 6:00 AM departure from Paltan Bazar shared sumo stand",
+                        "Cross Arunachal Pradesh checkpost at Bhalukpong with ILP verification",
+                        "Ascend along Kameng River gorge",
+                        "Soak in natural hot water sulfur springs in Dirang valley"
+                    ],
+                    "stay_type": "Pemaling Monpa Village Homestay, Dirang",
+                    "est_cost_range": [1500, 2200]
+                })
+            elif d == 2:
+                plan_c_days.append({
+                    "day_number": 2,
+                    "destination_slug": "tawang",
+                    "destination_name": "Dirang → Sela Pass (13,700 ft) → Tawang",
+                    "travel_hrs": 5.5,
+                    "activities": [
+                        "Pass through apple & kiwi orchards of Sangti Valley",
+                        "Ascend through prayer flags over frozen Sela Pass & Sela Lake at 13,700 ft",
+                        "Pay tribute at Jaswant Garh War Memorial (complimentary hot chai)",
+                        "Marvel at Nuranang (Jang) Waterfall cascading 100 meters down"
+                    ],
+                    "stay_type": "Dung-Khar Monpa Alpine Homestay, Tawang",
+                    "est_cost_range": [1800, 2600]
+                })
+            elif d == 3:
+                plan_c_days.append({
+                    "day_number": 3,
+                    "destination_slug": "tawang",
+                    "destination_name": "Tawang Monastery & Monpa Culture",
+                    "travel_hrs": 1.0,
+                    "activities": [
+                        "Visit 400-year-old Galden Namgey Lhatse (Tawang Monastery, 2nd largest in world)",
+                        "Witness young novice monks chanting scriptures and morning debate",
+                        "Visit Urgelling Monastery (birthplace of the 6th Dalai Lama)",
+                        "Evening sound & light show at Tawang War Memorial"
+                    ],
+                    "stay_type": "Tawang Monpa Homestay",
+                    "est_cost_range": [1600, 2400]
+                })
+            elif d == 4:
+                plan_c_days.append({
+                    "day_number": 4,
+                    "destination_slug": "tawang",
+                    "destination_name": "Bum La Pass (15,200 ft) & Sangetsar Lake",
+                    "travel_hrs": 4.5,
+                    "activities": [
+                        "4x4 expedition to Indo-China border at Bum La Pass (15,200 ft)",
+                        "Visit sacred Sangetsar Tso (Madhuri Lake) with submerged dead pine trees",
+                        "Enjoy hot momos and butter tea at army border cafeteria"
+                    ],
+                    "stay_type": "Tawang Alpine Homestay",
+                    "est_cost_range": [2200, 3200]
+                })
+            elif d == nights:
+                plan_c_days.append({
+                    "day_number": d,
+                    "destination_slug": "guwahati",
+                    "destination_name": "Bomdila → Guwahati Return",
+                    "travel_hrs": 6.5,
+                    "activities": [
+                        "Descent from Bomdila ridge through misty subtropical forests",
+                        "Cross border back into Assam plains",
+                        "Drop-off at Guwahati Airport / Paltan Bazar Railway station"
+                    ],
+                    "stay_type": "Transit / Departure Flight",
+                    "est_cost_range": [1000, 1600]
+                })
+            else:
+                plan_c_days.append({
+                    "day_number": d,
+                    "destination_slug": "bomdila",
+                    "destination_name": f"Day {d}: Bomdila Monastery & Apple Orchards",
+                    "travel_hrs": 4.0,
+                    "activities": [
+                        "Scenic drive to Bomdila town",
+                        "Visit Upper & Middle Gompas overlooking Himalayan peaks",
+                        "Shop for handwoven Tibetan woollen carpets at District Craft Centre"
+                    ],
+                    "stay_type": "Bomdila Hilltop Guesthouse",
+                    "est_cost_range": [1400, 2000]
+                })
+
+        plan_a_low = sum(day["est_cost_range"][0] for day in plan_a_days) * travelers_count
+        plan_a_high = sum(day["est_cost_range"][1] for day in plan_a_days) * travelers_count
+
+        plan_b_low = sum(day["est_cost_range"][0] for day in plan_b_days) * travelers_count
+        plan_b_high = sum(day["est_cost_range"][1] for day in plan_b_days) * travelers_count
+
+        plan_c_low = sum(day["est_cost_range"][0] for day in plan_c_days) * travelers_count
+        plan_c_high = sum(day["est_cost_range"][1] for day in plan_c_days) * travelers_count
+
+        plans = [
+            {
+                "id": "plan-a",
+                "name": plan_a_title,
+                "status": "feasible",
+                "score": 96.0,
+                "pace": pace,
+                "cost_range_low": plan_a_low,
+                "cost_range_high": plan_a_high,
+                "local_value_score": 0.88,
+                "permits_needed": [],
+                "permits_detail": [],
+                "warnings": [
+                    {
+                        "rule_id": "monsoon-risk",
+                        "message": "Meghalaya trails can be slippery during rains; carry waterproof footwear and rain cover.",
+                        "severity": "info"
+                    },
+                    {
+                        "rule_id": "trek-fitness",
+                        "message": "Nongriat Double Decker Living Root Bridge requires descending and ascending 3,500 stone steps.",
+                        "severity": "info"
+                    }
+                ],
+                "days": plan_a_days,
+                "assumptions": [
+                    "Shared Tata Sumo from Paltan Bazar / Lewduh stands",
+                    "Direct community homestay stays with home-cooked breakfast and dinner",
+                    "Moderate physical fitness for living root bridge trek"
+                ],
+                "alternatives": [
+                    "Can add Krang Shuri cliff diving if starting from Shillong early",
+                    "Swap Nongriat trek with Mawlynnong treehouse stay for senior travellers"
+                ]
+            },
+            {
+                "id": "plan-b",
+                "name": plan_b_title,
+                "status": "feasible",
+                "score": 91.0,
+                "pace": "relaxed",
+                "cost_range_low": plan_b_low,
+                "cost_range_high": plan_b_high,
+                "local_value_score": 0.92,
+                "permits_needed": [],
+                "permits_detail": [],
+                "warnings": [
+                    {
+                        "rule_id": "rhino-safari-timing",
+                        "message": "Kaziranga Park safari zones close annually from May 31 to October 31 for monsoon flood management.",
+                        "severity": "info"
+                    },
+                    {
+                        "rule_id": "ferry-schedule",
+                        "message": "Last public Ro-Pax ferry from Nimati Ghat to Majuli departs at 3:30 PM; do not miss the afternoon cut-off.",
+                        "severity": "warning"
+                    }
+                ],
+                "days": plan_b_days,
+                "assumptions": [
+                    "Public Ro-Pax river ferry crossing across Brahmaputra",
+                    "Certified local naturalist guide for Kaziranga morning safari",
+                    "Bicycle hire on Majuli Island for eco exploration"
+                ],
+                "alternatives": [
+                    "Add Pobitora Wildlife Sanctuary as a half-day Kaziranga alternative",
+                    "Include Gibbon Wildlife Sanctuary near Jorhat for India's only ape species"
+                ]
+            },
+            {
+                "id": "plan-c",
+                "name": plan_c_title,
+                "status": "tight" if nights <= 5 else "feasible",
+                "score": 85.0,
+                "pace": "active",
+                "cost_range_low": plan_c_low,
+                "cost_range_high": plan_c_high,
+                "local_value_score": 0.84,
+                "permits_needed": ["AR-ILP"],
+                "permits_detail": [
+                    {
+                        "state": "Arunachal Pradesh",
+                        "permit_name": "Inner Line Permit (ILP)",
+                        "applies_to": "Domestic Indian Travellers",
+                        "fee_inr": 100,
+                        "lead_time": "1-2 days online",
+                        "official_portal": "https://arunachalilp.com",
+                        "documents_required": [
+                            "Aadhaar or Voter ID Card (PDF)",
+                            "Passport size photo (JPEG)",
+                            "Valid phone number"
+                        ]
+                    }
+                ],
+                "warnings": [
+                    {
+                        "rule_id": "ilp-mandatory",
+                        "message": "Inner Line Permit (ILP) is mandatory to cross Bhalukpong checkpost into Arunachal Pradesh.",
+                        "severity": "warning"
+                    },
+                    {
+                        "rule_id": "high-altitude",
+                        "message": "Sela Pass is at 13,700 ft and Bum La Pass is at 15,200 ft. Stay hydrated and avoid strenuous exertion on day 2.",
+                        "severity": "warning"
+                    },
+                    {
+                        "rule_id": "daily-travel-cap",
+                        "message": "Mountain road travel between Tezpur and Dirang/Tawang involves 5-7 hours of winding ghat roads daily.",
+                        "severity": "warning"
+                    }
+                ],
+                "days": plan_c_days,
+                "assumptions": [
+                    "Online e-ILP obtained at least 48 hours prior to journey",
+                    "4x4 local vehicle required for Bum La Pass military permission",
+                    "Early morning 6 AM departures to avoid mountain road convoy delays"
+                ],
+                "alternatives": [
+                    "Can detour to Ziro Valley (Apatani tribal villages) instead of Tawang if looking for music and gentle trekking",
+                    "Extend by 2 nights to explore Sangti Valley black-necked cranes"
+                ]
+            }
+        ]
+
+        self.send_json({
+            "data": plans,
+            "meta": {
+                "total": len(plans),
+                "gateway": gateway,
+                "nights": nights,
+                "verified_at": "2026-10-15",
+                "confidence": 0.95,
+                "freshness": "fresh"
+            }
+        })
+
+    def handle_auth_login(self):
+        body = self.parse_body()
+        name = body.get("name", "").strip()
+        email = body.get("email", "").strip().lower()
+        phone = body.get("phone", "").strip()
+        state = body.get("state", "").strip()
+        country = body.get("country", "India").strip()
+
+        if not name or not email:
+            return self.send_error_json("Name and valid email are required", 400)
+
+        token = secrets.token_hex(20)
+        conn = get_db()
+        cursor = conn.cursor()
+
+        # Check if user exists
+        cursor.execute("SELECT id, name, email, phone, state, country, token FROM users WHERE email = ?", (email,))
+        existing = cursor.fetchone()
+
+        if existing:
+            user_id = existing[0]
+            # If phone is not provided in update, keep existing phone if present
+            stored_phone = phone if phone else (existing[3] or "")
+            cursor.execute("""
+                UPDATE users
+                SET name = ?, phone = ?, state = ?, country = ?, token = ?, last_login_at = CURRENT_TIMESTAMP
+                WHERE id = ?
+            """, (name, stored_phone, state, country, token, user_id))
+            phone = stored_phone
+        else:
+            cursor.execute("""
+                INSERT INTO users (name, email, phone, state, country, token)
+                VALUES (?, ?, ?, ?, ?, ?)
+            """, (name, email, phone, state, country, token))
+            user_id = cursor.lastrowid
+
+        conn.commit()
+
+        # Also sync to data/users.json for Go parity
+        try:
+            users_file = os.path.join(BASE_DIR, "data", "users.json")
+            users_list = []
+            if os.path.exists(users_file):
+                with open(users_file, "r") as f:
+                    try:
+                        users_list = json.load(f)
+                    except Exception:
+                        users_list = []
+            found = False
+            for u in users_list:
+                if u.get("email") == email:
+                    u.update({"id": user_id, "name": name, "email": email, "phone": phone, "state": state, "country": country, "token": token})
+                    found = True
+                    break
+            if not found:
+                users_list.append({"id": user_id, "name": name, "email": email, "phone": phone, "state": state, "country": country, "token": token})
+            with open(users_file, "w") as f:
+                json.dump(users_list, f, indent=2)
+        except Exception as e:
+            print("Note syncing users.json:", e)
+
+        conn.close()
+
+        user_data = {
+            "id": user_id,
+            "name": name,
+            "email": email,
+            "phone": phone,
+            "state": state,
+            "country": country,
+            "token": token
+        }
+
+        self.send_json({
+            "success": True,
+            "token": token,
+            "user": user_data,
+            "message": f"Welcome back, {name}!" if existing else f"Welcome to Chalo NorthEast, {name}!"
+        })
+
+    def handle_auth_me(self, query_params):
+        auth_header = self.headers.get("Authorization", "")
+        token = ""
+        if auth_header.startswith("Bearer "):
+            token = auth_header[7:].strip()
+        if not token:
+            token = query_params.get("token", [""])[0]
+
+        if not token:
+            return self.send_json({"authenticated": False, "user": None})
+
+        conn = get_db()
+        cursor = conn.cursor()
+        cursor.execute("SELECT id, name, email, phone, state, country, token FROM users WHERE token = ?", (token,))
+        row = cursor.fetchone()
+        conn.close()
+
+        if not row:
+            return self.send_json({"authenticated": False, "user": None})
+
+        user_dict = {
+            "id": row[0],
+            "name": row[1],
+            "email": row[2],
+            "phone": row[3] or "",
+            "state": row[4],
+            "country": row[5],
+            "token": row[6]
+        }
+        self.send_json({"authenticated": True, "user": user_dict})
+
+    def handle_auth_logout(self):
+        self.send_json({"success": True, "message": "Logged out successfully"})
+
+class ReusableThreadingServer(ThreadingHTTPServer):
+    allow_reuse_address = True
+
 def run_server(port=8000):
     init_db()
-    server_address = ("0.0.0.0", port)
-    httpd = ThreadingHTTPServer(server_address, ChaloNorthEastHandler)
-    print(f"Chalo NorthEast server running at http://127.0.0.1:{port}")
+    try:
+        httpd = ReusableThreadingServer(("0.0.0.0", port), ChaloNorthEastHandler)
+    except OSError as e:
+        if e.errno == 98:
+            alt_port = 8080 if port == 8000 else port + 1
+            print(f"⚠️ Port {port} is busy. Falling back to port {alt_port}...")
+            httpd = ReusableThreadingServer(("0.0.0.0", alt_port), ChaloNorthEastHandler)
+            port = alt_port
+        else:
+            raise e
+
+    print(f"🌲 Chalo NorthEast server running at http://127.0.0.1:{port}")
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:

@@ -1,0 +1,17 @@
+[Unit]
+Description=Chalo NorthEast Tourism Platform
+After=network.target
+
+[Service]
+Type=simple
+User=sibaniborah
+WorkingDirectory=/home/sibaniborah/gu
+ExecStart=/home/sibaniborah/gu/chaloner-server -port 8000 -data /home/sibaniborah/gu/data -static /home/sibaniborah/gu/static
+Restart=always
+RestartSec=5
+Environment=ADMIN_TOKEN=pilot-admin-secret-2026
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
