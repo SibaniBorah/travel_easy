@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Chalo NorthEast — Admin Panel</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <style>
+    .admin-layout { max-width: 1100px; margin: 2rem auto; padding: 0 1.25rem; }
+    .admin-login-card { max-width: 420px; margin: 4rem auto; background: white; border-radius: var(--radius-lg); border: 1px solid var(--border); padding: 2rem; box-shadow: var(--shadow-lg); }
+    .admin-panel { display: none; }
+    .admin-panel.visible { display: block; }
+    .admin-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    .admin-table th { background: var(--bg); padding: 0.65rem 1rem; text-align: left; font-weight: 700; font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; border-bottom: 2px solid var(--border); }
+    .admin-table td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border-light); vertical-align: middle; }
+    .admin-table tr:hover td { background: var(--bg); }
+    .urgency-expired { background: #fef2f2 !important; }
+    .urgency-stale { background: #fffbeb !important; }
+    .urgency-fresh { background: #f0fdf4 !important; }
+    .urgency-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 0.4rem; }
+    .dot-expired { background: var(--danger); }
+    .dot-stale { background: var(--warning); }
+    .dot-fresh { background: var(--success); }
+    .admin-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .table-wrap { overflow-x: auto; border-radius: var(--radius-md); border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
+    .admin-toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+    .admin-stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+    .admin-stat-card { background: white; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1rem; text-align: center; }
+    .admin-stat-num { font-size: 1.75rem; font-weight: 800; }
+    .admin-stat-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; }
+    .admin-header { background: linear-gradient(135deg, #064e3b, #0369a1); color: white; padding: 1.25rem 1.5rem; display: flex; align-items: center; justify-content: space-between; border-radius: var(--radius-lg); margin-bottom: 2rem; }
+  </style>
+</head>
+<body style="background: #f1f5f9; min-height: 100vh;">
+
+<!-- Login Screen -->
+<div id="admin-login-screen" class="admin-layout">
+  <div class="admin-login-card">
+    <div style="text-align:center; margin-bottom:1.5rem;">
+      <div style="font-size:2.5rem; margin-bottom:0.5rem;">🔐</div>
+      <h1 style="font-size:1.35rem; color:var(--primary);">Chalo NorthEast</h1>
+      <p style="font-size:0.85rem; color:var(--text-muted);">Admin Content Management Panel</p>
+    </div>
+    <form id="admin-login-form" novalidate>
+      <div class="form-group">
+        <label class="form-label" for="admin-token-input">Admin API Token</label>
+        <input type="password" id="admin-token-input" class="filter-select" style="width:100%;" placeholder="Enter your X-Admin-Token…" required autocomplete="current-password" />
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;">Sign In →</button>
+      <div id="login-error" style="display:none; color:var(--danger); font-size:0.82rem; margin-top:0.75rem; text-align:center;"></div>
+    </form>
+  </div>
+</div>
+
+<!-- Admin Panel -->
+<div id="admin-panel" class="admin-panel">
+  <div class="admin-layout">
+    <!-- Header -->
+    <div class="admin-header">
+      <div>
+        <div style="font-weight:800; font-size:1.1rem;">🏔️ Chalo NorthEast — Admin</div>
+        <div style="font-size:0.8rem; opacity:0.8;" id="admin-logged-in-label">Content Quality Dashboard</div>
+      </div>
+      <div style="display:flex; gap:0.75rem; align-items:center;">
+        <button class="btn btn-outline btn-sm" style="border-color:rgba(255,255,255,0.3); color:white;" onclick="refreshStaleQueue()">🔄 Refresh</button>
+        <button class="btn btn-outline btn-sm" style="border-color:rgba(255,255,255,0.3); color:white;" id="btn-admin-logout">Sign Out</button>
+      </div>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="admin-stats-row" id="admin-stats-row">
+      <div class="admin-stat-card">
+        <div class="admin-stat-num" style="color:var(--danger);" id="stat-expired">—</div>
+        <div class="admin-stat-label">🔴 Expired</div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-num" style="color:var(--warning);" id="stat-stale">—</div>
+        <div class="admin-stat-label">🟡 Stale (30–60d)</div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-num" style="color:var(--success);" id="stat-fresh">—</div>
+        <div class="admin-stat-label">🟢 Fresh</div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-num" id="stat-reports">—</div>
+        <div class="admin-stat-label">📋 Pending Reports</div>
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="admin-toolbar">
+      <h2 style="font-size:1.1rem;">📋 Stale Content Queue</h2>
+      <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+        <select class="filter-select" id="admin-filter-entity">
+          <option value="">All Entity Types</option>
+          <option value="destination">Destinations</option>
+          <option value="route">Route Legs</option>
+          <option value="permit">Permit Rules</option>
+          <option value="event">Events</option>
+          <option value="homestay">Homestays</option>
+        </select>
+        <select class="filter-select" id="admin-filter-status">
+          <option value="">All Statuses</option>
+          <option value="expired">Expired</option>
+          <option value="stale">Stale</option>
+          <option value="fresh">Fresh</option>
+        </select>
+        <button class="btn btn-sm btn-outline" onclick="applyAdminFilters()">Apply Filters</button>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrap" style="margin-bottom:2rem;">
+      <table class="admin-table" id="admin-stale-table" aria-label="Stale content queue">
+        <thead>
+          <tr>
+            <th>Status</th>
+            <th>Type</th>
+            <th>Name</th>
+            <th>State</th>
+            <th>Verified At</th>
+            <th>Expires At</th>
+            <th>Age (days)</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="admin-table-body">
+          <tr>
+            <td colspan="8" style="text-align:center; padding:2rem; color:var(--text-muted);">Loading…</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Reports Section -->
+    <h2 style="font-size:1.1rem; margin-bottom:1rem;">⚠️ User Reports</h2>
+    <div class="table-wrap">
+      <table class="admin-table" id="admin-reports-table" aria-label="User-submitted reports">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Entity</th>
+            <th>Report Type</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="admin-reports-body">
+          <tr>
+            <td colspan="7" style="text-align:center; padding:2rem; color:var(--text-muted);">Loading…</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div id="admin-toast" style="position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;display:none;background:#0f172a;color:white;padding:0.75rem 1.25rem;border-radius:8px;font-size:0.88rem;box-shadow:0 10px 25px rgba(0,0,0,0.2);"></div>
+
+<script>
+  let adminToken = '';
+  let allStaleData = [];
+  let allReports = [];
+
+  function showAdminToast(msg, color) {
+    const t = document.getElementById('admin-toast');
+    t.textContent = msg;
+    t.style.background = color || '#0f172a';
+    t.style.display = 'block';
+    setTimeout(() => { t.style.display = 'none'; }, 3200);
+  }
+
+  function daysSince(dateStr) {
+    if (!dateStr) return null;
+    return Math.floor((Date.now() - new Date(dateStr).getTime()) / 86400000);
+  }
+
+  function urgencyClass(item) {
+    const now = new Date();
+    const expires = item.expires_at ? new Date(item.expires_at) : null;
+    if (!expires) return 'urgency-stale';
+    if (expires < now) return 'urgency-expired';
+    const daysLeft = (expires - now) / 86400000;
+    if (daysLeft < 30) return 'urgency-stale';
+    return 'urgency-fresh';
+  }
+
+  function urgencyDot(item) {
+    const cls = urgencyClass(item);
+    if (cls === 'urgency-expired') return '<span class="urgency-dot dot-expired"></span>';
+    if (cls === 'urgency-stale') return '<span class="urgency-dot dot-stale"></span>';
+    return '<span class="urgency-dot dot-fresh"></span>';
+  }
+
+  function fmtDate(d) {
+    if (!d) return '—';
+    return new Date(d).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
+
+  async function refreshStaleQueue() {
+    try {
+      const res = await fetch('/api/v1/admin/stale', { headers: { 'X-Admin-Token': adminToken } });
+      if (res.status === 401) { showAdminToast('Session expired — please re-login', '#b91c1c'); return; }
+      const data = await res.json();
+      allStaleData = data.items || data || [];
+      renderStaleTable(allStaleData);
+      updateStats(allStaleData);
+    } catch (e) {
+      showAdminToast('Failed to load stale queue: ' + e.message, '#b91c1c');
+    }
+  }
+
+  async function refreshReports() {
+    try {
+      const res = await fetch('/api/v1/admin/reports', { headers: { 'X-Admin-Token': adminToken } });
+      if (!res.ok) return;
+      const data = await res.json();
+      allReports = data.items || data || [];
+      renderReportsTable(allReports);
+      document.getElementById('stat-reports').textContent = allReports.filter(r => r.status === 'pending').length;
+    } catch {}
+  }
+
+  function updateStats(items) {
+    const now = new Date();
+    let expired = 0, stale = 0, fresh = 0;
+    items.forEach(item => {
+      const cls = urgencyClass(item);
+      if (cls === 'urgency-expired') expired++;
+      else if (cls === 'urgency-stale') stale++;
+      else fresh++;
+    });
+    document.getElementById('stat-expired').textContent = expired;
+    document.getElementById('stat-stale').textContent = stale;
+    document.getElementById('stat-fresh').textContent = fresh;
+  }
+
+  function renderStaleTable(items) {
+    const tbody = document.getElementById('admin-table-body');
+    if (!items.length) {
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--text-muted);">✅ No stale items — everything is fresh!</td></tr>';
+      return;
+    }
+    tbody.innerHTML = items.map(item => {
+      const cls = urgencyClass(item);
+      const age = daysSince(item.verified_at);
+      return `
+        <tr class="${cls}">
+          <td>${urgencyDot(item)}${cls === 'urgency-expired' ? '🔴 Expired' : cls === 'urgency-stale' ? '🟡 Stale' : '🟢 Fresh'}</td>
+          <td><span style="background:var(--border-light);padding:0.2rem 0.5rem;border-radius:4px;font-size:0.75rem;font-weight:600;">${item.entity_type || item.type || '—'}</span></td>
+          <td><strong>${item.name || item.title || '—'}</strong></td>
+          <td>${item.state_code || '—'}</td>
+          <td>${fmtDate(item.verified_at)}</td>
+          <td>${fmtDate(item.expires_at)}</td>
+          <td>${age !== null ? age + 'd' : '—'}</td>
+          <td>
+            <div class="admin-actions">
+              <button class="btn btn-sm btn-primary" onclick="markVerified('${item.entity_type || item.type}','${item.id}')">✓ Verified</button>
+              <button class="btn btn-sm btn-outline" style="color:var(--warning);border-color:var(--warning);" onclick="flagItem('${item.entity_type || item.type}','${item.id}')">🚩 Flag</button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function renderReportsTable(items) {
+    const tbody = document.getElementById('admin-reports-body');
+    if (!items.length) {
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--text-muted);">No reports yet.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = items.map(r => `
+      <tr>
+        <td>${fmtDate(r.created_at)}</td>
+        <td>${r.entity_type || '—'}</td>
+        <td>${r.entity_id || '—'}</td>
+        <td><span style="font-size:0.8rem;">${r.report_type || '—'}</span></td>
+        <td style="max-width:260px;white-space:normal;">${r.description || '—'}</td>
+        <td><span style="font-size:0.78rem;padding:0.2rem 0.5rem;border-radius:4px;background:${r.status==='resolved'?'var(--primary-light)':'var(--accent-light)'};color:${r.status==='resolved'?'var(--primary)':'var(--accent)'};">${r.status || 'pending'}</span></td>
+        <td>
+          <div class="admin-actions">
+            <button class="btn btn-sm btn-outline" onclick="resolveReport('${r.id}')">✓ Resolve</button>
+            <button class="btn btn-sm btn-outline" style="color:var(--danger);" onclick="dismissReport('${r.id}')">✕ Dismiss</button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  async function markVerified(type, id) {
+    try {
+      const res = await fetch(`/api/v1/admin/verify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Token': adminToken },
+        body: JSON.stringify({ entity_type: type, entity_id: id })
+      });
+      if (res.ok) { showAdminToast('✓ Marked as verified', '#047857'); refreshStaleQueue(); }
+    } catch (e) { showAdminToast('Error: ' + e.message, '#b91c1c'); }
+  }
+
+  async function flagItem(type, id) {
+    const reason = prompt('Flag reason (optional):');
+    try {
+      await fetch(`/api/v1/admin/flag`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Token': adminToken },
+        body: JSON.stringify({ entity_type: type, entity_id: id, reason })
+      });
+      showAdminToast('🚩 Item flagged for review', '#d97706');
+      refreshStaleQueue();
+    } catch (e) { showAdminToast('Error: ' + e.message, '#b91c1c'); }
+  }
+
+  async function resolveReport(id) {
+    try {
+      await fetch(`/api/v1/admin/reports/${id}/resolve`, {
+        method: 'POST', headers: { 'X-Admin-Token': adminToken }
+      });
+      showAdminToast('Report resolved', '#047857');
+      refreshReports();
+    } catch {}
+  }
+
+  async function dismissReport(id) {
+    try {
+      await fetch(`/api/v1/admin/reports/${id}/dismiss`, {
+        method: 'POST', headers: { 'X-Admin-Token': adminToken }
+      });
+      showAdminToast('Report dismissed', '#64748b');
+      refreshReports();
+    } catch {}
+  }
+
+  function applyAdminFilters() {
+    const entityFilter = document.getElementById('admin-filter-entity').value;
+    const statusFilter = document.getElementById('admin-filter-status').value;
+    let filtered = allStaleData;
+    if (entityFilter) filtered = filtered.filter(i => (i.entity_type || i.type) === entityFilter);
+    if (statusFilter) {
+      filtered = filtered.filter(i => {
+        const cls = urgencyClass(i);
+        if (statusFilter === 'expired') return cls === 'urgency-expired';
+        if (statusFilter === 'stale') return cls === 'urgency-stale';
+        if (statusFilter === 'fresh') return cls === 'urgency-fresh';
+        return true;
+      });
+    }
+    renderStaleTable(filtered);
+  }
+
+  // Login form
+  document.getElementById('admin-login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const token = document.getElementById('admin-token-input').value.trim();
+    if (!token) return;
+
+    try {
+      const res = await fetch('/api/v1/admin/stale', {
+        headers: { 'X-Admin-Token': token }
+      });
+      if (res.status === 401 || res.status === 403) {
+        document.getElementById('login-error').textContent = 'Invalid token — access denied.';
+        document.getElementById('login-error').style.display = 'block';
+        return;
+      }
+      adminToken = token;
+      document.getElementById('admin-login-screen').style.display = 'none';
+      document.getElementById('admin-panel').classList.add('visible');
+      const data = await res.json();
+      allStaleData = data.items || data || [];
+      renderStaleTable(allStaleData);
+      updateStats(allStaleData);
+      refreshReports();
+    } catch (err) {
+      document.getElementById('login-error').textContent = 'Connection error: ' + err.message;
+      document.getElementById('login-error').style.display = 'block';
+    }
+  });
+
+  document.getElementById('btn-admin-logout').addEventListener('click', () => {
+    adminToken = '';
+    document.getElementById('admin-login-screen').style.display = 'block';
+    document.getElementById('admin-panel').classList.remove('visible');
+    document.getElementById('admin-token-input').value = '';
+  });
+</script>
+</body>
+</html>
