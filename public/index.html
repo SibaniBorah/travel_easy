@@ -1,16 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Chalo NorthEast — Discover budget-friendly destinations, plan itineraries, navigate permits and find verified eco-homestays across the 8 states of North East India." />
+  <meta name="description"
+    content="Chalo NorthEast — Discover budget-friendly destinations, plan itineraries, navigate permits and find verified eco-homestays across the 8 states of North East India." />
   <meta name="theme-color" content="#047857" />
   <meta property="og:title" content="Chalo NorthEast — Explore the Seven Sisters" />
-  <meta property="og:description" content="Your smart travel companion for North East India. Budget routes, ILP guides, festival calendar, eco-homestays." />
+  <meta property="og:description"
+    content="Your smart travel companion for North East India. Budget routes, ILP guides, festival calendar, eco-homestays." />
   <meta property="og:type" content="website" />
   <title>Chalo NorthEast — Discover the Seven Sisters &amp; Sikkim</title>
   <link rel="manifest" href="/manifest.json" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='28'>🏔️</text></svg>" />
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='28'>🏔️</text></svg>" />
+  <link rel="stylesheet" href="/css/style.css?v=20261126-v6" />
   <link rel="stylesheet" href="/css/style.css?v=20261126-v7" />
   <style>
     .hero {
@@ -23,6 +28,7 @@
       flex-direction: column !important;
       justify-content: center !important;
     }
+
     .hero::before {
       content: '' !important;
       position: absolute !important;
@@ -38,19 +44,23 @@
       pointer-events: none !important;
       z-index: 0 !important;
     }
+
     .hero-content {
       position: relative !important;
       z-index: 1 !important;
     }
+
     .map-card-container {
       grid-template-columns: 1.6fr 1fr !important;
       align-items: stretch !important;
     }
+
     @media (max-width: 900px) {
       .map-card-container {
         grid-template-columns: 1fr !important;
       }
     }
+
     .map-svg-wrap {
       position: relative !important;
       overflow: hidden !important;
@@ -61,6 +71,7 @@
       align-items: stretch !important;
       justify-content: stretch !important;
     }
+
     #map-container {
       width: 100% !important;
       height: 100% !important;
@@ -70,6 +81,7 @@
       justify-content: center !important;
       flex: 1 1 100% !important;
     }
+
     .map-svg {
       width: 100% !important;
       height: 100% !important;
@@ -77,6 +89,7 @@
       max-height: 100% !important;
       display: block !important;
     }
+
     .map-zoom-controls {
       position: absolute !important;
       top: 14px !important;
@@ -92,6 +105,7 @@
       box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15) !important;
       border: 1px solid rgba(203, 213, 225, 0.9) !important;
     }
+
     .map-zoom-btn {
       width: 34px !important;
       height: 34px !important;
@@ -109,12 +123,14 @@
       line-height: 1 !important;
       user-select: none !important;
     }
+
     .map-zoom-btn:hover {
       background: #047857 !important;
       color: #ffffff !important;
       border-color: #047857 !important;
       transform: scale(1.06) !important;
     }
+
     .map-zoom-btn:active {
       transform: scale(0.95) !important;
     }
@@ -122,7 +138,10 @@
     /* Photo Gallery Lightbox Modal */
     .gallery-modal-overlay {
       position: fixed !important;
-      top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
       background: rgba(10, 15, 29, 0.94) !important;
       backdrop-filter: blur(14px) !important;
       z-index: 99999 !important;
@@ -134,10 +153,12 @@
       pointer-events: none;
       transition: opacity 0.25s ease !important;
     }
+
     .gallery-modal-overlay.active {
       opacity: 1 !important;
       pointer-events: auto !important;
     }
+
     .gallery-modal-card {
       position: relative !important;
       max-width: 920px !important;
@@ -149,6 +170,7 @@
       display: flex !important;
       flex-direction: column !important;
     }
+
     .gallery-close-btn {
       position: absolute !important;
       top: 14px !important;
@@ -168,11 +190,13 @@
       z-index: 30 !important;
       transition: all 0.15s ease !important;
     }
+
     .gallery-close-btn:hover {
       background: #ef4444 !important;
       border-color: #ef4444 !important;
       transform: scale(1.08) !important;
     }
+
     .gallery-viewport {
       position: relative !important;
       width: 100% !important;
@@ -185,12 +209,14 @@
       overflow: hidden !important;
       user-select: none !important;
     }
+
     .gallery-active-img {
       max-width: 100% !important;
       max-height: 100% !important;
       object-fit: contain !important;
       transition: opacity 0.2s ease, transform 0.2s ease !important;
     }
+
     .gallery-nav-btn {
       position: absolute !important;
       top: 50% !important;
@@ -211,13 +237,21 @@
       transition: all 0.18s ease !important;
       backdrop-filter: blur(4px) !important;
     }
-    .gallery-prev-btn { left: 16px !important; }
-    .gallery-next-btn { right: 16px !important; }
+
+    .gallery-prev-btn {
+      left: 16px !important;
+    }
+
+    .gallery-next-btn {
+      right: 16px !important;
+    }
+
     .gallery-nav-btn:hover {
       background: #047857 !important;
       border-color: #047857 !important;
       transform: translateY(-50%) scale(1.12) !important;
     }
+
     .gallery-caption-bar {
       padding: 0.9rem 1.25rem !important;
       background: #0f172a !important;
@@ -227,9 +261,24 @@
       justify-content: space-between !important;
       gap: 1rem !important;
     }
-    .gallery-dest-info { display: flex !important; flex-direction: column !important; }
-    .gallery-dest-title { font-size: 1.15rem !important; font-weight: 700 !important; color: #ffffff !important; }
-    .gallery-caption-text { font-size: 0.88rem !important; color: #94a3b8 !important; margin-top: 0.2rem !important; }
+
+    .gallery-dest-info {
+      display: flex !important;
+      flex-direction: column !important;
+    }
+
+    .gallery-dest-title {
+      font-size: 1.15rem !important;
+      font-weight: 700 !important;
+      color: #ffffff !important;
+    }
+
+    .gallery-caption-text {
+      font-size: 0.88rem !important;
+      color: #94a3b8 !important;
+      margin-top: 0.2rem !important;
+    }
+
     .gallery-counter {
       font-size: 0.88rem !important;
       font-weight: 700 !important;
@@ -239,6 +288,7 @@
       border-radius: 20px !important;
       white-space: nowrap !important;
     }
+
     .gallery-thumbs-row {
       display: flex !important;
       gap: 0.5rem !important;
@@ -246,6 +296,7 @@
       background: #0f172a !important;
       overflow-x: auto !important;
     }
+
     .gallery-thumb-item {
       width: 72px !important;
       height: 48px !important;
@@ -257,12 +308,19 @@
       opacity: 0.55 !important;
       transition: all 0.15s ease !important;
     }
+
     .gallery-thumb-item.active {
       border-color: #10b981 !important;
       opacity: 1 !important;
       transform: scale(1.05) !important;
     }
-    .gallery-thumb-item img { width: 100% !important; height: 100% !important; object-fit: cover !important; }
+
+    .gallery-thumb-item img {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
+    }
+
     .dest-gallery-pill {
       position: absolute !important;
       bottom: 12px !important;
@@ -280,8 +338,9 @@
       align-items: center !important;
       gap: 0.35rem !important;
       transition: all 0.15s ease !important;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3) !important;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) !important;
     }
+
     .dest-card-header:hover .dest-gallery-pill {
       background: #047857 !important;
       border-color: #047857 !important;
@@ -290,885 +349,958 @@
   </style>
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistrations().then(function(regs) {
+      navigator.serviceWorker.getRegistrations().then(function (regs) {
         for (var r of regs) { r.unregister(); }
       });
     }
     if ('caches' in window) {
-      caches.keys().then(function(keys) {
-        keys.forEach(function(k) { caches.delete(k); });
+      caches.keys().then(function (keys) {
+        keys.forEach(function (k) { caches.delete(k); });
       });
     }
   </script>
 </head>
+
 <body>
 
-<!-- ══════════════════════════════════════════════════════════════
+  <!-- ══════════════════════════════════════════════════════════════
      OFFLINE INDICATOR BANNER
 ════════════════════════════════════════════════════════════════ -->
-<div id="offline-banner" class="offline-banner" role="alert" aria-live="assertive" style="display:none;">
-  📡 You are offline — cached content is shown. Some features require a connection.
-</div>
+  <div id="offline-banner" class="offline-banner" role="alert" aria-live="assertive" style="display:none;">
+    📡 You are offline — cached content is shown. Some features require a connection.
+  </div>
 
-<!-- ══════════════════════════════════════════════════════════════
+  <!-- ══════════════════════════════════════════════════════════════
      STICKY HEADER
 ════════════════════════════════════════════════════════════════ -->
-<header class="header" id="main-header">
-  <div class="container nav-container">
-    <a href="/" class="brand">
-      <div class="brand-icon">🏔️</div>
-      <div class="brand-text">
-        Chalo <span>NorthEast</span>
-        <span class="brand-subtitle">Seven Sisters + Sikkim</span>
+  <header class="header" id="main-header">
+    <div class="container nav-container">
+      <a href="/" class="brand">
+        <div class="brand-icon">🏔️</div>
+        <div class="brand-text">
+          Chalo <span>NorthEast</span>
+          <span class="brand-subtitle">Seven Sisters + Sikkim</span>
+        </div>
+      </a>
+
+      <nav aria-label="Main navigation">
+        <ul class="nav-links" id="nav-links">
+          <li><a class="nav-link" href="#map-section">🗺️ Explore</a></li>
+          <li><a class="nav-link" href="#planner">📅 Plan Trip</a></li>
+          <li><a class="nav-link" href="#transit">🚐 Transit</a></li>
+          <li><a class="nav-link" href="#permits">🛂 Permits</a></li>
+          <li><a class="nav-link" href="#festivals">🎉 Festivals</a></li>
+          <li><a class="nav-link" href="#community">💬 Community</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-cta">
+        <button class="btn-emergency" id="btn-nav-emergency" aria-label="Open emergency contacts">
+          🆘 Emergency
+        </button>
+        <button class="btn btn-outline btn-sm" id="btn-nav-lingo" aria-label="Open language survival kit">
+          🗣️ Lingo
+        </button>
+        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false">☰</button>
       </div>
-    </a>
-
-    <nav aria-label="Main navigation">
-      <ul class="nav-links" id="nav-links">
-        <li><a class="nav-link" href="#map-section">🗺️ Explore</a></li>
-        <li><a class="nav-link" href="#planner">📅 Plan Trip</a></li>
-        <li><a class="nav-link" href="#transit">🚐 Transit</a></li>
-        <li><a class="nav-link" href="#permits">🛂 Permits</a></li>
-        <li><a class="nav-link" href="#festivals">🎉 Festivals</a></li>
-        <li><a class="nav-link" href="#community">💬 Community</a></li>
-      </ul>
-    </nav>
-
-    <div class="nav-cta">
-      <button class="btn-emergency" id="btn-nav-emergency" aria-label="Open emergency contacts">
-        🆘 Emergency
-      </button>
-      <button class="btn btn-outline btn-sm" id="btn-nav-lingo" aria-label="Open language survival kit">
-        🗣️ Lingo
-      </button>
-      <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false">☰</button>
     </div>
-  </div>
-</header>
+  </header>
 
-<!-- ══════════════════════════════════════════════════════════════
+  <!-- ══════════════════════════════════════════════════════════════
      HERO SECTION
 ════════════════════════════════════════════════════════════════ -->
-<section class="hero" id="hero">
-  <div class="container hero-content">
-    <div class="hero-pill">✨ 100% Verified Budget Travel Guide — Updated Monthly</div>
-    <h1 id="hero-headline">
-      Explore NorthEast<br />
-      Without Breaking the Bank
-    </h1>
-    <p class="hero-desc">
-      Your smart companion for North East India — budget routes from ₹800/day, ILP permit guides,
-      eco-homestays run by local families, festival calendar &amp; shared sumo routes. No agency needed.
-    </p>
+  <section class="hero" id="hero">
+    <div class="container hero-content">
+      <div class="hero-pill">✨ 100% Verified Budget Travel Guide — Updated Monthly</div>
+      <h1 id="hero-headline">
+        Explore NorthEast<br />
+        Without Breaking the Bank
+      </h1>
+      <p class="hero-desc">
+        Your smart companion for North East India — budget routes from ₹800/day, ILP permit guides,
+        eco-homestays run by local families, festival calendar &amp; shared sumo routes. No agency needed.
+      </p>
 
-    <!-- Search Bar -->
-    <div class="search-box-wrapper" role="search">
-      <div class="search-icon" aria-hidden="true">
-        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <!-- Search Bar -->
+      <div class="search-box-wrapper" role="search">
+        <div class="search-icon" aria-hidden="true">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+        </div>
+        <input type="search" id="global-search-input" class="search-input"
+          placeholder="Search destinations, routes, permits… (e.g. Ziro, Tawang, Kohima)"
+          aria-label="Search destinations" autocomplete="off" />
+        <button class="btn btn-primary"
+          onclick="document.getElementById('destinations').scrollIntoView({behavior:'smooth'})">Search</button>
       </div>
-      <input type="search" id="global-search-input" class="search-input" placeholder="Search destinations, routes, permits… (e.g. Ziro, Tawang, Kohima)" aria-label="Search destinations" autocomplete="off" />
-      <button class="btn btn-primary" onclick="document.getElementById('destinations').scrollIntoView({behavior:'smooth'})">Search</button>
-    </div>
 
-    <!-- Quick Filter Tags -->
-    <div class="hero-tags" role="list" aria-label="Quick category filters">
-      <button class="hero-tag" data-cat="wildlife" role="listitem">🦏 Wildlife</button>
-      <button class="hero-tag" data-cat="waterfall" role="listitem">💧 Waterfalls</button>
-      <button class="hero-tag" data-cat="monastery" role="listitem">🛕 Monasteries</button>
-      <button class="hero-tag" data-cat="trek" role="listitem">🥾 Treks</button>
-      <button class="hero-tag" data-cat="culture" role="listitem">🎭 Culture</button>
-      <button class="hero-tag" data-budget="1500" role="listitem">💰 Budget &lt; ₹1500/day</button>
+      <!-- Quick Filter Tags -->
+      <div class="hero-tags" role="list" aria-label="Quick category filters">
+        <button class="hero-tag" data-cat="wildlife" role="listitem">🦏 Wildlife</button>
+        <button class="hero-tag" data-cat="waterfall" role="listitem">💧 Waterfalls</button>
+        <button class="hero-tag" data-cat="monastery" role="listitem">🛕 Monasteries</button>
+        <button class="hero-tag" data-cat="trek" role="listitem">🥾 Treks</button>
+        <button class="hero-tag" data-cat="culture" role="listitem">🎭 Culture</button>
+        <button class="hero-tag" data-budget="1500" role="listitem">💰 Budget &lt; ₹1500/day</button>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ══════════════════════════════════════════════════════════════
+  <!-- ══════════════════════════════════════════════════════════════
      STATS RIBBON
 ════════════════════════════════════════════════════════════════ -->
-<div class="stats-ribbon" role="region" aria-label="Platform statistics">
-  <div class="container">
-    <div class="stats-grid">
-      <div class="stat-item">
-        <div class="stat-icon">🗺️</div>
-        <div>
-          <div class="stat-number">8</div>
-          <div class="stat-label">States Covered</div>
+  <div class="stats-ribbon" role="region" aria-label="Platform statistics">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-icon">🗺️</div>
+          <div>
+            <div class="stat-number">8</div>
+            <div class="stat-label">States Covered</div>
+          </div>
         </div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-icon">📍</div>
-        <div>
-          <div class="stat-number" id="stat-dests-count">25+</div>
-          <div class="stat-label">Verified Destinations</div>
+        <div class="stat-item">
+          <div class="stat-icon">📍</div>
+          <div>
+            <div class="stat-number" id="stat-dests-count">25+</div>
+            <div class="stat-label">Verified Destinations</div>
+          </div>
         </div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-icon">🚐</div>
-        <div>
-          <div class="stat-number" id="stat-routes-count">16+</div>
-          <div class="stat-label">Budget Routes</div>
+        <div class="stat-item">
+          <div class="stat-icon">🚐</div>
+          <div>
+            <div class="stat-number" id="stat-routes-count">16+</div>
+            <div class="stat-label">Budget Routes</div>
+          </div>
         </div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-icon">🏡</div>
-        <div>
-          <div class="stat-number" id="stat-homestays-count">30+</div>
-          <div class="stat-label">Eco Homestays</div>
+        <div class="stat-item">
+          <div class="stat-icon">🏡</div>
+          <div>
+            <div class="stat-number" id="stat-homestays-count">30+</div>
+            <div class="stat-label">Eco Homestays</div>
+          </div>
         </div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-icon">✅</div>
-        <div>
-          <div class="stat-number" id="stat-itins-count">6+</div>
-          <div class="stat-label">Curated Itineraries</div>
+        <div class="stat-item">
+          <div class="stat-icon">✅</div>
+          <div>
+            <div class="stat-number" id="stat-itins-count">6+</div>
+            <div class="stat-label">Curated Itineraries</div>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- ══════════════════════════════════════════════════════════════
+  <!-- ══════════════════════════════════════════════════════════════
      INTERACTIVE MAP SECTION
 ════════════════════════════════════════════════════════════════ -->
-<section class="section" id="map-section" aria-labelledby="map-section-heading">
-  <div class="container">
-    <div class="section-header">
-      <div class="section-title-wrap">
-        <h2 id="map-section-heading">🗺️ Interactive Map of North East India</h2>
-        <p class="section-subtitle">Click any state to explore destinations, permits &amp; facts</p>
-      </div>
-    </div>
-
-    <div class="map-card-container">
-      <div class="map-svg-wrap">
-        <div class="map-zoom-controls" aria-label="Map Zoom Controls">
-          <button type="button" class="map-zoom-btn" id="btn-map-zoom-in" title="Zoom In" aria-label="Zoom in on map">＋</button>
-          <button type="button" class="map-zoom-btn" id="btn-map-zoom-out" title="Zoom Out" aria-label="Zoom out of map">－</button>
-          <button type="button" class="map-zoom-btn" id="btn-map-zoom-reset" title="Reset View" aria-label="Reset map view">↺</button>
-        </div>
-        <div id="map-container" aria-label="Interactive map of North East India states" role="img"></div>
-      </div>
-      <div class="map-details-card" id="map-state-details">
-        <div class="state-badge badge-no-ilp">Overview • 8 States</div>
-        <h3 style="font-size:1.45rem; margin-bottom:0.5rem;">Explore North East India</h3>
-        <p style="font-size:0.88rem; line-height:1.5; margin-bottom:1rem;">
-          Click on any state on the interactive map or select a filter below to explore curated destinations, permit guidance, shared sumos, and local homestays.
-        </p>
-        <div class="state-quick-facts">
-          <div class="fact-box">
-            <div class="fact-label">The 8 States</div>
-            <div class="fact-val">AS, ML, AR, NL, MN, MZ, TR, SK</div>
-          </div>
-          <div class="fact-box">
-            <div class="fact-label">ILP Required?</div>
-            <div class="fact-val">AR, NL, MN, MZ (Yes)</div>
-          </div>
-          <div class="fact-box">
-            <div class="fact-label">No Permit Needed</div>
-            <div class="fact-val">Assam, Meghalaya, Tripura</div>
-          </div>
-          <div class="fact-box">
-            <div class="fact-label">Best Season</div>
-            <div class="fact-val">October to April</div>
-          </div>
+  <section class="section" id="map-section" aria-labelledby="map-section-heading">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <h2 id="map-section-heading">🗺️ Interactive Map of North East India</h2>
+          <p class="section-subtitle">Click any state to explore destinations, permits &amp; facts</p>
         </div>
       </div>
-    </div>
-  </div>
-</section>
 
-<!-- ══════════════════════════════════════════════════════════════
+      <div class="map-card-container">
+        <div class="map-svg-wrap">
+          <div class="map-zoom-controls" aria-label="Map Zoom Controls">
+            <button type="button" class="map-zoom-btn" id="btn-map-zoom-in" title="Zoom In"
+              aria-label="Zoom in on map">＋</button>
+            <button type="button" class="map-zoom-btn" id="btn-map-zoom-out" title="Zoom Out"
+              aria-label="Zoom out of map">－</button>
+            <button type="button" class="map-zoom-btn" id="btn-map-zoom-reset" title="Reset View"
+              aria-label="Reset map view">↺</button>
+          </div>
+          <div id="map-container" aria-label="Interactive map of North East India states" role="img"></div>
+        </div>
+        <div class="map-details-card" id="map-state-details">
+          <div class="state-badge badge-no-ilp">Overview • 8 States</div>
+          <h3 style="font-size:1.45rem; margin-bottom:0.5rem;">Explore North East India</h3>
+          <p style="font-size:0.88rem; line-height:1.5; margin-bottom:1rem;">
+            Click on any state on the interactive map or select a filter below to explore curated destinations, permit
+            guidance, shared sumos, and local homestays.
+          </p>
+          <div class="state-quick-facts">
+            <div class="fact-box">
+              <div class="fact-label">The 8 States</div>
+              <div class="fact-val">AS, ML, AR, NL, MN, MZ, TR, SK</div>
+            </div>
+            <div class="fact-box">
+              <div class="fact-label">ILP Required?</div>
+              <div class="fact-val">AR, NL, MN, MZ (Yes)</div>
+            </div>
+            <div class="fact-box">
+              <div class="fact-label">No Permit Needed</div>
+              <div class="fact-val">Assam, Meghalaya, Tripura</div>
+            </div>
+            <div class="fact-box">
+              <div class="fact-label">Best Season</div>
+              <div class="fact-val">October to April</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════
      DISCOVER DESTINATIONS
 ════════════════════════════════════════════════════════════════ -->
-<section class="section section-alt" id="destinations" aria-labelledby="discover-heading">
-  <div class="container">
-    <div class="section-header">
-      <div class="section-title-wrap">
-        <h2 id="discover-heading">🌄 Discover Destinations</h2>
-        <p class="section-subtitle">Budget-verified attractions across all eight states</p>
-      </div>
-      <span id="destinations-count-label" class="badge-duration" aria-live="polite">Loading…</span>
-    </div>
-
-    <!-- Filter Bar -->
-    <div class="filter-bar" role="search" aria-label="Destination filters">
-      <div class="filter-group" id="state-filters-container" role="group" aria-label="Filter by state">
-        <span style="font-size:0.82rem; font-weight:600; color:var(--text-muted);">State:</span>
-        <button class="filter-chip active" data-state="ALL">All</button>
-        <button class="filter-chip" data-state="AS">Assam</button>
-        <button class="filter-chip" data-state="ML">Meghalaya</button>
-        <button class="filter-chip" data-state="AR">Arunachal</button>
-        <button class="filter-chip" data-state="NL">Nagaland</button>
-        <button class="filter-chip" data-state="MN">Manipur</button>
-        <button class="filter-chip" data-state="MZ">Mizoram</button>
-        <button class="filter-chip" data-state="TR">Tripura</button>
-        <button class="filter-chip" data-state="SK">Sikkim</button>
-      </div>
-      <div class="filter-group" id="category-filters-container" role="group" aria-label="Filter by category">
-        <span style="font-size:0.82rem; font-weight:600; color:var(--text-muted);">Category:</span>
-        <button class="filter-chip active" data-category="all">All</button>
-        <button class="filter-chip" data-category="wildlife">Wildlife</button>
-        <button class="filter-chip" data-category="waterfall">Waterfalls</button>
-        <button class="filter-chip" data-category="monastery">Monasteries</button>
-        <button class="filter-chip" data-category="trek">Treks</button>
-        <button class="filter-chip" data-category="culture">Culture</button>
-        <button class="filter-chip" data-category="scenic">Scenic</button>
-      </div>
-      <div class="filter-group">
-        <select class="filter-select" id="budget-tier-filter" aria-label="Filter by budget tier">
-          <option value="all">All Budgets</option>
-          <option value="backpacker">🎒 Backpacker (&lt;₹800/day)</option>
-          <option value="budget">🏕️ Budget (₹800–1500/day)</option>
-          <option value="moderate">🏨 Moderate (₹1500–3000/day)</option>
-          <option value="comfort">✈️ Comfort (₹3000+/day)</option>
-        </select>
-        <select class="filter-select" id="season-filter" aria-label="Filter by season">
-          <option value="all">All Seasons</option>
-          <option value="oct-nov">Oct–Nov (Post Monsoon)</option>
-          <option value="dec-feb">Dec–Feb (Winter)</option>
-          <option value="mar-apr">Mar–Apr (Spring)</option>
-          <option value="may-sep">May–Sep (Monsoon)</option>
-        </select>
-        <button type="button" class="btn btn-primary btn-sm" id="btn-apply-filters" style="font-weight:600; padding:0.42rem 1.15rem; border-radius:var(--radius-full); box-shadow:0 2px 6px rgba(4,120,87,0.25); display:inline-flex; align-items:center; gap:0.35rem;">
-          ✓ Apply Filters
-        </button>
-        <button type="button" class="btn btn-outline btn-sm" id="btn-reset-filters" style="font-weight:600; padding:0.42rem 0.85rem; border-radius:var(--radius-full);" title="Reset filters">
-          ↺ Reset
-        </button>
-      </div>
-    </div>
-
-    <div class="dest-grid" id="destinations-grid" aria-live="polite" aria-label="Destination cards">
-      <div style="grid-column:1/-1; text-align:center; padding:3rem 0;">
-        <div class="loading-spinner"></div>
-        <p style="color:var(--text-muted); margin-top:1rem;">Loading destinations…</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════════════════════════════
-     SMART TRIP PLANNER
-════════════════════════════════════════════════════════════════ -->
-<section class="section" id="planner" aria-labelledby="planner-heading">
-  <div class="container">
-    <div class="section-header">
-      <div class="section-title-wrap">
-        <h2 id="planner-heading">🧠 Smart Trip Planner</h2>
-        <p class="section-subtitle">AI-assisted itinerary builder — real costs, real routes, real permits</p>
-      </div>
-    </div>
-
-    <div class="planner-3col-layout">
-      <!-- LEFT: Planner Controls -->
-      <aside class="planner-controls-card" aria-label="Trip parameters">
-        <h3 style="font-size:1.1rem; margin-bottom:1.25rem; padding-bottom:0.75rem; border-bottom:1px solid var(--border);">⚙️ Trip Parameters</h3>
-
-        <div class="form-group">
-          <label class="form-label" for="planner-days-slider">
-            Trip Duration: <strong id="planner-days-val">5 Days</strong>
-          </label>
-          <input type="range" class="range-slider" id="planner-days-slider" min="2" max="14" value="5" step="1" aria-valuemin="2" aria-valuemax="14" aria-valuenow="5" />
-          <div class="range-values"><span>2 Days</span><span>14 Days</span></div>
+  <section class="section section-alt" id="destinations" aria-labelledby="discover-heading">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <h2 id="discover-heading">🌄 Discover Destinations</h2>
+          <p class="section-subtitle">Budget-verified attractions across all eight states</p>
         </div>
+        <span id="destinations-count-label" class="badge-duration" aria-live="polite">Loading…</span>
+      </div>
 
-        <div class="form-group">
-          <label class="form-label" for="planner-travelers-slider">
-            Travelers: <strong id="planner-travelers-val">2 People</strong>
-          </label>
-          <input type="range" class="range-slider" id="planner-travelers-slider" min="1" max="10" value="2" step="1" aria-valuemin="1" aria-valuemax="10" aria-valuenow="2" />
-          <div class="range-values"><span>Solo</span><span>Group of 10</span></div>
+      <!-- Filter Bar -->
+      <div class="filter-bar" role="search" aria-label="Destination filters">
+        <div class="filter-group" id="state-filters-container" role="group" aria-label="Filter by state">
+          <span style="font-size:0.82rem; font-weight:600; color:var(--text-muted);">State:</span>
+          <button class="filter-chip active" data-state="ALL">All</button>
+          <button class="filter-chip" data-state="AS">Assam</button>
+          <button class="filter-chip" data-state="ML">Meghalaya</button>
+          <button class="filter-chip" data-state="AR">Arunachal</button>
+          <button class="filter-chip" data-state="NL">Nagaland</button>
+          <button class="filter-chip" data-state="MN">Manipur</button>
+          <button class="filter-chip" data-state="MZ">Mizoram</button>
+          <button class="filter-chip" data-state="TR">Tripura</button>
+          <button class="filter-chip" data-state="SK">Sikkim</button>
         </div>
-
-        <div class="form-group">
-          <label class="form-label">Travel Style</label>
-          <div class="style-selector" role="radiogroup" aria-label="Travel style">
-            <button class="style-btn" data-style="backpacker" role="radio" aria-checked="false">
-              🎒 Backpacker
-              <span class="style-desc">Dorms, local buses, street food</span>
-            </button>
-            <button class="style-btn active" data-style="budget" role="radio" aria-checked="true">
-              🏕️ Budget
-              <span class="style-desc">Homestays, shared sumos</span>
-            </button>
-            <button class="style-btn" data-style="comfort" role="radio" aria-checked="false">
-              🏨 Comfort
-              <span class="style-desc">Hotels, private taxis</span>
-            </button>
-          </div>
+        <div class="filter-group" id="category-filters-container" role="group" aria-label="Filter by category">
+          <span style="font-size:0.82rem; font-weight:600; color:var(--text-muted);">Category:</span>
+          <button class="filter-chip active" data-category="all">All</button>
+          <button class="filter-chip" data-category="wildlife">Wildlife</button>
+          <button class="filter-chip" data-category="waterfall">Waterfalls</button>
+          <button class="filter-chip" data-category="monastery">Monasteries</button>
+          <button class="filter-chip" data-category="trek">Treks</button>
+          <button class="filter-chip" data-category="culture">Culture</button>
+          <button class="filter-chip" data-category="scenic">Scenic</button>
         </div>
-
-        <div class="form-group">
-          <label class="form-label">Interests</label>
-          <div class="interests-grid">
-            <label class="interest-chip"><input type="checkbox" value="wildlife" checked /> 🦏 Wildlife</label>
-            <label class="interest-chip"><input type="checkbox" value="culture" checked /> 🎭 Culture</label>
-            <label class="interest-chip"><input type="checkbox" value="trek" /> 🥾 Trekking</label>
-            <label class="interest-chip"><input type="checkbox" value="monastery" /> 🛕 Monasteries</label>
-            <label class="interest-chip"><input type="checkbox" value="waterfall" /> 💧 Waterfalls</label>
-            <label class="interest-chip"><input type="checkbox" value="food" /> 🍲 Local Food</label>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="planner-gateway">Gateway City</label>
-          <select class="filter-select" id="planner-gateway" style="width:100%;" aria-label="Starting gateway city">
-            <option value="guwahati">Guwahati (Assam) — Most Flights</option>
-            <option value="shillong">Shillong (Meghalaya)</option>
-            <option value="dimapur">Dimapur (Nagaland)</option>
-            <option value="imphal">Imphal (Manipur)</option>
-            <option value="agartala">Agartala (Tripura)</option>
-            <option value="aizawl">Aizawl (Mizoram)</option>
-            <option value="itanagar">Itanagar (Arunachal)</option>
-            <option value="gangtok">Gangtok / NJP (Sikkim)</option>
+        <div class="filter-group">
+          <select class="filter-select" id="budget-tier-filter" aria-label="Filter by budget tier">
+            <option value="all">All Budgets</option>
+            <option value="backpacker">🎒 Backpacker (&lt;₹800/day)</option>
+            <option value="budget">🏕️ Budget (₹800–1500/day)</option>
+            <option value="moderate">🏨 Moderate (₹1500–3000/day)</option>
+            <option value="comfort">✈️ Comfort (₹3000+/day)</option>
           </select>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="planner-start-date">Start Date</label>
-          <input type="date" class="filter-select" id="planner-start-date" style="width:100%;" aria-label="Trip start date" />
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Traveller Type</label>
-          <div style="display:flex; gap:0.5rem;">
-            <label class="interest-chip" style="flex:1; justify-content:center;">
-              <input type="radio" name="traveller-type" value="indian" checked /> 🇮🇳 Indian
-            </label>
-            <label class="interest-chip" style="flex:1; justify-content:center;">
-              <input type="radio" name="traveller-type" value="foreign" /> 🌍 Foreign
-            </label>
-          </div>
-        </div>
-
-        <button class="btn btn-primary" id="btn-generate-plans" style="width:100%; margin-bottom:0.75rem;">
-          ✨ Generate 3 Plans
-        </button>
-        <button class="btn btn-outline btn-sm" id="btn-clear-itinerary" style="width:100%;">
-          🗑️ Reset Planner
-        </button>
-      </aside>
-
-      <!-- CENTER: Generated Plans + Day Editor -->
-      <div class="planner-center-panel">
-        <!-- Generated Plans Tabs -->
-        <div id="generated-plans-section" style="display:none;" aria-label="Generated trip plans">
-          <div class="plan-tabs-header">
-            <button class="plan-tab active" data-plan="0">Plan A ⭐</button>
-            <button class="plan-tab" data-plan="1">Plan B</button>
-            <button class="plan-tab" data-plan="2">Plan C</button>
-          </div>
-          <div id="plan-tabs-content"></div>
-        </div>
-
-        <!-- Manual Day Builder -->
-        <div class="planner-schedule-card" id="planner-day-editor">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
-            <h3 style="font-size:1.1rem;">📅 Custom Day Builder</h3>
-            <div style="display:flex; gap:0.5rem;">
-              <button class="btn btn-outline btn-sm" id="btn-save-itinerary">💾 Save &amp; Share</button>
-              <button class="btn btn-outline btn-sm" id="btn-print-itinerary">🖨️ Print Trip Sheet</button>
-            </div>
-          </div>
-
-          <!-- Selected Destination Pills -->
-          <div class="selected-dest-pill-group" id="selected-destinations-pills" aria-label="Selected destinations" aria-live="polite">
-            <span style="font-size:0.85rem; color:var(--text-muted); font-style:italic;">
-              No destinations selected. Browse above and click "+ Plan Trip" on any card.
-            </span>
-          </div>
-
-          <!-- Day Plans -->
-          <div id="planner-day-cards-list" aria-live="polite" aria-label="Day-by-day itinerary"></div>
-        </div>
-      </div>
-
-      <!-- RIGHT: Live Budget Calculator -->
-      <aside class="planner-budget-panel" aria-label="Live budget calculator">
-        <div class="budget-summary-box">
-          <div class="budget-total-headline">
-            <div style="font-size:0.82rem; opacity:0.85; margin-bottom:0.25rem;">Estimated Total Cost</div>
-            <div class="budget-grand-total" id="budget-grand-total">₹—</div>
-            <div class="budget-per-person" id="budget-per-person">Configure your trip above</div>
-          </div>
-          <div class="budget-breakdown-table" id="budget-breakdown-details">
-            <div class="budget-breakdown-row">
-              <span>🏡 Stay:</span><strong>—</strong>
-            </div>
-            <div class="budget-breakdown-row">
-              <span>🚐 Transport:</span><strong>—</strong>
-            </div>
-            <div class="budget-breakdown-row">
-              <span>🍲 Food:</span><strong>—</strong>
-            </div>
-            <div class="budget-breakdown-row">
-              <span>🎫 Permits:</span><strong>—</strong>
-            </div>
-            <div class="budget-breakdown-row">
-              <span>🛡️ Buffer:</span><strong>—</strong>
-            </div>
-          </div>
-          <div class="savings-tag" id="budget-savings-badge" aria-live="polite"></div>
-        </div>
-
-        <!-- Local Value Score -->
-        <div class="local-value-card" id="local-value-section" style="margin-top:1rem;">
-          <div style="font-size:0.85rem; font-weight:600; margin-bottom:0.5rem; color:var(--text-main);">🌱 Local Value Score</div>
-          <div id="local-value-bar-container">
-            <div class="local-value-bar-track">
-              <div class="local-value-bar-fill" id="local-value-bar" style="width:0%" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
-            </div>
-            <div class="local-value-label" id="local-value-label">Select destinations to calculate</div>
-          </div>
-        </div>
-
-        <!-- Permit Checklist (populated on plan generation) -->
-        <div id="plan-permit-checklist" style="margin-top:1rem; display:none;" aria-label="Required permits"></div>
-
-        <!-- Warnings -->
-        <div id="plan-warnings" style="margin-top:0.75rem;" aria-live="polite" aria-label="Trip warnings"></div>
-      </aside>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════════════════════════════
-     ROUTE PLANNER / TRANSIT GUIDE
-════════════════════════════════════════════════════════════════ -->
-<section class="section section-alt" id="transit" aria-labelledby="transit-heading">
-  <div class="container">
-    <div class="section-header">
-      <div class="section-title-wrap">
-        <h2 id="transit-heading">🚐 Route Planner &amp; Transit Guide</h2>
-        <p class="section-subtitle">Shared sumos, trains, ferries — real fares from local stands</p>
-      </div>
-    </div>
-
-    <div class="transit-search-card" role="search" aria-label="Route search">
-      <div class="transit-input-row">
-        <div>
-          <label class="form-label" for="transit-from-input">From</label>
-          <input type="text" id="transit-from-input" class="search-input" style="border:1px solid var(--border); border-radius:var(--radius-sm); padding:0.5rem 0.75rem; width:100%;" placeholder="Guwahati, Shillong, Dimapur…" aria-label="Departure point" autocomplete="off" />
-        </div>
-        <div>
-          <label class="form-label" for="transit-to-input">To</label>
-          <input type="text" id="transit-to-input" class="search-input" style="border:1px solid var(--border); border-radius:var(--radius-sm); padding:0.5rem 0.75rem; width:100%;" placeholder="Cherrapunji, Tawang, Majuli…" aria-label="Destination" autocomplete="off" />
-        </div>
-        <button class="btn btn-primary" id="btn-search-transit">🔍 Find Routes</button>
-      </div>
-    </div>
-
-    <div class="transit-routes-list" id="transit-routes-list" aria-live="polite" aria-label="Route results">
-      <div style="text-align:center; padding:2rem; color:var(--text-muted);">
-        Loading transit routes…
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════════════════════════════
-     PREBUILT ITINERARIES
-════════════════════════════════════════════════════════════════ -->
-<section class="section" id="itineraries" aria-labelledby="itins-heading">
-  <div class="container">
-    <div class="section-header">
-      <div class="section-title-wrap">
-        <h2 id="itins-heading">🗒️ Curated Budget Itineraries</h2>
-        <p class="section-subtitle">Expert-crafted routes — click "Load in Planner" to customise</p>
-      </div>
-      <span id="itineraries-count-label" class="badge-duration" aria-live="polite">Showing 6 plans</span>
-    </div>
-    <div class="itinerary-grid" id="itineraries-grid" aria-live="polite" aria-label="Curated itineraries">
-      <div style="text-align:center; padding:2rem; color:var(--text-muted);">Loading itineraries…</div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════════════════════════════
-     PERMIT PASSPORT
-════════════════════════════════════════════════════════════════ -->
-<section class="section section-alt" id="permits" aria-labelledby="permits-heading">
-  <div class="container">
-    <div class="section-header">
-      <div class="section-title-wrap">
-        <h2 id="permits-heading">🛂 Permit Passport</h2>
-        <p class="section-subtitle">ILP, PAP, RAP requirements — with documents checklist &amp; official links</p>
-      </div>
-    </div>
-
-    <div class="permit-matrix-grid" id="permits-grid" aria-live="polite" aria-label="Permit requirements by state">
-      <div style="text-align:center; padding:2rem; color:var(--text-muted);">Loading permit data…</div>
-    </div>
-
-    <!-- Universal Checklist -->
-    <div class="permit-checklist-card" aria-label="Common documents required">
-      <h3 style="font-size:1.1rem; margin-bottom:0.5rem;">📋 Universal Document Checklist (All Travellers)</h3>
-      <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1rem;">Keep these on you at all times — physical copies recommended in remote areas.</p>
-      <div class="checklist-items">
-        <div class="check-item"><span class="check-icon">✓</span><span>Aadhaar Card / Passport (original + 2 self-attested copies)</span></div>
-        <div class="check-item"><span class="check-icon">✓</span><span>ILP / RAP / PAP (if required for the state you are visiting)</span></div>
-        <div class="check-item"><span class="check-icon">✓</span><span>Passport-size photos (minimum 4 — required for ILP counters)</span></div>
-        <div class="check-item"><span class="check-icon">✓</span><span>Return ticket / confirmed onward booking</span></div>
-        <div class="check-item"><span class="check-icon">✓</span><span>Travel insurance policy document (recommended)</span></div>
-        <div class="check-item"><span class="check-icon">✓</span><span>Offline maps &amp; emergency contacts saved to phone</span></div>
-        <div class="check-item"><span class="check-icon">✓</span><span>Emergency fund (₹2,000+ cash — ATMs unreliable in remote areas)</span></div>
-        <div class="check-item"><span class="check-icon">✓</span><span>Medical kit: ORS, altitude pills if going above 3,000m, antihistamines</span></div>
-      </div>
-      <button class="btn btn-outline btn-sm" style="margin-top:1rem;" onclick="window.print()">🖨️ Print Permit Checklist</button>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════════════════════════════
-     FESTIVAL CALENDAR
-════════════════════════════════════════════════════════════════ -->
-<section class="section" id="festivals" aria-labelledby="festivals-heading">
-  <div class="container">
-    <div class="section-header">
-      <div class="section-title-wrap">
-        <h2 id="festivals-heading">🎉 Festival Calendar</h2>
-        <p class="section-subtitle">Time your visit to celebrate with local communities</p>
-      </div>
-    </div>
-
-    <!-- Month Filter Row -->
-    <div class="month-filter-row" id="month-filter-row" role="group" aria-label="Filter by month">
-      <button class="month-pill active" data-month="0">All Months</button>
-      <button class="month-pill" data-month="1">Jan</button>
-      <button class="month-pill" data-month="2">Feb</button>
-      <button class="month-pill" data-month="3">Mar</button>
-      <button class="month-pill" data-month="4">Apr</button>
-      <button class="month-pill" data-month="5">May</button>
-      <button class="month-pill" data-month="6">Jun</button>
-      <button class="month-pill" data-month="7">Jul</button>
-      <button class="month-pill" data-month="8">Aug</button>
-      <button class="month-pill" data-month="9">Sep</button>
-      <button class="month-pill" data-month="10">Oct</button>
-      <button class="month-pill" data-month="11">Nov</button>
-      <button class="month-pill" data-month="12">Dec</button>
-    </div>
-
-    <div class="festival-grid" id="festival-grid" aria-live="polite" aria-label="Festivals">
-      <!-- Populated by JS -->
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════════════════════════════
-     ECO HOMESTAYS
-════════════════════════════════════════════════════════════════ -->
-<section class="section section-alt" id="homestays" aria-labelledby="homestays-heading">
-  <div class="container">
-    <div class="section-header">
-      <div class="section-title-wrap">
-        <h2 id="homestays-heading">🏡 Verified Eco Homestays</h2>
-        <p class="section-subtitle">Locally owned — your stay directly supports the community</p>
-      </div>
-    </div>
-    <div class="homestay-grid" id="homestays-grid" aria-live="polite" aria-label="Eco homestay listings">
-      <div style="text-align:center; padding:2rem; color:var(--text-muted);">Loading homestays…</div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════════════════════════════
-     COMMUNITY TIPS + DEBRIEFS
-════════════════════════════════════════════════════════════════ -->
-<section class="section" id="community" aria-labelledby="community-heading">
-  <div class="container">
-    <div class="section-header">
-      <div class="section-title-wrap">
-        <h2 id="community-heading">💬 Community Tips &amp; Traveller Debriefs</h2>
-        <p class="section-subtitle">Real advice from real travellers — share yours &amp; help others</p>
-      </div>
-    </div>
-
-    <div class="tips-layout">
-      <!-- Tips List -->
-      <div>
-        <h3 style="font-size:1rem; margin-bottom:1rem;">👍 Upvoted Tips</h3>
-        <div id="community-tips-list" aria-live="polite" aria-label="Community travel tips">
-          <div style="text-align:center; padding:2rem; color:var(--text-muted);">Loading tips…</div>
-        </div>
-      </div>
-
-      <!-- Submission Form + Debriefs -->
-      <div>
-        <h3 style="font-size:1rem; margin-bottom:1rem;">✍️ Share a Tip</h3>
-        <form id="form-submit-tip" class="tip-form-card" novalidate aria-label="Submit travel tip">
-          <div class="form-group">
-            <label class="form-label" for="tip-state-select">State</label>
-            <select class="filter-select" id="tip-state-select" required style="width:100%;" aria-required="true">
-              <option value="">Select a state…</option>
-              <option value="AS">Assam</option>
-              <option value="ML">Meghalaya</option>
-              <option value="AR">Arunachal Pradesh</option>
-              <option value="NL">Nagaland</option>
-              <option value="MN">Manipur</option>
-              <option value="MZ">Mizoram</option>
-              <option value="TR">Tripura</option>
-              <option value="SK">Sikkim</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="tip-dest-input">Destination / Area</label>
-            <input type="text" id="tip-dest-input" class="filter-select" style="width:100%;" placeholder="e.g. Cherrapunji, Ziro Valley" aria-label="Destination or area" />
-          </div>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;">
-            <div class="form-group">
-              <label class="form-label" for="tip-author-name">Your Name</label>
-              <input type="text" id="tip-author-name" class="filter-select" style="width:100%;" placeholder="Traveller name" required aria-required="true" />
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="tip-author-city">Your City</label>
-              <input type="text" id="tip-author-city" class="filter-select" style="width:100%;" placeholder="Mumbai, Delhi…" />
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="tip-cat-select">Category</label>
-            <select class="filter-select" id="tip-cat-select" style="width:100%;">
-              <option value="general">General Advice</option>
-              <option value="transport">Transport Hack</option>
-              <option value="food">Food Recommendation</option>
-              <option value="safety">Safety Tip</option>
-              <option value="budget">Budget Trick</option>
-              <option value="permits">Permit Guidance</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="tip-text-input">Your Tip</label>
-            <textarea id="tip-text-input" rows="3" style="width:100%; border:1px solid var(--border); border-radius:var(--radius-sm); padding:0.5rem; font-family:inherit;" placeholder="Share your honest experience, local contacts, budget tricks or safety advice…" required aria-required="true"></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary" style="width:100%;">📢 Post Tip</button>
-        </form>
-
-        <!-- Recent Debriefs -->
-        <div style="margin-top:2rem;">
-          <h3 style="font-size:1rem; margin-bottom:1rem;">📋 Recent Traveller Debriefs</h3>
-          <div id="debriefs-list" aria-live="polite" aria-label="Traveller debriefs">
-            <div style="text-align:center; padding:1.5rem; color:var(--text-muted);">No debriefs loaded yet.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════════════════════════════
-     OFFLINE TRIP PACK
-════════════════════════════════════════════════════════════════ -->
-<section class="section section-alt" id="offline-pack" aria-labelledby="offline-heading">
-  <div class="container">
-    <div class="offline-pack-card">
-      <div class="offline-pack-icon">📦</div>
-      <div class="offline-pack-info">
-        <h2 id="offline-heading" style="font-size:1.35rem; margin-bottom:0.4rem;">Download Offline Trip Pack</h2>
-        <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:1rem;">
-          Download everything you need before you lose signal. North East India has significant dead-zones — be prepared.
-        </p>
-        <ul class="offline-pack-includes">
-          <li>✓ All destination guides &amp; maps</li>
-          <li>✓ Permit rules &amp; document checklists</li>
-          <li>✓ Emergency contacts (state-wise)</li>
-          <li>✓ Language survival kit (4 languages)</li>
-          <li>✓ Shared sumo routes &amp; fares</li>
-          <li>✓ Your saved trip itinerary (if any)</li>
-        </ul>
-      </div>
-      <div class="offline-pack-action">
-        <button class="btn btn-primary" id="btn-download-offline-pack">
-          ⬇️ Download Offline Pack
-        </button>
-        <div id="offline-pack-status" style="margin-top:0.75rem; font-size:0.82rem; color:var(--text-muted);" aria-live="polite"></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════════════════════════════
-     FOOTER
-════════════════════════════════════════════════════════════════ -->
-<footer class="footer" role="contentinfo">
-  <div class="container">
-    <div class="footer-grid">
-      <div>
-        <div class="footer-brand">🏔️ Chalo NorthEast</div>
-        <p class="footer-desc">
-          India's most detailed budget travel platform for the Seven Sisters and Sikkim. Built by travellers, for travellers.
-        </p>
-        <div style="margin-top:1rem; padding:0.85rem; background:rgba(255,255,255,0.05); border-radius:var(--radius-sm); border:1px solid rgba(255,255,255,0.1);">
-          <strong style="color:white; font-size:0.85rem;">🌿 Responsible Travel Pledge</strong>
-          <p style="font-size:0.78rem; margin-top:0.35rem; line-height:1.5;">We commit to promoting low-impact, community-first tourism. Every homestay, route and tip on this platform puts local people first.</p>
-        </div>
-      </div>
-
-      <div>
-        <div class="footer-heading">🗺️ States</div>
-        <ul class="footer-links">
-          <li><a href="#destinations" onclick="window.app&&window.app.handleStateSelect('AS')">Assam</a></li>
-          <li><a href="#destinations" onclick="window.app&&window.app.handleStateSelect('ML')">Meghalaya</a></li>
-          <li><a href="#destinations" onclick="window.app&&window.app.handleStateSelect('AR')">Arunachal Pradesh</a></li>
-          <li><a href="#destinations" onclick="window.app&&window.app.handleStateSelect('NL')">Nagaland</a></li>
-          <li><a href="#destinations" onclick="window.app&&window.app.handleStateSelect('MN')">Manipur</a></li>
-          <li><a href="#destinations" onclick="window.app&&window.app.handleStateSelect('MZ')">Mizoram</a></li>
-          <li><a href="#destinations" onclick="window.app&&window.app.handleStateSelect('TR')">Tripura</a></li>
-          <li><a href="#destinations" onclick="window.app&&window.app.handleStateSelect('SK')">Sikkim</a></li>
-        </ul>
-      </div>
-
-      <div>
-        <div class="footer-heading">🔗 Quick Links</div>
-        <ul class="footer-links">
-          <li><a href="#planner">Trip Planner</a></li>
-          <li><a href="#transit">Transit Guide</a></li>
-          <li><a href="#permits">Permit Advisor</a></li>
-          <li><a href="#festivals">Festival Calendar</a></li>
-          <li><a href="#homestays">Eco Homestays</a></li>
-          <li><a href="#community">Community Tips</a></li>
-          <li><a href="#offline-pack">Offline Pack</a></li>
-          <li><a href="/admin.html">Admin Panel</a></li>
-        </ul>
-      </div>
-
-      <div>
-        <div class="footer-heading">ℹ️ About</div>
-        <ul class="footer-links">
-          <li><a href="#">About Chalo NorthEast</a></li>
-          <li><a href="#">Content Policy</a></li>
-          <li><a href="#">Responsible Travel</a></li>
-          <li><a href="#">Contributor Guidelines</a></li>
-          <li><a href="#">Privacy Policy</a></li>
-        </ul>
-        <div style="margin-top:1.25rem;">
-          <button class="btn btn-outline btn-sm report-outdated-btn" id="btn-report-footer" style="border-color:rgba(255,255,255,0.2); color:#94a3b8;" onclick="window.app&&window.app.showReportModal('general','site','Something on the page is outdated')">
-            ⚠️ Report Outdated Info
+          <select class="filter-select" id="season-filter" aria-label="Filter by season">
+            <option value="all">All Seasons</option>
+            <option value="oct-nov">Oct–Nov (Post Monsoon)</option>
+            <option value="dec-feb">Dec–Feb (Winter)</option>
+            <option value="mar-apr">Mar–Apr (Spring)</option>
+            <option value="may-sep">May–Sep (Monsoon)</option>
+          </select>
+          <button type="button" class="btn btn-primary btn-sm" id="btn-apply-filters"
+            style="font-weight:600; padding:0.42rem 1.15rem; border-radius:var(--radius-full); box-shadow:0 2px 6px rgba(4,120,87,0.25); display:inline-flex; align-items:center; gap:0.35rem;">
+            ✓ Apply Filters
+          </button>
+          <button type="button" class="btn btn-outline btn-sm" id="btn-reset-filters"
+            style="font-weight:600; padding:0.42rem 0.85rem; border-radius:var(--radius-full);" title="Reset filters">
+            ↺ Reset
           </button>
         </div>
       </div>
-    </div>
 
-    <div class="footer-bottom">
-      <div>© 2026 Chalo NorthEast · Content verified monthly · Not affiliated with any state tourism board</div>
-      <div>Made with ❤️ for the travellers of the Seven Sisters</div>
+      <div class="dest-grid" id="destinations-grid" aria-live="polite" aria-label="Destination cards">
+        <div style="grid-column:1/-1; text-align:center; padding:3rem 0;">
+          <div class="loading-spinner"></div>
+          <p style="color:var(--text-muted); margin-top:1rem;">Loading destinations…</p>
+        </div>
+      </div>
     </div>
-  </div>
-</footer>
+  </section>
 
-<!-- ══════════════════════════════════════════════════════════════
+  <!-- ══════════════════════════════════════════════════════════════
+     SMART TRIP PLANNER
+════════════════════════════════════════════════════════════════ -->
+  <section class="section" id="planner" aria-labelledby="planner-heading">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <h2 id="planner-heading">🧠 Smart Trip Planner</h2>
+          <p class="section-subtitle">AI-assisted itinerary builder — real costs, real routes, real permits</p>
+        </div>
+      </div>
+
+      <div class="planner-3col-layout">
+        <!-- LEFT: Planner Controls -->
+        <aside class="planner-controls-card" aria-label="Trip parameters">
+          <h3
+            style="font-size:1.1rem; margin-bottom:1.25rem; padding-bottom:0.75rem; border-bottom:1px solid var(--border);">
+            ⚙️ Trip Parameters</h3>
+
+          <div class="form-group">
+            <label class="form-label" for="planner-days-slider">
+              Trip Duration: <strong id="planner-days-val">5 Days</strong>
+            </label>
+            <input type="range" class="range-slider" id="planner-days-slider" min="2" max="14" value="5" step="1"
+              aria-valuemin="2" aria-valuemax="14" aria-valuenow="5" />
+            <div class="range-values"><span>2 Days</span><span>14 Days</span></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="planner-travelers-slider">
+              Travelers: <strong id="planner-travelers-val">2 People</strong>
+            </label>
+            <input type="range" class="range-slider" id="planner-travelers-slider" min="1" max="10" value="2" step="1"
+              aria-valuemin="1" aria-valuemax="10" aria-valuenow="2" />
+            <div class="range-values"><span>Solo</span><span>Group of 10</span></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Travel Style</label>
+            <div class="style-selector" role="radiogroup" aria-label="Travel style">
+              <button class="style-btn" data-style="backpacker" role="radio" aria-checked="false">
+                🎒 Backpacker
+                <span class="style-desc">Dorms, local buses, street food</span>
+              </button>
+              <button class="style-btn active" data-style="budget" role="radio" aria-checked="true">
+                🏕️ Budget
+                <span class="style-desc">Homestays, shared sumos</span>
+              </button>
+              <button class="style-btn" data-style="comfort" role="radio" aria-checked="false">
+                🏨 Comfort
+                <span class="style-desc">Hotels, private taxis</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Interests</label>
+            <div class="interests-grid">
+              <label class="interest-chip"><input type="checkbox" value="wildlife" checked /> 🦏 Wildlife</label>
+              <label class="interest-chip"><input type="checkbox" value="culture" checked /> 🎭 Culture</label>
+              <label class="interest-chip"><input type="checkbox" value="trek" /> 🥾 Trekking</label>
+              <label class="interest-chip"><input type="checkbox" value="monastery" /> 🛕 Monasteries</label>
+              <label class="interest-chip"><input type="checkbox" value="waterfall" /> 💧 Waterfalls</label>
+              <label class="interest-chip"><input type="checkbox" value="food" /> 🍲 Local Food</label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="planner-gateway">Gateway City</label>
+            <select class="filter-select" id="planner-gateway" style="width:100%;" aria-label="Starting gateway city">
+              <option value="guwahati">Guwahati (Assam) — Most Flights</option>
+              <option value="shillong">Shillong (Meghalaya)</option>
+              <option value="dimapur">Dimapur (Nagaland)</option>
+              <option value="imphal">Imphal (Manipur)</option>
+              <option value="agartala">Agartala (Tripura)</option>
+              <option value="aizawl">Aizawl (Mizoram)</option>
+              <option value="itanagar">Itanagar (Arunachal)</option>
+              <option value="gangtok">Gangtok / NJP (Sikkim)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="planner-start-date">Start Date</label>
+            <input type="date" class="filter-select" id="planner-start-date" style="width:100%;"
+              aria-label="Trip start date" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Traveller Type</label>
+            <div style="display:flex; gap:0.5rem;">
+              <label class="interest-chip" style="flex:1; justify-content:center;">
+                <input type="radio" name="traveller-type" value="indian" checked /> 🇮🇳 Indian
+              </label>
+              <label class="interest-chip" style="flex:1; justify-content:center;">
+                <input type="radio" name="traveller-type" value="foreign" /> 🌍 Foreign
+              </label>
+            </div>
+          </div>
+
+          <button class="btn btn-primary" id="btn-generate-plans" style="width:100%; margin-bottom:0.75rem;">
+            ✨ Generate 3 Plans
+          </button>
+          <button class="btn btn-outline btn-sm" id="btn-clear-itinerary" style="width:100%;">
+            🗑️ Reset Planner
+          </button>
+        </aside>
+
+        <!-- CENTER: Generated Plans + Day Editor -->
+        <div class="planner-center-panel">
+          <!-- Generated Plans Tabs -->
+          <div id="generated-plans-section" style="display:none;" aria-label="Generated trip plans">
+            <div class="plan-tabs-header">
+              <button class="plan-tab active" data-plan="0">Plan A ⭐</button>
+              <button class="plan-tab" data-plan="1">Plan B</button>
+              <button class="plan-tab" data-plan="2">Plan C</button>
+            </div>
+            <div id="plan-tabs-content"></div>
+          </div>
+
+          <!-- Manual Day Builder -->
+          <div class="planner-schedule-card" id="planner-day-editor">
+            <div
+              style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
+              <h3 style="font-size:1.1rem;">📅 Custom Day Builder</h3>
+              <div style="display:flex; gap:0.5rem;">
+                <button class="btn btn-outline btn-sm" id="btn-save-itinerary">💾 Save &amp; Share</button>
+                <button class="btn btn-outline btn-sm" id="btn-print-itinerary">🖨️ Print Trip Sheet</button>
+              </div>
+            </div>
+
+            <!-- Selected Destination Pills -->
+            <div class="selected-dest-pill-group" id="selected-destinations-pills" aria-label="Selected destinations"
+              aria-live="polite">
+              <span style="font-size:0.85rem; color:var(--text-muted); font-style:italic;">
+                No destinations selected. Browse above and click "+ Plan Trip" on any card.
+              </span>
+            </div>
+
+            <!-- Day Plans -->
+            <div id="planner-day-cards-list" aria-live="polite" aria-label="Day-by-day itinerary"></div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Live Budget Calculator -->
+        <aside class="planner-budget-panel" aria-label="Live budget calculator">
+          <div class="budget-summary-box">
+            <div class="budget-total-headline">
+              <div style="font-size:0.82rem; opacity:0.85; margin-bottom:0.25rem;">Estimated Total Cost</div>
+              <div class="budget-grand-total" id="budget-grand-total">₹—</div>
+              <div class="budget-per-person" id="budget-per-person">Configure your trip above</div>
+            </div>
+            <div class="budget-breakdown-table" id="budget-breakdown-details">
+              <div class="budget-breakdown-row">
+                <span>🏡 Stay:</span><strong>—</strong>
+              </div>
+              <div class="budget-breakdown-row">
+                <span>🚐 Transport:</span><strong>—</strong>
+              </div>
+              <div class="budget-breakdown-row">
+                <span>🍲 Food:</span><strong>—</strong>
+              </div>
+              <div class="budget-breakdown-row">
+                <span>🎫 Permits:</span><strong>—</strong>
+              </div>
+              <div class="budget-breakdown-row">
+                <span>🛡️ Buffer:</span><strong>—</strong>
+              </div>
+            </div>
+            <div class="savings-tag" id="budget-savings-badge" aria-live="polite"></div>
+          </div>
+
+          <!-- Local Value Score -->
+          <div class="local-value-card" id="local-value-section" style="margin-top:1rem;">
+            <div style="font-size:0.85rem; font-weight:600; margin-bottom:0.5rem; color:var(--text-main);">🌱 Local
+              Value Score</div>
+            <div id="local-value-bar-container">
+              <div class="local-value-bar-track">
+                <div class="local-value-bar-fill" id="local-value-bar" style="width:0%" role="progressbar"
+                  aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+              </div>
+              <div class="local-value-label" id="local-value-label">Select destinations to calculate</div>
+            </div>
+          </div>
+
+          <!-- Permit Checklist (populated on plan generation) -->
+          <div id="plan-permit-checklist" style="margin-top:1rem; display:none;" aria-label="Required permits"></div>
+
+          <!-- Warnings -->
+          <div id="plan-warnings" style="margin-top:0.75rem;" aria-live="polite" aria-label="Trip warnings"></div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════
+     ROUTE PLANNER / TRANSIT GUIDE
+════════════════════════════════════════════════════════════════ -->
+  <section class="section section-alt" id="transit" aria-labelledby="transit-heading">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <h2 id="transit-heading">🚐 Route Planner &amp; Transit Guide</h2>
+          <p class="section-subtitle">Shared sumos, trains, ferries — real fares from local stands</p>
+        </div>
+      </div>
+
+      <div class="transit-search-card" role="search" aria-label="Route search">
+        <div class="transit-input-row">
+          <div>
+            <label class="form-label" for="transit-from-input">From</label>
+            <input type="text" id="transit-from-input" class="search-input"
+              style="border:1px solid var(--border); border-radius:var(--radius-sm); padding:0.5rem 0.75rem; width:100%;"
+              placeholder="Guwahati, Shillong, Dimapur…" aria-label="Departure point" autocomplete="off" />
+          </div>
+          <div>
+            <label class="form-label" for="transit-to-input">To</label>
+            <input type="text" id="transit-to-input" class="search-input"
+              style="border:1px solid var(--border); border-radius:var(--radius-sm); padding:0.5rem 0.75rem; width:100%;"
+              placeholder="Cherrapunji, Tawang, Majuli…" aria-label="Destination" autocomplete="off" />
+          </div>
+          <button class="btn btn-primary" id="btn-search-transit">🔍 Find Routes</button>
+        </div>
+      </div>
+
+      <div class="transit-routes-list" id="transit-routes-list" aria-live="polite" aria-label="Route results">
+        <div style="text-align:center; padding:2rem; color:var(--text-muted);">
+          Loading transit routes…
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════
+     PREBUILT ITINERARIES
+════════════════════════════════════════════════════════════════ -->
+  <section class="section" id="itineraries" aria-labelledby="itins-heading">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <h2 id="itins-heading">🗒️ Curated Budget Itineraries</h2>
+          <p class="section-subtitle">Expert-crafted routes — click "Load in Planner" to customise</p>
+        </div>
+        <span id="itineraries-count-label" class="badge-duration" aria-live="polite">Showing 6 plans</span>
+      </div>
+      <div class="itinerary-grid" id="itineraries-grid" aria-live="polite" aria-label="Curated itineraries">
+        <div style="text-align:center; padding:2rem; color:var(--text-muted);">Loading itineraries…</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════
+     PERMIT PASSPORT
+════════════════════════════════════════════════════════════════ -->
+  <section class="section section-alt" id="permits" aria-labelledby="permits-heading">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <h2 id="permits-heading">🛂 Permit Passport</h2>
+          <p class="section-subtitle">ILP, PAP, RAP requirements — with documents checklist &amp; official links</p>
+        </div>
+      </div>
+
+      <div class="permit-matrix-grid" id="permits-grid" aria-live="polite" aria-label="Permit requirements by state">
+        <div style="text-align:center; padding:2rem; color:var(--text-muted);">Loading permit data…</div>
+      </div>
+
+      <!-- Universal Checklist -->
+      <div class="permit-checklist-card" aria-label="Common documents required">
+        <h3 style="font-size:1.1rem; margin-bottom:0.5rem;">📋 Universal Document Checklist (All Travellers)</h3>
+        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1rem;">Keep these on you at all times —
+          physical copies recommended in remote areas.</p>
+        <div class="checklist-items">
+          <div class="check-item"><span class="check-icon">✓</span><span>Aadhaar Card / Passport (original + 2
+              self-attested copies)</span></div>
+          <div class="check-item"><span class="check-icon">✓</span><span>ILP / RAP / PAP (if required for the state you
+              are visiting)</span></div>
+          <div class="check-item"><span class="check-icon">✓</span><span>Passport-size photos (minimum 4 — required for
+              ILP counters)</span></div>
+          <div class="check-item"><span class="check-icon">✓</span><span>Return ticket / confirmed onward booking</span>
+          </div>
+          <div class="check-item"><span class="check-icon">✓</span><span>Travel insurance policy document
+              (recommended)</span></div>
+          <div class="check-item"><span class="check-icon">✓</span><span>Offline maps &amp; emergency contacts saved to
+              phone</span></div>
+          <div class="check-item"><span class="check-icon">✓</span><span>Emergency fund (₹2,000+ cash — ATMs unreliable
+              in remote areas)</span></div>
+          <div class="check-item"><span class="check-icon">✓</span><span>Medical kit: ORS, altitude pills if going above
+              3,000m, antihistamines</span></div>
+        </div>
+        <button class="btn btn-outline btn-sm" style="margin-top:1rem;" onclick="window.print()">🖨️ Print Permit
+          Checklist</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════
+     FESTIVAL CALENDAR
+════════════════════════════════════════════════════════════════ -->
+  <section class="section" id="festivals" aria-labelledby="festivals-heading">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <h2 id="festivals-heading">🎉 Festival Calendar</h2>
+          <p class="section-subtitle">Time your visit to celebrate with local communities</p>
+        </div>
+      </div>
+
+      <!-- Month Filter Row -->
+      <div class="month-filter-row" id="month-filter-row" role="group" aria-label="Filter by month">
+        <button class="month-pill active" data-month="0">All Months</button>
+        <button class="month-pill" data-month="1">Jan</button>
+        <button class="month-pill" data-month="2">Feb</button>
+        <button class="month-pill" data-month="3">Mar</button>
+        <button class="month-pill" data-month="4">Apr</button>
+        <button class="month-pill" data-month="5">May</button>
+        <button class="month-pill" data-month="6">Jun</button>
+        <button class="month-pill" data-month="7">Jul</button>
+        <button class="month-pill" data-month="8">Aug</button>
+        <button class="month-pill" data-month="9">Sep</button>
+        <button class="month-pill" data-month="10">Oct</button>
+        <button class="month-pill" data-month="11">Nov</button>
+        <button class="month-pill" data-month="12">Dec</button>
+      </div>
+
+      <div class="festival-grid" id="festival-grid" aria-live="polite" aria-label="Festivals">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════
+     ECO HOMESTAYS
+════════════════════════════════════════════════════════════════ -->
+  <section class="section section-alt" id="homestays" aria-labelledby="homestays-heading">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <h2 id="homestays-heading">🏡 Verified Eco Homestays</h2>
+          <p class="section-subtitle">Locally owned — your stay directly supports the community</p>
+        </div>
+      </div>
+      <div class="homestay-grid" id="homestays-grid" aria-live="polite" aria-label="Eco homestay listings">
+        <div style="text-align:center; padding:2rem; color:var(--text-muted);">Loading homestays…</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════
+     COMMUNITY TIPS + DEBRIEFS
+════════════════════════════════════════════════════════════════ -->
+  <section class="section" id="community" aria-labelledby="community-heading">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <h2 id="community-heading">💬 Community Tips &amp; Traveller Debriefs</h2>
+          <p class="section-subtitle">Real advice from real travellers — share yours &amp; help others</p>
+        </div>
+      </div>
+
+      <div class="tips-layout">
+        <!-- Tips List -->
+        <div>
+          <h3 style="font-size:1rem; margin-bottom:1rem;">👍 Upvoted Tips</h3>
+          <div id="community-tips-list" aria-live="polite" aria-label="Community travel tips">
+            <div style="text-align:center; padding:2rem; color:var(--text-muted);">Loading tips…</div>
+          </div>
+        </div>
+
+        <!-- Submission Form + Debriefs -->
+        <div>
+          <h3 style="font-size:1rem; margin-bottom:1rem;">✍️ Share a Tip</h3>
+          <form id="form-submit-tip" class="tip-form-card" novalidate aria-label="Submit travel tip">
+            <div class="form-group">
+              <label class="form-label" for="tip-state-select">State</label>
+              <select class="filter-select" id="tip-state-select" required style="width:100%;" aria-required="true">
+                <option value="">Select a state…</option>
+                <option value="AS">Assam</option>
+                <option value="ML">Meghalaya</option>
+                <option value="AR">Arunachal Pradesh</option>
+                <option value="NL">Nagaland</option>
+                <option value="MN">Manipur</option>
+                <option value="MZ">Mizoram</option>
+                <option value="TR">Tripura</option>
+                <option value="SK">Sikkim</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="tip-dest-input">Destination / Area</label>
+              <input type="text" id="tip-dest-input" class="filter-select" style="width:100%;"
+                placeholder="e.g. Cherrapunji, Ziro Valley" aria-label="Destination or area" />
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;">
+              <div class="form-group">
+                <label class="form-label" for="tip-author-name">Your Name</label>
+                <input type="text" id="tip-author-name" class="filter-select" style="width:100%;"
+                  placeholder="Traveller name" required aria-required="true" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="tip-author-city">Your City</label>
+                <input type="text" id="tip-author-city" class="filter-select" style="width:100%;"
+                  placeholder="Mumbai, Delhi…" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="tip-cat-select">Category</label>
+              <select class="filter-select" id="tip-cat-select" style="width:100%;">
+                <option value="general">General Advice</option>
+                <option value="transport">Transport Hack</option>
+                <option value="food">Food Recommendation</option>
+                <option value="safety">Safety Tip</option>
+                <option value="budget">Budget Trick</option>
+                <option value="permits">Permit Guidance</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="tip-text-input">Your Tip</label>
+              <textarea id="tip-text-input" rows="3"
+                style="width:100%; border:1px solid var(--border); border-radius:var(--radius-sm); padding:0.5rem; font-family:inherit;"
+                placeholder="Share your honest experience, local contacts, budget tricks or safety advice…" required
+                aria-required="true"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:100%;">📢 Post Tip</button>
+          </form>
+
+          <!-- Recent Debriefs -->
+          <div style="margin-top:2rem;">
+            <h3 style="font-size:1rem; margin-bottom:1rem;">📋 Recent Traveller Debriefs</h3>
+            <div id="debriefs-list" aria-live="polite" aria-label="Traveller debriefs">
+              <div style="text-align:center; padding:1.5rem; color:var(--text-muted);">No debriefs loaded yet.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════
+     OFFLINE TRIP PACK
+════════════════════════════════════════════════════════════════ -->
+  <section class="section section-alt" id="offline-pack" aria-labelledby="offline-heading">
+    <div class="container">
+      <div class="offline-pack-card">
+        <div class="offline-pack-icon">📦</div>
+        <div class="offline-pack-info">
+          <h2 id="offline-heading" style="font-size:1.35rem; margin-bottom:0.4rem;">Download Offline Trip Pack</h2>
+          <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:1rem;">
+            Download everything you need before you lose signal. North East India has significant dead-zones — be
+            prepared.
+          </p>
+          <ul class="offline-pack-includes">
+            <li>✓ All destination guides &amp; maps</li>
+            <li>✓ Permit rules &amp; document checklists</li>
+            <li>✓ Emergency contacts (state-wise)</li>
+            <li>✓ Language survival kit (4 languages)</li>
+            <li>✓ Shared sumo routes &amp; fares</li>
+            <li>✓ Your saved trip itinerary (if any)</li>
+          </ul>
+        </div>
+        <div class="offline-pack-action">
+          <button class="btn btn-primary" id="btn-download-offline-pack">
+            ⬇️ Download Offline Pack
+          </button>
+          <div id="offline-pack-status" style="margin-top:0.75rem; font-size:0.82rem; color:var(--text-muted);"
+            aria-live="polite"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════════════════════════ -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand">🏔️ Chalo NorthEast</div>
+          <p class="footer-desc">
+            India's most detailed budget travel platform for the Seven Sisters and Sikkim. Built by travellers, for
+            travellers.
+          </p>
+          <div
+            style="margin-top:1rem; padding:0.85rem; background:rgba(255,255,255,0.05); border-radius:var(--radius-sm); border:1px solid rgba(255,255,255,0.1);">
+            <strong style="color:white; font-size:0.85rem;">🌿 Responsible Travel Pledge</strong>
+            <p style="font-size:0.78rem; margin-top:0.35rem; line-height:1.5;">We commit to promoting low-impact,
+              community-first tourism. Every homestay, route and tip on this platform puts local people first.</p>
+          </div>
+        </div>
+
+        <div>
+          <div class="footer-heading">🗺️ States</div>
+          <ul class="footer-links">
+            <li><a href="#destinations" onclick="window.app&&window.app.handleStateSelect('AS')">Assam</a></li>
+            <li><a href="#destinations" onclick="window.app&&window.app.handleStateSelect('ML')">Meghalaya</a></li>
+            <li><a href="#destinations" onclick="window.app&&window.app.handleStateSelect('AR')">Arunachal Pradesh</a>
+            </li>
+            <li><a href="#destinations" onclick="window.app&&window.app.handleStateSelect('NL')">Nagaland</a></li>
+            <li><a href="#destinations" onclick="window.app&&window.app.handleStateSelect('MN')">Manipur</a></li>
+            <li><a href="#destinations" onclick="window.app&&window.app.handleStateSelect('MZ')">Mizoram</a></li>
+            <li><a href="#destinations" onclick="window.app&&window.app.handleStateSelect('TR')">Tripura</a></li>
+            <li><a href="#destinations" onclick="window.app&&window.app.handleStateSelect('SK')">Sikkim</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="footer-heading">🔗 Quick Links</div>
+          <ul class="footer-links">
+            <li><a href="#planner">Trip Planner</a></li>
+            <li><a href="#transit">Transit Guide</a></li>
+            <li><a href="#permits">Permit Advisor</a></li>
+            <li><a href="#festivals">Festival Calendar</a></li>
+            <li><a href="#homestays">Eco Homestays</a></li>
+            <li><a href="#community">Community Tips</a></li>
+            <li><a href="#offline-pack">Offline Pack</a></li>
+            <li><a href="/admin.html">Admin Panel</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="footer-heading">ℹ️ About</div>
+          <ul class="footer-links">
+            <li><a href="#">About Chalo NorthEast</a></li>
+            <li><a href="#">Content Policy</a></li>
+            <li><a href="#">Responsible Travel</a></li>
+            <li><a href="#">Contributor Guidelines</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+          </ul>
+          <div style="margin-top:1.25rem;">
+            <button class="btn btn-outline btn-sm report-outdated-btn" id="btn-report-footer"
+              style="border-color:rgba(255,255,255,0.2); color:#94a3b8;"
+              onclick="window.app&&window.app.showReportModal('general','site','Something on the page is outdated')">
+              ⚠️ Report Outdated Info
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>© 2026 Chalo NorthEast · Content verified monthly · Not affiliated with any state tourism board</div>
+        <div>Made with ❤️ for the travellers of the Seven Sisters</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ══════════════════════════════════════════════════════════════
      MODALS
 ════════════════════════════════════════════════════════════════ -->
 
-<!-- Emergency Contacts Modal -->
-<div class="modal-overlay" id="modal-emergency" role="dialog" aria-modal="true" aria-labelledby="modal-emergency-title">
-  <div class="modal-card">
-    <div class="modal-header">
-      <h2 id="modal-emergency-title" style="font-size:1.2rem; color:#b91c1c;">🆘 Emergency Contacts</h2>
-      <button class="modal-close" aria-label="Close modal">✕</button>
-    </div>
-    <div class="modal-body" id="emergency-content-body" aria-live="polite">
-      <!-- Rendered by JS -->
-    </div>
-  </div>
-  <div class="modal-backdrop-close" aria-hidden="true"></div>
-</div>
-
-<!-- Language Survival Kit Modal -->
-<div class="modal-overlay" id="modal-lingo" role="dialog" aria-modal="true" aria-labelledby="modal-lingo-title">
-  <div class="modal-card">
-    <div class="modal-header">
-      <h2 id="modal-lingo-title" style="font-size:1.2rem;">🗣️ Language Survival Kit</h2>
-      <button class="modal-close" aria-label="Close modal">✕</button>
-    </div>
-    <div class="modal-body" id="lingo-content-body" aria-live="polite">
-      <!-- Rendered by JS -->
-    </div>
-  </div>
-  <div class="modal-backdrop-close" aria-hidden="true"></div>
-</div>
-
-<!-- Destination Detail Modal -->
-<div class="modal-overlay" id="modal-destination-detail" role="dialog" aria-modal="true" aria-labelledby="modal-dest-title">
-  <div class="modal-card" style="max-width:860px;">
-    <div class="modal-header">
-      <h2 id="modal-dest-title" style="font-size:1.2rem;">Destination Guide</h2>
-      <button class="modal-close" aria-label="Close modal">✕</button>
-    </div>
-    <div class="modal-body" id="modal-dest-content" aria-live="polite">
-      <!-- Rendered by JS -->
-    </div>
-  </div>
-  <div class="modal-backdrop-close" aria-hidden="true"></div>
-</div>
-
-<!-- Report Outdated Info Modal -->
-<div class="modal-overlay" id="modal-report" role="dialog" aria-modal="true" aria-labelledby="modal-report-title">
-  <div class="modal-card" style="max-width:500px;">
-    <div class="modal-header">
-      <h2 id="modal-report-title" style="font-size:1.1rem;">⚠️ Report Outdated / Incorrect Info</h2>
-      <button class="modal-close" aria-label="Close modal">✕</button>
-    </div>
-    <div class="modal-body">
-      <form id="form-report" novalidate aria-label="Report form">
-        <input type="hidden" id="report-entity-type" value="" />
-        <input type="hidden" id="report-entity-id" value="" />
-        <div class="form-group">
-          <label class="form-label" for="report-type-select">What is incorrect?</label>
-          <select class="filter-select" id="report-type-select" style="width:100%;">
-            <option value="outdated-info">Information is outdated</option>
-            <option value="incorrect">Factually incorrect</option>
-            <option value="missing">Important info is missing</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="report-description">Describe the issue</label>
-          <textarea id="report-description" rows="4" style="width:100%; border:1px solid var(--border); border-radius:var(--radius-sm); padding:0.5rem; font-family:inherit;" placeholder="Please be as specific as possible — include the correct information if you know it." required></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary" style="width:100%;" id="btn-submit-report">Submit Report</button>
-      </form>
-    </div>
-  </div>
-  <div class="modal-backdrop-close" aria-hidden="true"></div>
-</div>
-
-<!-- Destination Photo Gallery Modal (Multi-pic Lightbox with Swipe & Thumbnails) -->
-<div class="gallery-modal-overlay" id="modal-photo-gallery" role="dialog" aria-modal="true" aria-label="Photo Gallery Lightbox">
-  <div class="gallery-modal-card">
-    <button class="gallery-close-btn" id="gallery-close-btn" aria-label="Close photo gallery" onclick="window.app&&window.app.closeGallery()">✕</button>
-    <div class="gallery-viewport" id="gallery-viewport">
-      <button class="gallery-nav-btn gallery-prev-btn" id="gallery-prev-btn" aria-label="Previous photo" onclick="window.app&&window.app.prevGalleryPhoto()">❮</button>
-      <img id="gallery-active-img" src="" alt="Destination Photo" class="gallery-active-img" />
-      <button class="gallery-nav-btn gallery-next-btn" id="gallery-next-btn" aria-label="Next photo" onclick="window.app&&window.app.nextGalleryPhoto()">❯</button>
-    </div>
-    <div class="gallery-caption-bar">
-      <div class="gallery-dest-info">
-        <span class="gallery-dest-title" id="gallery-dest-title">Destination</span>
-        <span class="gallery-caption-text" id="gallery-caption-text">Photo description</span>
+  <!-- Emergency Contacts Modal -->
+  <div class="modal-overlay" id="modal-emergency" role="dialog" aria-modal="true"
+    aria-labelledby="modal-emergency-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="modal-emergency-title" style="font-size:1.2rem; color:#b91c1c;">🆘 Emergency Contacts</h2>
+        <button class="modal-close" aria-label="Close modal">✕</button>
       </div>
-      <div class="gallery-counter" id="gallery-counter">1 / 1</div>
+      <div class="modal-body" id="emergency-content-body" aria-live="polite">
+        <!-- Rendered by JS -->
+      </div>
     </div>
-    <div class="gallery-thumbs-row" id="gallery-thumbs-row">
-      <!-- Thumbnails rendered dynamically -->
-    </div>
+    <div class="modal-backdrop-close" aria-hidden="true"></div>
   </div>
-  <div class="modal-backdrop-close" onclick="window.app&&window.app.closeGallery()" style="position:absolute; inset:0; z-index:1;" aria-hidden="true"></div>
-</div>
 
-<!-- Scripts -->
-<script src="/js/data.js?v=20261126-v7"></script>
-<script src="/js/map.js?v=20261126-v7"></script>
-<script src="/js/planner.js?v=20261126-v7"></script>
-<script src="/js/app.js?v=20261126-v7"></script>
-<script>
+  <!-- Language Survival Kit Modal -->
+  <div class="modal-overlay" id="modal-lingo" role="dialog" aria-modal="true" aria-labelledby="modal-lingo-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="modal-lingo-title" style="font-size:1.2rem;">🗣️ Language Survival Kit</h2>
+        <button class="modal-close" aria-label="Close modal">✕</button>
+      </div>
+      <div class="modal-body" id="lingo-content-body" aria-live="polite">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+    <div class="modal-backdrop-close" aria-hidden="true"></div>
+  </div>
+
+  <!-- Destination Detail Modal -->
+  <div class="modal-overlay" id="modal-destination-detail" role="dialog" aria-modal="true"
+    aria-labelledby="modal-dest-title">
+    <div class="modal-card" style="max-width:860px;">
+      <div class="modal-header">
+        <h2 id="modal-dest-title" style="font-size:1.2rem;">Destination Guide</h2>
+        <button class="modal-close" aria-label="Close modal">✕</button>
+      </div>
+      <div class="modal-body" id="modal-dest-content" aria-live="polite">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+    <div class="modal-backdrop-close" aria-hidden="true"></div>
+  </div>
+
+  <!-- Report Outdated Info Modal -->
+  <div class="modal-overlay" id="modal-report" role="dialog" aria-modal="true" aria-labelledby="modal-report-title">
+    <div class="modal-card" style="max-width:500px;">
+      <div class="modal-header">
+        <h2 id="modal-report-title" style="font-size:1.1rem;">⚠️ Report Outdated / Incorrect Info</h2>
+        <button class="modal-close" aria-label="Close modal">✕</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-report" novalidate aria-label="Report form">
+          <input type="hidden" id="report-entity-type" value="" />
+          <input type="hidden" id="report-entity-id" value="" />
+          <div class="form-group">
+            <label class="form-label" for="report-type-select">What is incorrect?</label>
+            <select class="filter-select" id="report-type-select" style="width:100%;">
+              <option value="outdated-info">Information is outdated</option>
+              <option value="incorrect">Factually incorrect</option>
+              <option value="missing">Important info is missing</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="report-description">Describe the issue</label>
+            <textarea id="report-description" rows="4"
+              style="width:100%; border:1px solid var(--border); border-radius:var(--radius-sm); padding:0.5rem; font-family:inherit;"
+              placeholder="Please be as specific as possible — include the correct information if you know it."
+              required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%;" id="btn-submit-report">Submit
+            Report</button>
+        </form>
+      </div>
+    </div>
+    <div class="modal-backdrop-close" aria-hidden="true"></div>
+  </div>
+
+  <!-- Destination Photo Gallery Modal (Multi-pic Lightbox with Swipe & Thumbnails) -->
+  <div class="gallery-modal-overlay" id="modal-photo-gallery" role="dialog" aria-modal="true"
+    aria-label="Photo Gallery Lightbox">
+    <div class="gallery-modal-card">
+      <button class="gallery-close-btn" id="gallery-close-btn" aria-label="Close photo gallery"
+        onclick="window.app&&window.app.closeGallery()">✕</button>
+      <div class="gallery-viewport" id="gallery-viewport">
+        <button class="gallery-nav-btn gallery-prev-btn" id="gallery-prev-btn" aria-label="Previous photo"
+          onclick="window.app&&window.app.prevGalleryPhoto()">❮</button>
+        <img id="gallery-active-img" src="" alt="Destination Photo" class="gallery-active-img" />
+        <button class="gallery-nav-btn gallery-next-btn" id="gallery-next-btn" aria-label="Next photo"
+          onclick="window.app&&window.app.nextGalleryPhoto()">❯</button>
+      </div>
+      <div class="gallery-caption-bar">
+        <div class="gallery-dest-info">
+          <span class="gallery-dest-title" id="gallery-dest-title">Destination</span>
+          <span class="gallery-caption-text" id="gallery-caption-text">Photo description</span>
+        </div>
+        <div class="gallery-counter" id="gallery-counter">1 / 1</div>
+      </div>
+      <div class="gallery-thumbs-row" id="gallery-thumbs-row">
+        <!-- Thumbnails rendered dynamically -->
+      </div>
+    </div>
+    <div class="modal-backdrop-close" onclick="window.app&&window.app.closeGallery()"
+      style="position:absolute; inset:0; z-index:1;" aria-hidden="true"></div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/js/data.js?v=20261126-v6"></script>
+  <script src="/js/map.js?v=20261126-v6"></script>
+  <script src="/js/planner.js?v=20261126-v6"></script>
+  <script src="/js/app.js?v=20261126-v6"></script>
+  <script>
+    // Online/offline indicator
+    function updateOnlineStatus() {
+      const banner = document.getElementById('offline-banner');
+      if (banner) {
+        banner.style.display = navigator.onLine ? 'none' : 'block';
+      }
+      <!-- Scripts -->
+      <script src="/js/data.js?v=20261126-v7"></script>
+  <script src="/js/map.js?v=20261126-v7"></script>
+  <script src="/js/planner.js?v=20261126-v7"></script>
+  <script src="/js/app.js?v=20261126-v7"></script>
+  <script>
   // Online/offline indicator
-  function updateOnlineStatus() {
+        function updateOnlineStatus() {
     const banner = document.getElementById('offline-banner');
-    if (banner) {
-      banner.style.display = navigator.onLine ? 'none' : 'block';
+        if (banner) {
+          banner.style.display = navigator.onLine ? 'none' : 'block';
     }
-  }
-  window.addEventListener('online', updateOnlineStatus);
-  window.addEventListener('offline', updateOnlineStatus);
-  updateOnlineStatus();
-</script>
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+        updateOnlineStatus();
+  </script>
 </body>
+
 </html>
