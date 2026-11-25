@@ -24,6 +24,13 @@ class App {
     this.map = null;
     this.planner = null;
 
+    this.galleryState = {
+      activeSlug: null,
+      dest: null,
+      photos: [],
+      currentIndex: 0
+    };
+
     this.init();
   }
 
@@ -223,6 +230,37 @@ class App {
         this.renderFestivals(monthNum);
       });
     });
+
+    // Photo gallery keyboard swipe/nav and Escape key
+    window.addEventListener("keydown", (e) => {
+      const gallery = document.getElementById("modal-photo-gallery");
+      if (gallery && gallery.classList.contains("active")) {
+        if (e.key === "ArrowLeft") this.prevGalleryPhoto();
+        else if (e.key === "ArrowRight") this.nextGalleryPhoto();
+        else if (e.key === "Escape") this.closeGallery();
+      }
+    });
+
+    // Touch swipe support on gallery viewport
+    const viewport = document.getElementById("gallery-viewport");
+    if (viewport) {
+      let touchStartX = 0;
+      viewport.addEventListener("touchstart", (e) => {
+        if (e.changedTouches && e.changedTouches[0]) {
+          touchStartX = e.changedTouches[0].screenX;
+        }
+      }, { passive: true });
+      viewport.addEventListener("touchend", (e) => {
+        if (e.changedTouches && e.changedTouches[0]) {
+          const touchEndX = e.changedTouches[0].screenX;
+          const diff = touchEndX - touchStartX;
+          if (Math.abs(diff) > 40) {
+            if (diff < 0) this.nextGalleryPhoto();
+            else this.prevGalleryPhoto();
+          }
+        }
+      }, { passive: true });
+    }
   }
 
   handleStateSelect(stateCode) {
@@ -411,7 +449,7 @@ class App {
       const imgUrl = dest.image_url || `/images/destinations/${dest.slug}.jpg`;
       return `
       <div class="dest-card">
-        <div class="dest-card-header">
+        <div class="dest-card-header" onclick="window.app.openGallery('${dest.slug}')" style="cursor: pointer;" title="Click to view photo gallery">
           <img src="${imgUrl}" alt="${dest.name}" class="dest-card-img-bg" loading="lazy" onerror="this.src='/images/destinations/kaziranga-national-park.jpg'" />
           <div class="dest-card-overlay"></div>
           <div class="dest-card-badges">
@@ -421,6 +459,9 @@ class App {
           <div class="dest-card-title-group">
             <div class="dest-card-state">${dest.state_name} • ${dest.altitude}</div>
             <h3 class="dest-card-title">${dest.name}</h3>
+          </div>
+          <div class="dest-gallery-pill">
+            📷 <span>Photos</span>
           </div>
         </div>
         <div class="dest-card-body">
@@ -437,6 +478,9 @@ class App {
             </div>
           </div>
           <div class="dest-actions">
+            <button class="btn btn-outline btn-sm" onclick="window.app.openGallery('${dest.slug}')" title="View photo gallery">
+              📷 Photos
+            </button>
             <button class="btn btn-outline btn-sm" onclick="window.app.openDestinationDetail('${dest.slug}')">
               📖 Guide
             </button>
@@ -513,9 +557,14 @@ class App {
         contentEl.innerHTML = `
           <div style="position:relative; height:220px; border-radius:var(--radius-md); overflow:hidden; margin-bottom:1.25rem;">
             <img src="${modalImg}" alt="${dest.name}" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='/images/destinations/kaziranga-national-park.jpg'" />
-            <div style="position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent, rgba(0,0,0,0.8)); padding:1rem; color:white;">
-              <span class="state-badge badge-no-ilp" style="background:var(--primary); color:white; border:none;">${dest.category.toUpperCase()}</span>
-              <span style="font-size:0.85rem; opacity:0.95; margin-left:0.5rem;">Altitude: ${dest.altitude} • Best Season: ${dest.best_season}</span>
+            <div style="position:absolute; bottom:0; left:0; right:0; background:linear-gradient(transparent, rgba(0,0,0,0.85)); padding:0.9rem 1.25rem; color:white; display:flex; justify-content:space-between; align-items:flex-end;">
+              <div>
+                <span class="state-badge badge-no-ilp" style="background:var(--primary); color:white; border:none;">${dest.category.toUpperCase()}</span>
+                <span style="font-size:0.85rem; opacity:0.95; margin-left:0.5rem;">Altitude: ${dest.altitude} • Best Season: ${dest.best_season}</span>
+              </div>
+              <button class="btn btn-sm btn-primary" onclick="window.app.openGallery('${dest.slug}')" style="box-shadow:0 2px 8px rgba(0,0,0,0.4); font-weight:600; font-size:0.8rem; padding:0.35rem 0.8rem;">
+                📷 View Photos
+              </button>
             </div>
           </div>
 
@@ -1238,8 +1287,641 @@ class App {
   }
 
   closeModals() {
-    const modals = document.querySelectorAll(".modal-overlay");
+    const modals = document.querySelectorAll(".modal-overlay, .gallery-modal-overlay");
     modals.forEach(m => m.classList.remove("active"));
+    document.body.style.overflow = "auto";
+  }
+
+  getDestinationGallery(slug) {
+    const dest = this.destinations.find(d => d.slug === slug);
+    const destName = dest ? dest.name : "Destination";
+    const stateName = dest ? dest.state_name : "North East India";
+
+    const galleryMap = {
+      "gurudongmar-lake-north-sikkim": [
+        {
+          url: "/images/destinations/gurudongmar-lake-north-sikkim.jpg",
+          title: "Gurudongmar High-Altitude Sacred Lake (5,430m)",
+          desc: "One of the highest lakes in the world, sacred to Buddhists and Sikhs, surrounded by snow-capped peaks."
+        },
+        {
+          url: "/images/destinations/tsomgo-lake-nathula-pass.jpg",
+          title: "Tsomgo Glacial Lake & Alpine Pass",
+          desc: "Pristine glacial lake situated at 12,400 ft on the historic Indo-China Silk Route in East Sikkim."
+        },
+        {
+          url: "/images/destinations/pelling-skywalk-pemayangtse.jpg",
+          title: "Mount Kanchenjunga Majestic Panorama",
+          desc: "Breathtaking views of the world's 3rd highest peak and centuries-old Pemayangtse Monastery."
+        },
+        {
+          url: "/images/itineraries/sikkim-himalayan-majesty-7d.jpg",
+          title: "North Sikkim High Himalayan Plateau",
+          desc: "Dramatic valleys of Lachen, Lachung, and Yumthang Valley of Flowers covered in alpine beauty."
+        }
+      ],
+      "tawang-sela-pass": [
+        {
+          url: "/images/destinations/tawang-sela-pass.jpg",
+          title: "Tawang Monastery & Sela Pass (13,700 ft)",
+          desc: "India's largest Buddhist monastery and the breathtaking snow-covered Sela gateway."
+        },
+        {
+          url: "/images/destinations/mechuka-forbidden-valley.jpg",
+          title: "Mechuka Valley & Pristine Siyom River",
+          desc: "Untouched highland meadows, snow peaks, and ancient Memba Buddhist traditions."
+        },
+        {
+          url: "/images/destinations/ziro-valley-apatani.jpg",
+          title: "Arunachal Pine Hills & Lush Valleys",
+          desc: "Enchanting landscapes across the Eastern Himalayas."
+        },
+        {
+          url: "/images/itineraries/arunachal-tawang-high-altitude-7d.jpg",
+          title: "High Altitude Himalayan Pass & Prayer Flags",
+          desc: "Buddhist prayer flags fluttering along the historic trade route near China border."
+        }
+      ],
+      "nongriat-root-bridges": [
+        {
+          url: "/images/destinations/nongriat-root-bridges.jpg",
+          title: "Double Decker Living Root Bridge, Nongriat",
+          desc: "World-renowned bio-engineering marvel crafted by Khasi tribes from Ficus elastica roots across 200+ years."
+        },
+        {
+          url: "/images/destinations/cherrapunji-sohra.jpg",
+          title: "Nohkalikai Falls & Cloud Gorges of Sohra",
+          desc: "India's tallest plunge waterfall (1,115 ft) cascading into a turquoise jungle pool."
+        },
+        {
+          url: "/images/destinations/mawlynnong-clean-village.jpg",
+          title: "Living Root Bridge of Riwai Village",
+          desc: "Single-decker living root bridge near Asia's cleanest village."
+        },
+        {
+          url: "/images/destinations/dawki-shnongpdeng-river.jpg",
+          title: "Rainbow Falls & Crystal Natural Pools",
+          desc: "Deep turquoise natural river pools hidden within Nongriat's rainforest trail."
+        }
+      ],
+      "dzukou-valley-trek": [
+        {
+          url: "/images/destinations/dzukou-valley-trek.jpg",
+          title: "Dzukou Valley Rolling Green Hills (2,452m)",
+          desc: "Famous for the rare Dzukou Lily, sweeping emerald dwarf-bamboo hills, and winding natural streams."
+        },
+        {
+          url: "/images/destinations/kohima-kisama-hornbill.jpg",
+          title: "Kisama Heritage Morungs & Gateways",
+          desc: "Traditional Naga tribal architecture in the shadow of Mount Japfü."
+        },
+        {
+          url: "/images/destinations/khonoma-green-village.jpg",
+          title: "Khonoma Terraced Paddy Fields",
+          desc: "Centuries-old terraced agriculture and India's first green village conservation sanctuary."
+        },
+        {
+          url: "/images/itineraries/nagaland-dzukou-and-hornbill-5d.jpg",
+          title: "Camping Under The Stars in Dzukou Valley",
+          desc: "Golden sunrise over misty mountain ravines along the Nagaland-Manipur border."
+        }
+      ],
+      "cherrapunji-sohra": [
+        {
+          url: "/images/destinations/cherrapunji-sohra.jpg",
+          title: "Nohkalikai Falls & Misty Gorges",
+          desc: "Breathtaking 340-meter plunge waterfall in the heart of Sohra's wet evergreen plateau."
+        },
+        {
+          url: "/images/destinations/nongriat-root-bridges.jpg",
+          title: "Double Decker Bio-Root Bridge Trail",
+          desc: "The legendary 3,500-step trek connecting Tyrna to deep jungle living root bridges."
+        },
+        {
+          url: "/images/destinations/dawki-shnongpdeng-river.jpg",
+          title: "Seven Sisters Falls & Limestone Caverns",
+          desc: "Mawsmai and Arwah limestone caves with prehistoric fossils and subterranean waterfalls."
+        },
+        {
+          url: "/images/itineraries/meghalaya-budget-backpacker-5d.jpg",
+          title: "Meghalaya Clouds, Cliffs & Living Wonders",
+          desc: "Scenic viewpoints looking out across the Bangladesh plains."
+        }
+      ],
+      "loktak-lake-keibul-lamjao": [
+        {
+          url: "/images/destinations/loktak-lake-keibul-lamjao.jpg",
+          title: "Loktak Lake Floating Phumdis",
+          desc: "The largest freshwater lake in Northeast India, famed for circular floating biomass islands called phumdis."
+        },
+        {
+          url: "/images/destinations/imphal-city-ima-keithel.jpg",
+          title: "Imphal Valley & Historic Kangla Fort",
+          desc: "The cultural heartland of Manipur with royal coronation pavilions and sacred ponds."
+        },
+        {
+          url: "/images/itineraries/seven-sisters-grand-explorer-12d.jpg",
+          title: "Keibul Lamjao - World's Only Floating National Park",
+          desc: "The last natural refuge of the endangered dancing deer, the Sangai."
+        },
+        {
+          url: "/images/hero-bg.jpg",
+          title: "Traditional Manipuri Cultural Splendor",
+          desc: "Rich dance traditions, vibrant handlooms, and indigenous water culture."
+        }
+      ],
+      "kaziranga-national-park": [
+        {
+          url: "/images/destinations/kaziranga-national-park.jpg",
+          title: "Great Indian One-Horned Rhinoceros at Kaziranga",
+          desc: "UNESCO World Heritage site home to two-thirds of the world's great one-horned rhinoceros population."
+        },
+        {
+          url: "/images/destinations/manas-national-park.jpg",
+          title: "Elephant & Wild Water Buffalo Habitats",
+          desc: "Pristine alluvial tall grassland and tropical moist deciduous forests."
+        },
+        {
+          url: "/images/destinations/majuli-island.jpg",
+          title: "Brahmaputra Floodplains & Bird Sanctuary",
+          desc: "Crucial stopover for thousands of migratory waterbirds from Siberia and Central Asia."
+        },
+        {
+          url: "/images/itineraries/assam-wildlife-and-majuli-6d.jpg",
+          title: "Morning Jeep Safari in Bagori & Kohora Ranges",
+          desc: "Thrilling early morning wildlife spotting through misty elephant grass."
+        }
+      ],
+      "mechuka-forbidden-valley": [
+        {
+          url: "/images/destinations/mechuka-forbidden-valley.jpg",
+          title: "Mechuka Forbidden Valley & Siyom River (1,829m)",
+          desc: "Known as the Mini Switzerland of India, surrounded by snow-draped pine peaks near Tibet border."
+        },
+        {
+          url: "/images/destinations/tawang-sela-pass.jpg",
+          title: "400-Year-Old Samten Yongcha Buddhist Gompa",
+          desc: "Historic hill-perched monastery with ancient Tibetan murals and statues."
+        },
+        {
+          url: "/images/destinations/ziro-valley-apatani.jpg",
+          title: "Wooden Bridges & Lush High Pastures",
+          desc: "Traditional hanging bridges crossing torrential glacial mountain rivers."
+        },
+        {
+          url: "/images/itineraries/arunachal-tawang-high-altitude-7d.jpg",
+          title: "Memba & Ramo Tribal Wooden Homestays",
+          desc: "Warm hospitality with roaring bukhari wood stoves and fresh butter tea."
+        }
+      ],
+      "kohima-kisama-hornbill": [
+        {
+          url: "/images/destinations/kohima-kisama-hornbill.jpg",
+          title: "Kisama Heritage Village & Hornbill Arena",
+          desc: "Permanent cultural arena showcasing authentic morungs (dormitories) of all 17 major Naga tribes."
+        },
+        {
+          url: "/images/destinations/dzukou-valley-trek.jpg",
+          title: "Mount Japfü & Dzukou Foothills",
+          desc: "Trekking through the second highest peak in Nagaland and rhododendron forests."
+        },
+        {
+          url: "/images/destinations/khonoma-green-village.jpg",
+          title: "Angami Naga Traditional Architecture",
+          desc: "Carved wooden clan gateways (Kharu) and historical resistance monuments."
+        },
+        {
+          url: "/images/hero-bg.jpg",
+          title: "Hornbill Festival Grand Tribal Dances",
+          desc: "The famous 'Festival of Festivals' held every December celebrating Naga bravery and harvest."
+        }
+      ],
+      "tsomgo-lake-nathula-pass": [
+        {
+          url: "/images/destinations/tsomgo-lake-nathula-pass.jpg",
+          title: "Tsomgo (Changu) Sacred Glacial Lake (12,400 ft)",
+          desc: "Sacred oval alpine lake reflecting changing colors across seasons, surrounded by rugged mountain slopes."
+        },
+        {
+          url: "/images/destinations/gurudongmar-lake-north-sikkim.jpg",
+          title: "Nathu La Pass & Old Silk Route Indo-China Border",
+          desc: "Historic high-altitude pass at 14,140 ft linking Sikkim with Tibet Autonomous Region."
+        },
+        {
+          url: "/images/destinations/pelling-skywalk-pemayangtse.jpg",
+          title: "Baba Harbhajan Singh Memorial Shrine",
+          desc: "Legendary military shrine revered by soldiers stationed along the Eastern Himalayan frontier."
+        },
+        {
+          url: "/images/itineraries/sikkim-himalayan-majesty-7d.jpg",
+          title: "Yak Safaris in Winter Snowscape",
+          desc: "Decorated friendly Himalayan yaks traversing snow trails around the alpine lake."
+        }
+      ],
+      "pelling-skywalk-pemayangtse": [
+        {
+          url: "/images/destinations/pelling-skywalk-pemayangtse.jpg",
+          title: "Pelling Glass Skywalk & 137ft Chenrezig Statue",
+          desc: "India's first glass skywalk overlooking deep Himalayan valleys and facing Mount Kanchenjunga."
+        },
+        {
+          url: "/images/destinations/gurudongmar-lake-north-sikkim.jpg",
+          title: "Pemayangtse Monastery (1705 AD)",
+          desc: "One of Sikkim's oldest and premier Nyingma Buddhist monasteries with priceless wood carvings."
+        },
+        {
+          url: "/images/destinations/tsomgo-lake-nathula-pass.jpg",
+          title: "Rabdentse Ruins & Royal Ancient Capital",
+          desc: "Archaeological ruins of the second historic capital of the Kingdom of Sikkim."
+        },
+        {
+          url: "/images/itineraries/sikkim-himalayan-majesty-7d.jpg",
+          title: "Singshore Suspension Bridge & Waterfalls",
+          desc: "Spectacular gorge crossings and lush cardamom plantations of West Sikkim."
+        }
+      ],
+      "ziro-valley-apatani": [
+        {
+          url: "/images/destinations/ziro-valley-apatani.jpg",
+          title: "Ziro Valley Pine Hills & Terraced Paddy (1,572m)",
+          desc: "UNESCO tentative world heritage site famous for eco-friendly paddy-cum-fish farming by the Apatani."
+        },
+        {
+          url: "/images/destinations/tawang-sela-pass.jpg",
+          title: "Apatani Bamboo Villages & Sacred Groves",
+          desc: "Hong, Hari, and Bulla villages preserved with distinctive bamboo homes and sacred totems."
+        },
+        {
+          url: "/images/destinations/mechuka-forbidden-valley.jpg",
+          title: "Kardo Shiva Lingam & Talley Valley Sanctuary",
+          desc: "Naturally formed 25ft stone lingam and subtropical cloud rainforest rich in rare clouded leopards."
+        },
+        {
+          url: "/images/hero-bg.jpg",
+          title: "Ziro Music Festival & Cultural Celebrations",
+          desc: "India's greatest outdoor indie music festival set in golden autumn paddy fields."
+        }
+      ],
+      "dawki-shnongpdeng-river": [
+        {
+          url: "/images/destinations/dawki-shnongpdeng-river.jpg",
+          title: "Umngot River Floating Boats on Crystal Water",
+          desc: "Water so transparent that wooden country boats appear to float in mid-air above the riverbed."
+        },
+        {
+          url: "/images/destinations/cherrapunji-sohra.jpg",
+          title: "Shnongpdeng Riverside Pebble Beaches",
+          desc: "Popular hub for kayaking, cliff jumping, snorkeling, and camping along the clear river banks."
+        },
+        {
+          url: "/images/destinations/mawlynnong-clean-village.jpg",
+          title: "Dawki Suspension Bridge & Bangladesh Border",
+          desc: "Historic British-era single span suspension bridge spanning the gorge into Tamabil."
+        },
+        {
+          url: "/images/destinations/nongriat-root-bridges.jpg",
+          title: "Night Camping Under Starry Skies at Umngot",
+          desc: "Riverside bonfires and local Khasi grilled fish by the tranquil river."
+        }
+      ],
+      "unakoti-rock-reliefs": [
+        {
+          url: "/images/destinations/unakoti-rock-reliefs.jpg",
+          title: "Unakoti Rock-Cut Bas Reliefs of Lord Shiva (7th-9th C)",
+          desc: "Mysterious hillside rock carvings of 99,99,999 deities hidden within Tripura's dense tropical forest."
+        },
+        {
+          url: "/images/destinations/tripura-palaces-neermahal.jpg",
+          title: "Central Shiva Head (Unakotiswara Kal Bhairava)",
+          desc: "Colossal 30-foot high rock sculpture adorned with an elaborate headdress."
+        },
+        {
+          url: "/images/itineraries/seven-sisters-grand-explorer-12d.jpg",
+          title: "Ganesha & Rawana Stone Sculptures by the Stream",
+          desc: "Intricately carved elephant gods and celestial figures flanking natural forest waterfalls."
+        },
+        {
+          url: "/images/hero-bg.jpg",
+          title: "Ashokastami Mela & Pilgrimage Heritage",
+          desc: "Annual spring festival drawing thousands of pilgrims from across Eastern India."
+        }
+      ],
+      "khonoma-green-village": [
+        {
+          url: "/images/destinations/khonoma-green-village.jpg",
+          title: "Khonoma Asia's First Green Village",
+          desc: "Eco-conscious Angami village that banned hunting and logging to protect the Blyth's Tragopan pheasant."
+        },
+        {
+          url: "/images/destinations/dzukou-valley-trek.jpg",
+          title: "Terraced Paddy Fields with Mountain Springs",
+          desc: "Ancient self-irrigating step cultivation sculpted along steep mountain slopes."
+        },
+        {
+          url: "/images/destinations/kohima-kisama-hornbill.jpg",
+          title: "Fortified Morungs & Battle of Khonoma Heritage",
+          desc: "Stone forts where Angami warriors held off British colonial forces in the 1879 siege."
+        },
+        {
+          url: "/images/itineraries/nagaland-dzukou-and-hornbill-5d.jpg",
+          title: "Nature Trails & Blyth's Tragopan Sanctuary",
+          desc: "20 sq km community nature reserve rich in endangered orchids, ferns, and montane birds."
+        }
+      ],
+      "aizawl-reiek-peak": [
+        {
+          url: "/images/destinations/aizawl-reiek-peak.jpg",
+          title: "Reiek Peak Sheer Cliffs (1,548m)",
+          desc: "Towering vertical rock face offering 360-degree views across Mizoram's lush valleys towards Bangladesh."
+        },
+        {
+          url: "/images/destinations/thenzawl-vantawng-falls.jpg",
+          title: "Reiek Mizo Model Heritage Village",
+          desc: "Reconstructed traditional huts of Mizo chieftains, bachelors' quarters, and blacksmith workshops."
+        },
+        {
+          url: "/images/itineraries/seven-sisters-grand-explorer-12d.jpg",
+          title: "Aizawl Mountain City Ridge at Night",
+          desc: "Glittering capital city perched atop serpentine mountain ridges under starry skies."
+        },
+        {
+          url: "/images/hero-bg.jpg",
+          title: "Anurag Bamboo Groves & Trek Trail",
+          desc: "Lush tropical hardwood forest trail teeming with migratory birds, orchids, and wild ferns."
+        }
+      ],
+      "majuli-island": [
+        {
+          url: "/images/destinations/majuli-island.jpg",
+          title: "Majuli Island - World's Largest River Island",
+          desc: "Nestled in the Brahmaputra River, the spiritual epicenter of Assam's Neo-Vaishnavite culture."
+        },
+        {
+          url: "/images/destinations/sivasagar-ahom-heritage.jpg",
+          title: "Chamaguri Satra Traditional Mask Making",
+          desc: "Centuries-old craft of handcrafting bamboo and clay mythological masks for Bhaona theatrical plays."
+        },
+        {
+          url: "/images/destinations/kaziranga-national-park.jpg",
+          title: "Kamalabari & Auniati Satra Monasteries",
+          desc: "Monks performing ethereal Sattriya classical dances and playing rhythmic Khol drums."
+        },
+        {
+          url: "/images/itineraries/assam-wildlife-and-majuli-6d.jpg",
+          title: "Sunset Boat Cruise on the Brahmaputra",
+          desc: "Traditional wooden ferry rides navigating the peaceful sandbars and wetlands."
+        }
+      ],
+      "tripura-palaces-neermahal": [
+        {
+          url: "/images/destinations/tripura-palaces-neermahal.jpg",
+          title: "Neermahal Water Palace on Rudrasagar Lake",
+          desc: "Only floating palace in Eastern India, blending Hindu and Mughal architectural styles built in 1930."
+        },
+        {
+          url: "/images/destinations/unakoti-rock-reliefs.jpg",
+          title: "Ujjayanta Palace & Royal Courtyards",
+          desc: "Magnificent white neoclassical palace in Agartala with Mughal-style gardens and fountains."
+        },
+        {
+          url: "/images/itineraries/seven-sisters-grand-explorer-12d.jpg",
+          title: "Rudrasagar Lake Migratory Bird Sanctuary",
+          desc: "Boat cruises watching pintails, teals, and cormorants around the illuminated water palace."
+        },
+        {
+          url: "/images/hero-bg.jpg",
+          title: "Tripura Tribal Handloom & Folk Festivities",
+          desc: "Traditional Risa and Rikutu weaving with intricate indigenous geometric motifs."
+        }
+      ],
+      "mawlynnong-clean-village": [
+        {
+          url: "/images/destinations/mawlynnong-clean-village.jpg",
+          title: "Mawlynnong Village Floral Paths & Bamboo Bins",
+          desc: "Awarded Asia's Cleanest Village in 2003, with 100% literacy, eco-waste management, and blooming gardens."
+        },
+        {
+          url: "/images/destinations/dawki-shnongpdeng-river.jpg",
+          title: "Sky Walk Bamboo Machan Viewpoint",
+          desc: "85-foot eco-bamboo watchtower offering sweeping bird's-eye views across the Bangladesh plains."
+        },
+        {
+          url: "/images/destinations/nongriat-root-bridges.jpg",
+          title: "Riwai Single-Decker Living Root Bridge",
+          desc: "Accessible living root bridge grown over a sparkling stream just 10 minutes from the village."
+        },
+        {
+          url: "/images/destinations/cherrapunji-sohra.jpg",
+          title: "Traditional Khasi Thatched Homestays",
+          desc: "Wholesome organic Khasi meals served with local red rice, wild greens, and seasonal fruits."
+        }
+      ],
+      "imphal-city-ima-keithel": [
+        {
+          url: "/images/destinations/imphal-city-ima-keithel.jpg",
+          title: "Ima Keithel (Mother's Market) - 500-Year Heritage",
+          desc: "World's largest market run entirely by over 5,000 married women traders selling textiles and produce."
+        },
+        {
+          url: "/images/destinations/loktak-lake-keibul-lamjao.jpg",
+          title: "Kangla Fort & Royal Kangla Sha Dragons",
+          desc: "Ancient fortified palace complex holding the sacred coronation sites of Meitei royalty."
+        },
+        {
+          url: "/images/itineraries/seven-sisters-grand-explorer-12d.jpg",
+          title: "Manipur State Museum & Royal Polo Grounds",
+          desc: "Home to the original roots of modern polo (Sagol Kangjei), played on indigenous Manipuri ponies."
+        },
+        {
+          url: "/images/hero-bg.jpg",
+          title: "Classical Manipuri Raas Leela & Pung Cholom",
+          desc: "Acrobatic drum dances and graceful devotional dances celebrating Vaishnavite culture."
+        }
+      ],
+      "thenzawl-vantawng-falls": [
+        {
+          url: "/images/destinations/thenzawl-vantawng-falls.jpg",
+          title: "Vantawng Falls - Highest Waterfall in Mizoram (750 ft)",
+          desc: "Magnificent two-tiered waterfall roaring amidst impenetrable bamboo groves and deep jungle canyons."
+        },
+        {
+          url: "/images/destinations/aizawl-reiek-peak.jpg",
+          title: "Tuirihnau Falls & Natural Crystal Lagoons",
+          desc: "Serene curtain waterfall where visitors can walk directly behind the cascade into natural grottos."
+        },
+        {
+          url: "/images/itineraries/seven-sisters-grand-explorer-12d.jpg",
+          title: "Thenzawl Handloom Weaving Center",
+          desc: "The textile capital of Mizoram, producing exquisite handwoven Puan fabrics on traditional loin looms."
+        },
+        {
+          url: "/images/hero-bg.jpg",
+          title: "Thenzawl Golf Course & Lush Meadows",
+          desc: "Pristine highland eco-tourism park set amidst pine hills and misty mornings."
+        }
+      ],
+      "manas-national-park": [
+        {
+          url: "/images/destinations/manas-national-park.jpg",
+          title: "Manas UNESCO Biosphere & Foothills of Bhutan",
+          desc: "Cross-border biodiversity haven harboring golden langurs, pygmy hogs, Bengal tigers, and wild elephants."
+        },
+        {
+          url: "/images/destinations/kaziranga-national-park.jpg",
+          title: "Manas River White Water & Elephant Camp",
+          desc: "Crystal-clear glacier-fed river flowing out from Bhutan into Assam's lush riverine plains."
+        },
+        {
+          url: "/images/destinations/majuli-island.jpg",
+          title: "Pygmy Hog Conservation Breeding Center",
+          desc: "Global sanctuary saving the world's smallest and rarest wild suid from extinction."
+        },
+        {
+          url: "/images/itineraries/assam-wildlife-and-majuli-6d.jpg",
+          title: "Bansbari & Mathanguri Riverfront Vistas",
+          desc: "Panoramic forest rest house overlooking the turquoise river into the Royal Manas National Park of Bhutan."
+        }
+      ],
+      "sivasagar-ahom-heritage": [
+        {
+          url: "/images/destinations/sivasagar-ahom-heritage.jpg",
+          title: "Rang Ghar - 18th C Royal Sports Amphitheatre",
+          desc: "Two-storied royal pavilion built in 1744 by King Pramatta Singha to watch buffalo fights and indigenous games."
+        },
+        {
+          url: "/images/destinations/majuli-island.jpg",
+          title: "Talatal Ghar - Seven-Storied Secret Fort",
+          desc: "Remarkable military stronghold with secret underground tunnels connecting to the Dikhow River."
+        },
+        {
+          url: "/images/destinations/kaziranga-national-park.jpg",
+          title: "Siva Dol - Tallest Shiva Temple in India (104 ft)",
+          desc: "Perched along the 257-acre historic Borpukhuri tank, with a massive golden dome finial."
+        },
+        {
+          url: "/images/itineraries/assam-wildlife-and-majuli-6d.jpg",
+          title: "Kareng Ghar & Gargaon Royal Palace",
+          desc: "Terraced brick and stone royal palace reflecting 600 years of indomitable Ahom rule."
+        }
+      ]
+    };
+
+    if (galleryMap[slug]) {
+      return galleryMap[slug];
+    }
+
+    const fallbackPhoto = `/images/destinations/${slug}.jpg`;
+    return [
+      {
+        url: fallbackPhoto,
+        title: `${destName} — Scenic Overview`,
+        desc: `Discover the breathtaking sights and unique topography of ${destName}, ${stateName}.`
+      },
+      {
+        url: "/images/destinations/gurudongmar-lake-north-sikkim.jpg",
+        title: `${destName} — Surrounding Landscapes`,
+        desc: `Pristine Himalayan landscapes and natural beauty across ${stateName}.`
+      },
+      {
+        url: "/images/destinations/cherrapunji-sohra.jpg",
+        title: `${destName} — Flora, Mist & Waterfalls`,
+        desc: `Lush valleys, mountain mist, and vibrant ecological wonders of the Seven Sisters.`
+      },
+      {
+        url: "/images/itineraries/seven-sisters-grand-explorer-12d.jpg",
+        title: `${destName} — Cultural & Natural Splendor`,
+        desc: `Experience authentic local hospitality and untamed wilderness in Northeast India.`
+      }
+    ];
+  }
+
+  openGallery(slug) {
+    const dest = this.destinations.find(d => d.slug === slug);
+    const photos = this.getDestinationGallery(slug);
+    this.galleryState = {
+      activeSlug: slug,
+      dest: dest || { name: "Destination", state_name: "North East India", slug },
+      photos: photos,
+      currentIndex: 0
+    };
+
+    const modal = document.getElementById("modal-photo-gallery");
+    if (modal) {
+      modal.classList.add("active");
+      document.body.style.overflow = "hidden";
+      this.renderGalleryModal();
+    }
+  }
+
+  renderGalleryModal() {
+    const { dest, photos, currentIndex } = this.galleryState;
+    if (!photos || photos.length === 0) return;
+
+    const currentPhoto = photos[currentIndex];
+
+    const titleEl = document.getElementById("gallery-dest-title");
+    const captionEl = document.getElementById("gallery-caption-text");
+    const counterEl = document.getElementById("gallery-counter");
+    const imgEl = document.getElementById("gallery-active-img");
+    const thumbsRow = document.getElementById("gallery-thumbs-row");
+
+    if (titleEl) titleEl.textContent = `${dest.name} (${dest.state_name || ''})`;
+    if (captionEl) captionEl.textContent = `${currentPhoto.title} — ${currentPhoto.desc}`;
+    if (counterEl) counterEl.textContent = `${currentIndex + 1} / ${photos.length}`;
+
+    if (imgEl) {
+      imgEl.style.opacity = "0.3";
+      imgEl.style.transform = "scale(0.98)";
+      imgEl.src = currentPhoto.url;
+      imgEl.alt = currentPhoto.title;
+      imgEl.onload = () => {
+        imgEl.style.opacity = "1";
+        imgEl.style.transform = "scale(1)";
+      };
+      imgEl.onerror = () => {
+        imgEl.src = "/images/destinations/kaziranga-national-park.jpg";
+        imgEl.style.opacity = "1";
+        imgEl.style.transform = "scale(1)";
+      };
+    }
+
+    if (thumbsRow) {
+      thumbsRow.innerHTML = photos.map((p, idx) => `
+        <div class="gallery-thumb-item ${idx === currentIndex ? 'active' : ''}" onclick="window.app.jumpGallery(${idx})" title="${p.title}">
+          <img src="${p.url}" alt="${p.title}" onerror="this.src='/images/destinations/kaziranga-national-park.jpg'" />
+        </div>
+      `).join("");
+
+      const activeThumb = thumbsRow.querySelector(".gallery-thumb-item.active");
+      if (activeThumb) {
+        activeThumb.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+      }
+    }
+  }
+
+  nextGalleryPhoto() {
+    if (!this.galleryState.photos || this.galleryState.photos.length <= 1) return;
+    this.galleryState.currentIndex = (this.galleryState.currentIndex + 1) % this.galleryState.photos.length;
+    this.renderGalleryModal();
+  }
+
+  prevGalleryPhoto() {
+    if (!this.galleryState.photos || this.galleryState.photos.length <= 1) return;
+    this.galleryState.currentIndex = (this.galleryState.currentIndex - 1 + this.galleryState.photos.length) % this.galleryState.photos.length;
+    this.renderGalleryModal();
+  }
+
+  jumpGallery(index) {
+    if (!this.galleryState.photos || index < 0 || index >= this.galleryState.photos.length) return;
+    this.galleryState.currentIndex = index;
+    this.renderGalleryModal();
+  }
+
+  closeGallery() {
+    const modal = document.getElementById("modal-photo-gallery");
+    if (modal) {
+      modal.classList.remove("active");
+    }
     document.body.style.overflow = "auto";
   }
 

@@ -11,7 +11,7 @@
   <title>Chalo NorthEast — Discover the Seven Sisters &amp; Sikkim</title>
   <link rel="manifest" href="/manifest.json" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='28'>🏔️</text></svg>" />
-  <link rel="stylesheet" href="/css/style.css?v=20261126-v4" />
+  <link rel="stylesheet" href="/css/style.css?v=20261126-v5" />
   <style>
     .hero {
       position: relative !important;
@@ -86,6 +86,175 @@
     }
     .map-zoom-btn:active {
       transform: scale(0.95) !important;
+    }
+
+    /* Photo Gallery Lightbox Modal */
+    .gallery-modal-overlay {
+      position: fixed !important;
+      top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
+      background: rgba(10, 15, 29, 0.94) !important;
+      backdrop-filter: blur(14px) !important;
+      z-index: 99999 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 1rem !important;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease !important;
+    }
+    .gallery-modal-overlay.active {
+      opacity: 1 !important;
+      pointer-events: auto !important;
+    }
+    .gallery-modal-card {
+      position: relative !important;
+      max-width: 920px !important;
+      width: 100% !important;
+      background: #0f172a !important;
+      border-radius: 16px !important;
+      overflow: hidden !important;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.12) !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+    .gallery-close-btn {
+      position: absolute !important;
+      top: 14px !important;
+      right: 14px !important;
+      width: 40px !important;
+      height: 40px !important;
+      border-radius: 50% !important;
+      background: rgba(15, 23, 42, 0.8) !important;
+      border: 1px solid rgba(255, 255, 255, 0.3) !important;
+      color: #ffffff !important;
+      font-size: 1.25rem !important;
+      font-weight: 700 !important;
+      cursor: pointer !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      z-index: 30 !important;
+      transition: all 0.15s ease !important;
+    }
+    .gallery-close-btn:hover {
+      background: #ef4444 !important;
+      border-color: #ef4444 !important;
+      transform: scale(1.08) !important;
+    }
+    .gallery-viewport {
+      position: relative !important;
+      width: 100% !important;
+      height: 480px !important;
+      max-height: 65vh !important;
+      background: #020617 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      overflow: hidden !important;
+      user-select: none !important;
+    }
+    .gallery-active-img {
+      max-width: 100% !important;
+      max-height: 100% !important;
+      object-fit: contain !important;
+      transition: opacity 0.2s ease, transform 0.2s ease !important;
+    }
+    .gallery-nav-btn {
+      position: absolute !important;
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+      width: 48px !important;
+      height: 48px !important;
+      border-radius: 50% !important;
+      background: rgba(15, 23, 42, 0.85) !important;
+      border: 1px solid rgba(255, 255, 255, 0.3) !important;
+      color: #ffffff !important;
+      font-size: 1.5rem !important;
+      font-weight: 700 !important;
+      cursor: pointer !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      z-index: 25 !important;
+      transition: all 0.18s ease !important;
+      backdrop-filter: blur(4px) !important;
+    }
+    .gallery-prev-btn { left: 16px !important; }
+    .gallery-next-btn { right: 16px !important; }
+    .gallery-nav-btn:hover {
+      background: #047857 !important;
+      border-color: #047857 !important;
+      transform: translateY(-50%) scale(1.12) !important;
+    }
+    .gallery-caption-bar {
+      padding: 0.9rem 1.25rem !important;
+      background: #0f172a !important;
+      border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 1rem !important;
+    }
+    .gallery-dest-info { display: flex !important; flex-direction: column !important; }
+    .gallery-dest-title { font-size: 1.15rem !important; font-weight: 700 !important; color: #ffffff !important; }
+    .gallery-caption-text { font-size: 0.88rem !important; color: #94a3b8 !important; margin-top: 0.2rem !important; }
+    .gallery-counter {
+      font-size: 0.88rem !important;
+      font-weight: 700 !important;
+      color: #10b981 !important;
+      background: rgba(16, 185, 129, 0.15) !important;
+      padding: 0.35rem 0.75rem !important;
+      border-radius: 20px !important;
+      white-space: nowrap !important;
+    }
+    .gallery-thumbs-row {
+      display: flex !important;
+      gap: 0.5rem !important;
+      padding: 0.75rem 1.25rem 1rem !important;
+      background: #0f172a !important;
+      overflow-x: auto !important;
+    }
+    .gallery-thumb-item {
+      width: 72px !important;
+      height: 48px !important;
+      border-radius: 6px !important;
+      overflow: hidden !important;
+      border: 2px solid transparent !important;
+      cursor: pointer !important;
+      flex-shrink: 0 !important;
+      opacity: 0.55 !important;
+      transition: all 0.15s ease !important;
+    }
+    .gallery-thumb-item.active {
+      border-color: #10b981 !important;
+      opacity: 1 !important;
+      transform: scale(1.05) !important;
+    }
+    .gallery-thumb-item img { width: 100% !important; height: 100% !important; object-fit: cover !important; }
+    .dest-gallery-pill {
+      position: absolute !important;
+      bottom: 12px !important;
+      right: 12px !important;
+      background: rgba(15, 23, 42, 0.85) !important;
+      color: #ffffff !important;
+      backdrop-filter: blur(6px) !important;
+      border: 1px solid rgba(255, 255, 255, 0.3) !important;
+      border-radius: 20px !important;
+      font-size: 0.78rem !important;
+      font-weight: 600 !important;
+      padding: 0.3rem 0.75rem !important;
+      z-index: 5 !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 0.35rem !important;
+      transition: all 0.15s ease !important;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3) !important;
+    }
+    .dest-card-header:hover .dest-gallery-pill {
+      background: #047857 !important;
+      border-color: #047857 !important;
+      transform: scale(1.06) !important;
     }
   </style>
   <script>
@@ -929,11 +1098,34 @@
   <div class="modal-backdrop-close" aria-hidden="true"></div>
 </div>
 
+<!-- Destination Photo Gallery Modal (Multi-pic Lightbox with Swipe & Thumbnails) -->
+<div class="gallery-modal-overlay" id="modal-photo-gallery" role="dialog" aria-modal="true" aria-label="Photo Gallery Lightbox">
+  <div class="gallery-modal-card">
+    <button class="gallery-close-btn" id="gallery-close-btn" aria-label="Close photo gallery" onclick="window.app&&window.app.closeGallery()">✕</button>
+    <div class="gallery-viewport" id="gallery-viewport">
+      <button class="gallery-nav-btn gallery-prev-btn" id="gallery-prev-btn" aria-label="Previous photo" onclick="window.app&&window.app.prevGalleryPhoto()">❮</button>
+      <img id="gallery-active-img" src="" alt="Destination Photo" class="gallery-active-img" />
+      <button class="gallery-nav-btn gallery-next-btn" id="gallery-next-btn" aria-label="Next photo" onclick="window.app&&window.app.nextGalleryPhoto()">❯</button>
+    </div>
+    <div class="gallery-caption-bar">
+      <div class="gallery-dest-info">
+        <span class="gallery-dest-title" id="gallery-dest-title">Destination</span>
+        <span class="gallery-caption-text" id="gallery-caption-text">Photo description</span>
+      </div>
+      <div class="gallery-counter" id="gallery-counter">1 / 1</div>
+    </div>
+    <div class="gallery-thumbs-row" id="gallery-thumbs-row">
+      <!-- Thumbnails rendered dynamically -->
+    </div>
+  </div>
+  <div class="modal-backdrop-close" onclick="window.app&&window.app.closeGallery()" style="position:absolute; inset:0; z-index:1;" aria-hidden="true"></div>
+</div>
+
 <!-- Scripts -->
-<script src="/js/data.js?v=20261126-v4"></script>
-<script src="/js/map.js?v=20261126-v4"></script>
-<script src="/js/planner.js?v=20261126-v4"></script>
-<script src="/js/app.js?v=20261126-v4"></script>
+<script src="/js/data.js?v=20261126-v5"></script>
+<script src="/js/map.js?v=20261126-v5"></script>
+<script src="/js/planner.js?v=20261126-v5"></script>
+<script src="/js/app.js?v=20261126-v5"></script>
 <script>
   // Online/offline indicator
   function updateOnlineStatus() {
