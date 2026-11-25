@@ -68,6 +68,12 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // On localhost / 127.0.0.1, always fetch fresh from network to prevent dev caching issues
+  if (url.hostname === 'localhost' || url.hostname === '127.0.0.1') {
+    event.respondWith(networkFirstWithCache(request, STATIC_CACHE));
+    return;
+  }
+
   // Static assets → cache-first
   event.respondWith(cacheFirstWithNetwork(request));
 });
