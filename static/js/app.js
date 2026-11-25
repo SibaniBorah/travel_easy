@@ -170,6 +170,7 @@ class App {
           chip.classList.add("active");
           this.currentCategory = chip.getAttribute("data-category");
           this.renderDestinations();
+          this.renderItineraries();
         }
       });
     }
@@ -283,6 +284,7 @@ class App {
 
     this.renderStateHighlights();
     this.renderDestinations();
+    this.renderItineraries();
     this.renderFestivals(this.currentFestivalMonth);
   }
 
@@ -294,6 +296,7 @@ class App {
       else c.classList.remove("active");
     });
     this.renderDestinations();
+    this.renderItineraries();
   }
 
   renderStateHighlights() {
@@ -375,6 +378,56 @@ class App {
     `;
   }
 
+  isDestinationInSeason(d, seasonKey) {
+    if (!seasonKey || seasonKey === "all") return true;
+    const text = ((d.best_season || "") + " " + (d.best_months || "")).toLowerCase();
+    if (text.includes("year round") || text.includes("all year") || text.includes("throughout the year")) return true;
+
+    const monthNames = {
+      "jan": 1, "january": 1,
+      "feb": 2, "february": 2,
+      "mar": 3, "march": 3,
+      "apr": 4, "april": 4,
+      "may": 5,
+      "jun": 6, "june": 6,
+      "jul": 7, "july": 7,
+      "aug": 8, "august": 8,
+      "sep": 9, "september": 9,
+      "oct": 10, "october": 10,
+      "nov": 11, "november": 11,
+      "dec": 12, "december": 12
+    };
+
+    const targetMonths = {
+      "oct-nov": [10, 11],
+      "dec-feb": [12, 1, 2],
+      "mar-apr": [3, 4],
+      "may-sep": [5, 6, 7, 8, 9]
+    }[seasonKey] || [];
+
+    const rangeRegex = /(jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|june?|july?|aug(?:ust)?|sep(?:tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\s*(?:to|-)\s*(jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|june?|july?|aug(?:ust)?|sep(?:tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)/gi;
+    let match;
+    while ((match = rangeRegex.exec(text)) !== null) {
+      const m1 = monthNames[match[1].toLowerCase()];
+      const m2 = monthNames[match[2].toLowerCase()];
+      if (m1 && m2) {
+        for (const tm of targetMonths) {
+          if (m1 <= m2 && tm >= m1 && tm <= m2) return true;
+          if (m1 > m2 && (tm >= m1 || tm <= m2)) return true;
+        }
+      }
+    }
+
+    const kwMap = {
+      "oct-nov": ["october", "november", "autumn", "post monsoon"],
+      "dec-feb": ["december", "january", "february", "winter", "frost"],
+      "mar-apr": ["march", "april", "spring", "rhododendron"],
+      "may-sep": ["may", "june", "july", "august", "september", "monsoon", "summer"]
+    }[seasonKey] || [];
+
+    return kwMap.some(kw => text.includes(kw));
+  }
+
   renderDestinations() {
     const grid = document.getElementById("destinations-grid");
     if (!grid) return;
@@ -394,28 +447,18 @@ class App {
     // Filter by budget tier
     if (this.currentBudgetTier && this.currentBudgetTier !== "all") {
       list = list.filter(d => {
-        if (d.budget_tier === this.currentBudgetTier) return true;
-        if (this.currentBudgetTier === "backpacker") return (d.est_cost_per_day || 0) <= 900;
-        if (this.currentBudgetTier === "budget") return (d.est_cost_per_day || 0) <= 1600;
-        if (this.currentBudgetTier === "moderate") return (d.est_cost_per_day || 0) <= 3000;
-        if (this.currentBudgetTier === "comfort") return (d.est_cost_per_day || 0) > 2500;
-        return false;
+        const cost = d.est_cost_per_day || 0;
+        if (this.currentBudgetTier === "backpacker") return cost <= 1000;
+        if (this.currentBudgetTier === "budget") return cost > 1000 && cost <= 1600;
+        if (this.currentBudgetTier === "moderate") return cost > 1600 && cost <= 2500;
+        if (this.currentBudgetTier === "comfort") return cost >= 2000;
+        return true;
       });
     }
 
     // Filter by season
     if (this.currentSeason && this.currentSeason !== "all") {
-      const seasonKeywords = {
-        "oct-nov": ["october", "november", "autumn", "post monsoon", "all year"],
-        "dec-feb": ["december", "january", "february", "winter", "all year"],
-        "mar-apr": ["march", "april", "spring", "all year"],
-        "may-sep": ["may", "june", "july", "august", "september", "monsoon", "summer", "all year"]
-      }[this.currentSeason] || [];
-
-      list = list.filter(d => {
-        const text = ((d.best_season || "") + " " + (d.best_months || "")).toLowerCase();
-        return seasonKeywords.some(kw => text.includes(kw));
-      });
+      list = list.filter(d => this.isDestinationInSeason(d, this.currentSeason));
     }
 
     // Search query
@@ -495,24 +538,52 @@ class App {
   }
 
   applyFilters() {
+    const activeStateChip = document.querySelector("#state-filters-container .filter-chip.active");
+    if (activeStateChip) {
+      this.currentState = activeStateChip.getAttribute("data-state") || "ALL";
+    }
+
+    const activeCatChip = document.querySelector("#category-filters-container .filter-chip.active");
+    if (activeCatChip) {
+      this.currentCategory = activeCatChip.getAttribute("data-category") || "all";
+    }
+
     const budgetSelect = document.getElementById("budget-tier-filter");
     if (budgetSelect) this.currentBudgetTier = budgetSelect.value || "all";
 
     const seasonSelect = document.getElementById("season-filter");
     if (seasonSelect) this.currentSeason = seasonSelect.value || "all";
 
+    const searchInput = document.getElementById("global-search-input");
+    if (searchInput) this.searchQuery = searchInput.value.trim().toLowerCase();
+
+    if (this.map && this.currentState !== "ALL") {
+      this.map.selectState(this.currentState);
+    } else if (this.map && this.currentState === "ALL") {
+      this.map.selectedState = null;
+      if (this.map.resetHighlight) this.map.resetHighlight();
+    }
+
+    this.renderStateHighlights();
     this.renderDestinations();
+    this.renderItineraries();
 
     const btn = document.getElementById("btn-apply-filters");
     if (btn) {
       const origText = btn.innerHTML;
       btn.innerHTML = "✓ Applied!";
       btn.style.backgroundColor = "#059669";
+      btn.style.transform = "scale(0.96)";
       setTimeout(() => {
         btn.innerHTML = origText;
         btn.style.backgroundColor = "";
+        btn.style.transform = "";
       }, 1000);
     }
+
+    const destCount = document.querySelectorAll("#destinations-grid .dest-card").length;
+    const itinCount = document.querySelectorAll("#itineraries-grid .itinerary-card").length;
+    this.showToast(`Filters Applied: ${destCount} attraction${destCount === 1 ? '' : 's'} & ${itinCount} plan${itinCount === 1 ? '' : 's'} matching.`, "success");
   }
 
   resetFilters() {
@@ -529,8 +600,21 @@ class App {
     const seasonSelect = document.getElementById("season-filter");
     if (seasonSelect) seasonSelect.value = "all";
 
-    this.handleStateSelect("ALL");
-    this.setCategoryFilter("all");
+    const stateChips = document.querySelectorAll("#state-filters-container .filter-chip");
+    stateChips.forEach(c => c.classList.toggle("active", c.getAttribute("data-state") === "ALL"));
+
+    const catChips = document.querySelectorAll("#category-filters-container .filter-chip");
+    catChips.forEach(c => c.classList.toggle("active", c.getAttribute("data-category") === "all"));
+
+    if (this.map) {
+      this.map.selectedState = null;
+      if (this.map.resetHighlight) this.map.resetHighlight();
+    }
+
+    this.renderStateHighlights();
+    this.renderDestinations();
+    this.renderItineraries();
+    this.showToast("All filters reset.", "info");
   }
 
   addDestinationToPlanner(slug) {
@@ -744,7 +828,77 @@ class App {
     const grid = document.getElementById("itineraries-grid");
     if (!grid) return;
 
-    grid.innerHTML = this.itineraries.map(itin => {
+    let list = this.itineraries || [];
+
+    // Filter itineraries by state
+    if (this.currentState && this.currentState !== "ALL") {
+      list = list.filter(itin => {
+        const states = (itin.states || "").split(",").map(s => s.trim());
+        if (states.includes(this.currentState)) return true;
+        const stateObj = (typeof NE_CONSTANTS !== "undefined" && NE_CONSTANTS.STATES) ? NE_CONSTANTS.STATES[this.currentState] : null;
+        if (stateObj && (itin.title.includes(stateObj.name) || itin.summary.includes(stateObj.name))) return true;
+        return false;
+      });
+    }
+
+    // Filter itineraries by category
+    if (this.currentCategory && this.currentCategory !== "all") {
+      const catKeywords = {
+        "wildlife": ["wildlife", "safari", "rhino", "kaziranga", "manas", "jungle"],
+        "waterfall": ["waterfall", "falls", "sohra", "root bridge", "river"],
+        "monastery": ["monaster", "tawang", "gompa", "buddhist", "sikkim", "pelling"],
+        "trek": ["trek", "dzukou", "hike", "active", "trail"],
+        "culture": ["culture", "tribal", "hornbill", "satras", "ahoms", "village"],
+        "scenic": ["scenic", "himalayan", "lake", "pass", "high altitude", "odyssey"]
+      }[this.currentCategory] || [this.currentCategory];
+
+      list = list.filter(itin => {
+        const text = (itin.title + " " + itin.summary + " " + (itin.pace || "")).toLowerCase();
+        return catKeywords.some(kw => text.includes(kw));
+      });
+    }
+
+    // Filter itineraries by budget tier
+    if (this.currentBudgetTier && this.currentBudgetTier !== "all") {
+      list = list.filter(itin => {
+        const total = itin.est_total_cost_inr || 0;
+        const perDay = itin.duration_days ? Math.round(total / itin.duration_days) : 1500;
+        if (this.currentBudgetTier === "backpacker") {
+          return perDay <= 1600 || total <= 9000;
+        }
+        if (this.currentBudgetTier === "budget") {
+          return total <= 15000;
+        }
+        if (this.currentBudgetTier === "moderate") {
+          return total >= 10000 && total <= 20000;
+        }
+        if (this.currentBudgetTier === "comfort") {
+          return total >= 15000;
+        }
+        return true;
+      });
+    }
+
+    const countLabel = document.getElementById("itineraries-count-label");
+    if (countLabel) {
+      countLabel.innerText = `Showing ${list.length} plan${list.length === 1 ? '' : 's'}`;
+    }
+
+    if (list.length === 0) {
+      grid.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 2.5rem 1rem; background: white; border-radius: var(--radius-lg); border: 1px dashed var(--border);">
+          <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">🗒️</div>
+          <h4 style="font-size: 1.15rem; margin-bottom: 0.5rem;">No curated plans match your current filters</h4>
+          <p style="font-size: 0.88rem; margin-bottom: 1rem; color: var(--text-muted);">
+            Try selecting "All States" or clearing specific category/budget filters to see more itineraries.
+          </p>
+          <button class="btn btn-primary btn-sm" onclick="window.app.resetFilters()">Reset All Filters</button>
+        </div>
+      `;
+      return;
+    }
+
+    grid.innerHTML = list.map(itin => {
       const imgUrl = itin.image_url || `/images/itineraries/${itin.slug}.jpg`;
       return `
       <div class="itinerary-card">
