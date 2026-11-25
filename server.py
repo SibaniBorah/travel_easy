@@ -21,11 +21,22 @@ class ChaloNorthEastHandler(SimpleHTTPRequestHandler):
         super().__init__(*args, directory=STATIC_DIR, **kwargs)
 
     def end_headers(self):
-        # Enable CORS and caching headers
+        # Enable CORS and disable caching during development
         self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
         self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        self.send_header("Cache-Control", "no-cache, no-store, must-revalidate, max-age=0")
+        self.send_header("Pragma", "no-cache")
+        self.send_header("Expires", "0")
         super().end_headers()
+
+    def send_head(self):
+        # Prevent 304 Not Modified so the browser always receives fresh files
+        if "If-Modified-Since" in self.headers:
+            del self.headers["If-Modified-Since"]
+        if "If-None-Match" in self.headers:
+            del self.headers["If-None-Match"]
+        return super().send_head()
 
     def do_OPTIONS(self):
         self.send_response(200)

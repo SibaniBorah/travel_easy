@@ -11,7 +11,45 @@
   <title>Chalo NorthEast — Discover the Seven Sisters &amp; Sikkim</title>
   <link rel="manifest" href="/manifest.json" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='28'>🏔️</text></svg>" />
-  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/style.css?v=20261126" />
+  <style>
+    .hero {
+      position: relative !important;
+      background: linear-gradient(135deg, #064e3b 0%, #065f46 45%, #0369a1 100%) !important;
+      overflow: hidden !important;
+    }
+    .hero::before {
+      content: '' !important;
+      position: absolute !important;
+      top: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      left: 0 !important;
+      background-image: url('/images/hero-bg.jpg') !important;
+      background-size: cover !important;
+      background-position: center 35% !important;
+      background-repeat: no-repeat !important;
+      opacity: 0.3 !important;
+      pointer-events: none !important;
+      z-index: 0 !important;
+    }
+    .hero-content {
+      position: relative !important;
+      z-index: 1 !important;
+    }
+  </style>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(regs) {
+        for (var r of regs) { r.unregister(); }
+      });
+    }
+    if ('caches' in window) {
+      caches.keys().then(function(keys) {
+        keys.forEach(function(k) { caches.delete(k); });
+      });
+    }
+  </script>
 </head>
 <body>
 
@@ -831,23 +869,11 @@
 </div>
 
 <!-- Scripts -->
-<script src="/js/data.js"></script>
-<script src="/js/map.js"></script>
-<script src="/js/planner.js"></script>
-<script src="/js/app.js"></script>
+<script src="/js/data.js?v=20261126"></script>
+<script src="/js/map.js?v=20261126"></script>
+<script src="/js/planner.js?v=20261126"></script>
+<script src="/js/app.js?v=20261126"></script>
 <script>
-  // Register Service Worker
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js')
-        .then(reg => {
-          reg.update();
-          console.log('[SW] Registered & updated:', reg.scope);
-        })
-        .catch(err => console.warn('[SW] Registration failed:', err));
-    });
-  }
-
   // Online/offline indicator
   function updateOnlineStatus() {
     const banner = document.getElementById('offline-banner');
