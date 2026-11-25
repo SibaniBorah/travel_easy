@@ -11,7 +11,7 @@
   <title>Chalo NorthEast — Discover the Seven Sisters &amp; Sikkim</title>
   <link rel="manifest" href="/manifest.json" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='28'>🏔️</text></svg>" />
-  <link rel="stylesheet" href="/css/style.css?v=20261126" />
+  <link rel="stylesheet" href="/css/style.css?v=20261126-v4" />
   <style>
     .hero {
       position: relative !important;
@@ -241,6 +241,11 @@
 
     <div class="map-card-container">
       <div class="map-svg-wrap">
+        <div class="map-zoom-controls" aria-label="Map Zoom Controls">
+          <button type="button" class="map-zoom-btn" id="btn-map-zoom-in" title="Zoom In" aria-label="Zoom in on map">＋</button>
+          <button type="button" class="map-zoom-btn" id="btn-map-zoom-out" title="Zoom Out" aria-label="Zoom out of map">－</button>
+          <button type="button" class="map-zoom-btn" id="btn-map-zoom-reset" title="Reset View" aria-label="Reset map view">↺</button>
+        </div>
         <div id="map-container" aria-label="Interactive map of North East India states" role="img"></div>
       </div>
       <div class="map-details-card" id="map-state-details">
@@ -925,10 +930,10 @@
 </div>
 
 <!-- Scripts -->
-<script src="/js/data.js?v=20261126"></script>
-<script src="/js/map.js?v=20261126"></script>
-<script src="/js/planner.js?v=20261126"></script>
-<script src="/js/app.js?v=20261126"></script>
+<script src="/js/data.js?v=20261126-v4"></script>
+<script src="/js/map.js?v=20261126-v4"></script>
+<script src="/js/planner.js?v=20261126-v4"></script>
+<script src="/js/app.js?v=20261126-v4"></script>
 <script>
   // Online/offline indicator
   function updateOnlineStatus() {

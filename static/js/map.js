@@ -26,12 +26,6 @@ class NorthEastMap {
     // Stylized SVG Map coordinates for North East India
     // ViewBox: 0 0 750 550
     this.container.innerHTML = `
-      <div class="map-zoom-controls" aria-label="Map Zoom Controls">
-        <button type="button" class="map-zoom-btn" id="btn-map-zoom-in" title="Zoom In" aria-label="Zoom in on map">＋</button>
-        <button type="button" class="map-zoom-btn" id="btn-map-zoom-out" title="Zoom Out" aria-label="Zoom out of map">－</button>
-        <button type="button" class="map-zoom-btn" id="btn-map-zoom-reset" title="Reset View" aria-label="Reset map view">↺</button>
-      </div>
-
       <svg class="map-svg" viewBox="0 0 750 550" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <filter id="map-glow" x="-20%" y="-20%" width="140%" height="140%">
@@ -162,9 +156,9 @@ class NorthEastMap {
   }
 
   attachZoomEvents() {
-    const btnIn = this.container.querySelector("#btn-map-zoom-in");
-    const btnOut = this.container.querySelector("#btn-map-zoom-out");
-    const btnReset = this.container.querySelector("#btn-map-zoom-reset");
+    const btnIn = document.getElementById("btn-map-zoom-in") || this.container.querySelector("#btn-map-zoom-in");
+    const btnOut = document.getElementById("btn-map-zoom-out") || this.container.querySelector("#btn-map-zoom-out");
+    const btnReset = document.getElementById("btn-map-zoom-reset") || this.container.querySelector("#btn-map-zoom-reset");
     const svg = this.container.querySelector(".map-svg");
 
     if (btnIn) btnIn.addEventListener("click", (e) => { e.stopPropagation(); this.zoomIn(); });
