@@ -3,7 +3,7 @@
  * Cache-first static assets, network-first API calls, offline fallback
  */
 
-const CACHE_VERSION = 'chalonne-v1';
+const CACHE_VERSION = 'chalonne-v2';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const API_CACHE = `${CACHE_VERSION}-api`;
 const OFFLINE_PACK_CACHE = `${CACHE_VERSION}-offline-pack`;
@@ -53,6 +53,12 @@ self.addEventListener('fetch', (event) => {
   // API calls → network-first with cache fallback
   if (url.pathname.startsWith('/api/')) {
     event.respondWith(networkFirstWithCache(request, API_CACHE));
+    return;
+  }
+
+  // HTML navigation requests → network-first so users immediately see updates
+  if (request.mode === 'navigate' || request.destination === 'document' || url.pathname === '/' || url.pathname === '/index.html') {
+    event.respondWith(networkFirstWithCache(request, STATIC_CACHE));
     return;
   }
 
