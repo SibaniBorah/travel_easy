@@ -26,7 +26,7 @@ class NorthEastMap {
     // Stylized SVG Map coordinates for North East India
     // ViewBox: 0 0 750 550
     this.container.innerHTML = `
-      <svg class="map-svg" viewBox="0 0 750 550" xmlns="http://www.w3.org/2000/svg">
+      <svg class="map-svg" viewBox="0 0 750 550" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
         <defs>
           <filter id="map-glow" x="-20%" y="-20%" width="140%" height="140%">
             <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#047857" flood-opacity="0.25"/>
@@ -176,9 +176,8 @@ class NorthEastMap {
         }
       }, { passive: false });
 
-      // Drag to pan when zoomed in
+      // Drag to pan freely
       svg.addEventListener("mousedown", (e) => {
-        if (this.scale <= 1.0) return;
         this.isDragging = true;
         this.startX = e.clientX - this.panX;
         this.startY = e.clientY - this.panY;
@@ -189,17 +188,45 @@ class NorthEastMap {
         if (!this.isDragging) return;
         this.panX = e.clientX - this.startX;
         this.panY = e.clientY - this.startY;
-        // Limit pan boundary
-        const maxPan = 220 * (this.scale - 1);
-        this.panX = Math.max(-maxPan, Math.min(maxPan, this.panX));
-        this.panY = Math.max(-maxPan, Math.min(maxPan, this.panY));
+        // Expansive pan boundary allowing full freedom of view
+        const maxPanX = Math.max(160, 420 * Math.max(0.3, this.scale - 0.5));
+        const maxPanY = Math.max(120, 320 * Math.max(0.3, this.scale - 0.5));
+        this.panX = Math.max(-maxPanX, Math.min(maxPanX, this.panX));
+        this.panY = Math.max(-maxPanY, Math.min(maxPanY, this.panY));
         this.applyTransform(true);
       });
 
       window.addEventListener("mouseup", () => {
         if (this.isDragging) {
           this.isDragging = false;
-          svg.style.cursor = this.scale > 1.0 ? "grab" : "default";
+          svg.style.cursor = "grab";
+          this.applyTransform(false);
+        }
+      });
+
+      // Touch events for mobile/tablet panning
+      svg.addEventListener("touchstart", (e) => {
+        if (e.touches && e.touches.length === 1) {
+          this.isDragging = true;
+          this.startX = e.touches[0].clientX - this.panX;
+          this.startY = e.touches[0].clientY - this.panY;
+        }
+      }, { passive: true });
+
+      window.addEventListener("touchmove", (e) => {
+        if (!this.isDragging || !e.touches || !e.touches[0]) return;
+        this.panX = e.touches[0].clientX - this.startX;
+        this.panY = e.touches[0].clientY - this.startY;
+        const maxPanX = Math.max(160, 420 * Math.max(0.3, this.scale - 0.5));
+        const maxPanY = Math.max(120, 320 * Math.max(0.3, this.scale - 0.5));
+        this.panX = Math.max(-maxPanX, Math.min(maxPanX, this.panX));
+        this.panY = Math.max(-maxPanY, Math.min(maxPanY, this.panY));
+        this.applyTransform(true);
+      }, { passive: true });
+
+      window.addEventListener("touchend", () => {
+        if (this.isDragging) {
+          this.isDragging = false;
           this.applyTransform(false);
         }
       });
@@ -207,13 +234,13 @@ class NorthEastMap {
   }
 
   zoomIn() {
-    this.scale = Math.min(+(this.scale + 0.35).toFixed(2), 3.0);
+    this.scale = Math.min(+(this.scale + 0.28).toFixed(2), 3.5);
     this.applyTransform();
   }
 
   zoomOut() {
-    this.scale = Math.max(+(this.scale - 0.35).toFixed(2), 0.75);
-    if (this.scale <= 1.0) {
+    this.scale = Math.max(+(this.scale - 0.28).toFixed(2), 0.55);
+    if (this.scale <= 0.75) {
       this.panX = 0;
       this.panY = 0;
     }

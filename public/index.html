@@ -11,7 +11,7 @@
   <title>Chalo NorthEast — Discover the Seven Sisters &amp; Sikkim</title>
   <link rel="manifest" href="/manifest.json" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='28'>🏔️</text></svg>" />
-  <link rel="stylesheet" href="/css/style.css?v=20261126-v6" />
+  <link rel="stylesheet" href="/css/style.css?v=20261126-v7" />
   <style>
     .hero {
       position: relative !important;
@@ -42,9 +42,40 @@
       position: relative !important;
       z-index: 1 !important;
     }
+    .map-card-container {
+      grid-template-columns: 1.6fr 1fr !important;
+      align-items: stretch !important;
+    }
+    @media (max-width: 900px) {
+      .map-card-container {
+        grid-template-columns: 1fr !important;
+      }
+    }
     .map-svg-wrap {
       position: relative !important;
       overflow: hidden !important;
+      min-height: 540px !important;
+      height: 560px !important;
+      padding: 0.5rem !important;
+      display: flex !important;
+      align-items: stretch !important;
+      justify-content: stretch !important;
+    }
+    #map-container {
+      width: 100% !important;
+      height: 100% !important;
+      min-height: 520px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      flex: 1 1 100% !important;
+    }
+    .map-svg {
+      width: 100% !important;
+      height: 100% !important;
+      min-height: 500px !important;
+      max-height: 100% !important;
+      display: block !important;
     }
     .map-zoom-controls {
       position: absolute !important;
@@ -1123,10 +1154,10 @@
 </div>
 
 <!-- Scripts -->
-<script src="/js/data.js?v=20261126-v6"></script>
-<script src="/js/map.js?v=20261126-v6"></script>
-<script src="/js/planner.js?v=20261126-v6"></script>
-<script src="/js/app.js?v=20261126-v6"></script>
+<script src="/js/data.js?v=20261126-v7"></script>
+<script src="/js/map.js?v=20261126-v7"></script>
+<script src="/js/planner.js?v=20261126-v7"></script>
+<script src="/js/app.js?v=20261126-v7"></script>
 <script>
   // Online/offline indicator
   function updateOnlineStatus() {
