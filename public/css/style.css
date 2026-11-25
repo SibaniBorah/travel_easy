@@ -362,6 +362,22 @@ a:hover {
   overflow: hidden;
 }
 
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-image: url('/images/hero-bg.jpg'), url('https://assets.traveltriangle.com/blog/wp-content/uploads/2019/02/Seven-Sisters.jpg');
+  background-size: cover;
+  background-position: center 35%;
+  background-repeat: no-repeat;
+  opacity: 0.28;
+  pointer-events: none;
+  z-index: 0;
+}
+
 .hero::after {
   content: '';
   position: absolute;
