@@ -16,6 +16,8 @@ class App {
     
     this.currentState = "ALL";
     this.currentCategory = "all";
+    this.currentBudgetTier = "all";
+    this.currentSeason = "all";
     this.currentTier = "all";
     this.searchQuery = "";
 
@@ -163,6 +165,17 @@ class App {
           this.renderDestinations();
         }
       });
+    }
+
+    // Apply and Reset Filter buttons
+    const applyBtn = document.getElementById("btn-apply-filters");
+    if (applyBtn) {
+      applyBtn.addEventListener("click", () => this.applyFilters());
+    }
+
+    const resetBtn = document.getElementById("btn-reset-filters");
+    if (resetBtn) {
+      resetBtn.addEventListener("click", () => this.resetFilters());
     }
 
     // Transit Search Form
@@ -340,6 +353,33 @@ class App {
       list = list.filter(d => d.category === this.currentCategory);
     }
 
+    // Filter by budget tier
+    if (this.currentBudgetTier && this.currentBudgetTier !== "all") {
+      list = list.filter(d => {
+        if (d.budget_tier === this.currentBudgetTier) return true;
+        if (this.currentBudgetTier === "backpacker") return (d.est_cost_per_day || 0) <= 900;
+        if (this.currentBudgetTier === "budget") return (d.est_cost_per_day || 0) <= 1600;
+        if (this.currentBudgetTier === "moderate") return (d.est_cost_per_day || 0) <= 3000;
+        if (this.currentBudgetTier === "comfort") return (d.est_cost_per_day || 0) > 2500;
+        return false;
+      });
+    }
+
+    // Filter by season
+    if (this.currentSeason && this.currentSeason !== "all") {
+      const seasonKeywords = {
+        "oct-nov": ["october", "november", "autumn", "post monsoon", "all year"],
+        "dec-feb": ["december", "january", "february", "winter", "all year"],
+        "mar-apr": ["march", "april", "spring", "all year"],
+        "may-sep": ["may", "june", "july", "august", "september", "monsoon", "summer", "all year"]
+      }[this.currentSeason] || [];
+
+      list = list.filter(d => {
+        const text = ((d.best_season || "") + " " + (d.best_months || "")).toLowerCase();
+        return seasonKeywords.some(kw => text.includes(kw));
+      });
+    }
+
     // Search query
     if (this.searchQuery) {
       list = list.filter(d => 
@@ -410,12 +450,41 @@ class App {
     }).join("");
   }
 
+  applyFilters() {
+    const budgetSelect = document.getElementById("budget-tier-filter");
+    if (budgetSelect) this.currentBudgetTier = budgetSelect.value || "all";
+
+    const seasonSelect = document.getElementById("season-filter");
+    if (seasonSelect) this.currentSeason = seasonSelect.value || "all";
+
+    this.renderDestinations();
+
+    const btn = document.getElementById("btn-apply-filters");
+    if (btn) {
+      const origText = btn.innerHTML;
+      btn.innerHTML = "✓ Applied!";
+      btn.style.backgroundColor = "#059669";
+      setTimeout(() => {
+        btn.innerHTML = origText;
+        btn.style.backgroundColor = "";
+      }, 1000);
+    }
+  }
+
   resetFilters() {
     this.currentState = "ALL";
     this.currentCategory = "all";
+    this.currentBudgetTier = "all";
+    this.currentSeason = "all";
     this.searchQuery = "";
+
     const searchInput = document.getElementById("global-search-input");
     if (searchInput) searchInput.value = "";
+    const budgetSelect = document.getElementById("budget-tier-filter");
+    if (budgetSelect) budgetSelect.value = "all";
+    const seasonSelect = document.getElementById("season-filter");
+    if (seasonSelect) seasonSelect.value = "all";
+
     this.handleStateSelect("ALL");
     this.setCategoryFilter("all");
   }
