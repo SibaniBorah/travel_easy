@@ -357,12 +357,13 @@ a:hover {
 .hero {
   background: linear-gradient(135deg, #064e3b 0%, #065f46 45%, #0369a1 100%);
   color: white;
-  padding: 6.5rem 0 5.5rem;
+  padding: 4.5rem 0 7rem;
   min-height: 520px;
   position: relative;
   overflow: hidden;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .hero::before {
